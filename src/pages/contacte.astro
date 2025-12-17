@@ -1,0 +1,201 @@
+---
+import BaseHead from '../components/BaseHead.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import { SITE_TITLE } from '../consts';
+import { getEntry, render } from 'astro:content';
+
+const page = await getEntry('pages', 'contacte');
+if (!page) throw new Error('Page not found');
+const { Content } = await render(page);
+---
+
+<!doctype html>
+<html lang="ca">
+	<head>
+		<BaseHead title={`${page.data.title} | ${SITE_TITLE}`} description={page.data.description} />
+	</head>
+	<body>
+		<Header />
+		<main>
+			<article class="prose">
+				<div class="hero-image">
+					<div class="title">
+						<h1>{page.data.title}</h1>
+						<p class="description">{page.data.description}</p>
+					</div>
+				</div>
+				<div class="content">
+					<div class="contact-info">
+						{page.data.email && (
+							<div class="info-item">
+								<strong>Email:</strong>
+								<a href={`mailto:${page.data.email}`}>{page.data.email}</a>
+							</div>
+						)}
+						{page.data.phone && (
+							<div class="info-item">
+								<strong>Telèfon:</strong>
+								<a href={`tel:${page.data.phone}`}>{page.data.phone}</a>
+							</div>
+						)}
+						{page.data.address && (
+							<div class="info-item">
+								<strong>Adreça:</strong>
+								<span>{page.data.address}</span>
+							</div>
+						)}
+					</div>
+
+					<Content />
+
+					<div class="form-section">
+						<h2>Formulari de contacte</h2>
+						<form name="contact" method="POST" data-netlify="true" netlify-honeypot="bot-field">
+							<input type="hidden" name="form-name" value="contact" />
+							<p style="display: none;">
+								<label>No omplis això si ets humà: <input name="bot-field" /></label>
+							</p>
+
+							<div class="form-group">
+								<label for="name">Nom *</label>
+								<input type="text" id="name" name="name" required />
+							</div>
+
+							<div class="form-group">
+								<label for="email">Email *</label>
+								<input type="email" id="email" name="email" required />
+							</div>
+
+							<div class="form-group">
+								<label for="subject">Assumpte</label>
+								<input type="text" id="subject" name="subject" />
+							</div>
+
+							<div class="form-group">
+								<label for="message">Missatge *</label>
+								<textarea id="message" name="message" rows="6" required></textarea>
+							</div>
+
+							<button type="submit">Enviar missatge</button>
+						</form>
+					</div>
+				</div>
+			</article>
+		</main>
+		<Footer />
+	</body>
+</html>
+
+<style>
+	main {
+		width: calc(100% - 2em);
+		max-width: 100%;
+		margin: 0;
+	}
+	.hero-image {
+		width: 100%;
+		background: var(--accent-gradient);
+		padding: 4rem 2rem;
+	}
+	.hero-image .title {
+		max-width: 960px;
+		margin: 0 auto;
+	}
+	.title {
+		margin-bottom: 1em;
+		padding: 1em 0;
+		text-align: center;
+		line-height: 1;
+	}
+	.title h1 {
+		margin: 0 0 0.5em 0;
+		color: white;
+		font-size: 2.5rem;
+	}
+	.description {
+		margin-bottom: 0;
+		color: rgba(255, 255, 255, 0.9);
+		font-size: 1.2rem;
+	}
+	.content {
+		max-width: 960px;
+		margin: 0 auto;
+		padding: 3rem 2rem;
+	}
+	.prose {
+		width: 100%;
+		max-width: none;
+		color: rgb(var(--gray-dark));
+	}
+	.contact-info {
+		background: rgb(var(--gray-light));
+		padding: 1.5rem;
+		border-radius: 8px;
+		margin-bottom: 2rem;
+	}
+	.info-item {
+		margin-bottom: 0.75rem;
+	}
+	.info-item:last-child {
+		margin-bottom: 0;
+	}
+	.info-item strong {
+		display: inline-block;
+		width: 100px;
+		color: rgb(var(--gray-dark));
+	}
+	.info-item a {
+		color: rgb(var(--accent));
+		text-decoration: none;
+	}
+	.info-item a:hover {
+		text-decoration: underline;
+	}
+	.form-section {
+		margin-top: 3rem;
+		padding-top: 3rem;
+		border-top: 2px solid rgb(var(--gray-light));
+	}
+	.form-section h2 {
+		color: rgb(var(--accent));
+		margin-bottom: 1.5rem;
+	}
+	.form-group {
+		margin-bottom: 1.5rem;
+	}
+	.form-group label {
+		display: block;
+		margin-bottom: 0.5rem;
+		color: rgb(var(--gray-dark));
+		font-weight: 500;
+	}
+	.form-group input,
+	.form-group textarea {
+		width: 100%;
+		padding: 0.75rem;
+		border: 1px solid rgb(var(--gray-light));
+		border-radius: 4px;
+		font-family: inherit;
+		font-size: 1rem;
+	}
+	.form-group input:focus,
+	.form-group textarea:focus {
+		outline: none;
+		border-color: rgb(var(--accent));
+	}
+	button[type="submit"] {
+		background: rgb(var(--accent));
+		color: white;
+		padding: 0.75rem 2rem;
+		border: none;
+		border-radius: 4px;
+		font-size: 1rem;
+		font-weight: 500;
+		cursor: pointer;
+		transition: opacity 0.2s ease;
+	}
+	button[type="submit"]:hover {
+		opacity: 0.9;
+	}
+</style>

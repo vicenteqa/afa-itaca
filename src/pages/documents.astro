@@ -1,0 +1,178 @@
+---
+import BaseHead from '../components/BaseHead.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import FormattedDate from '../components/FormattedDate.astro';
+import { SITE_TITLE } from '../consts';
+import { getEntry, getCollection, render } from 'astro:content';
+
+const page = await getEntry('pages', 'documents');
+if (!page) throw new Error('Page not found');
+const { Content } = await render(page);
+
+const allDocuments = (await getCollection('documents')).sort(
+	(a, b) => b.data.date.valueOf() - a.data.date.valueOf(),
+);
+
+// Group documents by category
+const documentsByCategory = allDocuments.reduce((acc, doc) => {
+	const category = doc.data.category;
+	if (!acc[category]) {
+		acc[category] = [];
+	}
+	acc[category].push(doc);
+	return acc;
+}, {} as Record<string, typeof allDocuments>);
+---
+
+<!doctype html>
+<html lang="ca">
+	<head>
+		<BaseHead title={`${page.data.title} | ${SITE_TITLE}`} description={page.data.description} />
+	</head>
+	<body>
+		<Header />
+		<main>
+			<article class="prose">
+				<div class="hero-image">
+					<div class="title">
+						<h1>{page.data.title}</h1>
+						<p class="description">{page.data.description}</p>
+					</div>
+				</div>
+				<div class="content">
+					<Content />
+
+					{Object.keys(documentsByCategory).length > 0 && (
+						<div class="documents-section">
+							{Object.entries(documentsByCategory).map(([category, docs]) => (
+								<div class="category-section">
+									<h2>{category}</h2>
+									<ul class="documents-list">
+										{docs.map((doc) => (
+											<li class="document-item">
+												<a href={doc.data.file} download>
+													<div class="doc-info">
+														<h3>{doc.data.title}</h3>
+														<p>{doc.data.description}</p>
+														<span class="date">
+															<FormattedDate date={doc.data.date} />
+														</span>
+													</div>
+													<span class="download-icon">↓</span>
+												</a>
+											</li>
+										))}
+									</ul>
+								</div>
+							))}
+						</div>
+					)}
+				</div>
+			</article>
+		</main>
+		<Footer />
+	</body>
+</html>
+
+<style>
+	main {
+		width: calc(100% - 2em);
+		max-width: 100%;
+		margin: 0;
+	}
+	.hero-image {
+		width: 100%;
+		background: var(--accent-gradient);
+		padding: 4rem 2rem;
+	}
+	.hero-image .title {
+		max-width: 960px;
+		margin: 0 auto;
+	}
+	.title {
+		margin-bottom: 1em;
+		padding: 1em 0;
+		text-align: center;
+		line-height: 1;
+	}
+	.title h1 {
+		margin: 0 0 0.5em 0;
+		color: white;
+		font-size: 2.5rem;
+	}
+	.description {
+		margin-bottom: 0;
+		color: rgba(255, 255, 255, 0.9);
+		font-size: 1.2rem;
+	}
+	.content {
+		max-width: 960px;
+		margin: 0 auto;
+		padding: 3rem 2rem;
+	}
+	.prose {
+		width: 100%;
+		max-width: none;
+		color: rgb(var(--gray-dark));
+	}
+	.documents-section {
+		margin-top: 3rem;
+	}
+	.category-section {
+		margin-bottom: 3rem;
+	}
+	.category-section h2 {
+		color: rgb(var(--accent));
+		border-bottom: 2px solid rgb(var(--accent));
+		padding-bottom: 0.5rem;
+		margin-bottom: 1.5rem;
+	}
+	.documents-list {
+		list-style: none;
+		padding: 0;
+	}
+	.document-item {
+		margin-bottom: 1rem;
+	}
+	.document-item a {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		padding: 1rem;
+		background: white;
+		border: 1px solid rgb(var(--gray-light));
+		border-radius: 8px;
+		text-decoration: none;
+		color: rgb(var(--gray-dark));
+		transition: all 0.2s ease;
+	}
+	.document-item a:hover {
+		transform: translateY(-2px);
+		box-shadow: var(--box-shadow);
+		border-color: rgb(var(--accent));
+	}
+	.doc-info h3 {
+		margin: 0 0 0.25rem 0;
+		color: rgb(var(--accent));
+		font-size: 1.1rem;
+	}
+	.doc-info p {
+		margin: 0 0 0.5rem 0;
+		font-size: 0.9rem;
+		color: rgb(var(--gray));
+	}
+	.date {
+		font-size: 0.85rem;
+		color: rgb(var(--gray-light));
+	}
+	.download-icon {
+		font-size: 2rem;
+		color: rgb(var(--accent));
+		opacity: 0.6;
+		transition: opacity 0.2s ease;
+	}
+	.document-item a:hover .download-icon {
+		opacity: 1;
+	}
+</style>
