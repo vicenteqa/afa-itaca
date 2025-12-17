@@ -1,5 +1,6 @@
 backend:
-  name: git-gateway
+  name: github
+  repo: vicenteqa/afa-itaca
   branch: main
 
 media_folder: "public/uploads"
