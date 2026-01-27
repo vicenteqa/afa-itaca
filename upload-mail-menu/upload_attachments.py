@@ -8,6 +8,7 @@ import email
 import os
 import sys
 import io
+import time
 from email.header import decode_header
 import requests
 from requests.auth import HTTPBasicAuth
@@ -51,17 +52,28 @@ def convert_image_to_pdf(image_content):
 
 def find_all_existing_media(auth):
     """Find all menjador*.pdf files in WordPress media library."""
-    url = f"{WORDPRESS_URL.rstrip('/')}/wp-json/wp/v2/media"
+    base_url = f"{WORDPRESS_URL.rstrip('/')}/wp-json/wp/v2/media"
     found_ids = []
+    page = 1
 
-    response = requests.get(url, params={"per_page": 100}, auth=auth)
-    if response.status_code == 200:
+    while True:
+        response = requests.get(base_url, params={"per_page": 100, "page": page}, auth=auth)
+        if response.status_code != 200 or not response.json():
+            break
+
         for media in response.json():
             source_url = media.get("source_url", "")
-            # Match menjador.pdf, menjador-1.pdf, menjador-2.pdf, etc.
-            if "/menjador" in source_url and source_url.endswith(".pdf"):
-                print(f"  Found existing file: {source_url} (ID: {media.get('id')})")
-                found_ids.append(media.get("id"))
+            slug = media.get("slug", "")
+            # Match menjador, menjador-1, menjador-2, etc.
+            if slug.startswith("menjador") or "menjador" in source_url:
+                media_id = media.get("id")
+                print(f"  Found: {source_url} (ID: {media_id})")
+                found_ids.append(media_id)
+
+        page += 1
+        # Safety limit
+        if page > 10:
+            break
 
     if not found_ids:
         print("  No existing menjador files found")
@@ -87,6 +99,11 @@ def upload_to_wordpress(filename, content, content_type):
             print(f"  Deleted file (ID: {existing_id})")
         else:
             print(f"  Warning: Could not delete file (ID: {existing_id})")
+
+    # Wait for WordPress to fully process deletions
+    if existing_ids:
+        print("  Waiting for WordPress to process deletions...")
+        time.sleep(2)
 
     url = f"{WORDPRESS_URL.rstrip('/')}/wp-json/wp/v2/media"
 
