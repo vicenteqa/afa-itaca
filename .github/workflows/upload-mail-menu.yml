@@ -1,0 +1,49 @@
+name: Upload Email Attachments to WordPress
+
+on:
+  schedule:
+    # Run at 00:00 UTC on days 28-31 of each month
+    - cron: '0 0 28-31 * *'
+  workflow_dispatch:
+
+jobs:
+  upload:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check if last day of month
+        id: check-last-day
+        run: |
+          # Only continue if it's the last day of the month or manual trigger
+          today=$(date +%d)
+          last_day=$(date -d "$(date +%Y-%m-01) +1 month -1 day" +%d)
+          if [ "$today" = "$last_day" ] || [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            echo "is_last_day=true" >> $GITHUB_OUTPUT
+          else
+            echo "is_last_day=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Checkout
+        if: steps.check-last-day.outputs.is_last_day == 'true'
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        if: steps.check-last-day.outputs.is_last_day == 'true'
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install dependencies
+        if: steps.check-last-day.outputs.is_last_day == 'true'
+        run: pip install -r upload-mail-menu/requirements.txt
+
+      - name: Run upload script
+        if: steps.check-last-day.outputs.is_last_day == 'true'
+        env:
+          GMAIL_USER: ${{ secrets.GMAIL_USER }}
+          GMAIL_APP_PASSWORD: ${{ secrets.GMAIL_APP_PASSWORD }}
+          ALLOWED_SENDER: ${{ secrets.ALLOWED_SENDER }}
+          WORDPRESS_URL: ${{ secrets.WORDPRESS_URL }}
+          WORDPRESS_USER: ${{ secrets.WORDPRESS_USER }}
+          WORDPRESS_APP_PASSWORD: ${{ secrets.WORDPRESS_APP_PASSWORD }}
+        run: python upload-mail-menu/upload_attachments.py
