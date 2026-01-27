@@ -50,27 +50,28 @@ def convert_image_to_pdf(image_content):
     return pdf_buffer.getvalue()
 
 
-def find_all_existing_media(auth):
+def find_all_existing_media():
     """Find all menjador*.pdf files in WordPress media library."""
     base_url = f"{WORDPRESS_URL.rstrip('/')}/wp-json/wp/v2/media"
     found_ids = []
 
-    response = requests.get(base_url, params={"per_page": 100}, auth=auth)
+    # List media without auth (public endpoint) but with User-Agent
+    headers = {"User-Agent": "Mozilla/5.0 (compatible; MenuUploader/1.0)"}
+    response = requests.get(base_url, params={"per_page": 100}, headers=headers)
     print(f"  API status: {response.status_code}, items returned: {len(response.json()) if response.status_code == 200 else 0}")
 
     if response.status_code == 200:
         for media in response.json():
             source_url = media.get("source_url", "")
             slug = media.get("slug", "")
-            print(f"  Checking: slug={slug}, url={source_url}")
             # Match menjador, menjador-1, menjador-2, etc.
-            if slug.startswith("menjador") or "menjador" in source_url:
+            if slug.startswith("menjador") or "/menjador" in source_url:
                 media_id = media.get("id")
-                print(f"  >>> MATCH: {source_url} (ID: {media_id})")
+                print(f"  Found: {source_url} (ID: {media_id})")
                 found_ids.append(media_id)
 
     if not found_ids:
-        print("  No existing menjador files found")
+        print("  No existing menjador files to delete")
 
     return found_ids
 
@@ -78,7 +79,10 @@ def find_all_existing_media(auth):
 def delete_media(media_id, auth):
     """Delete a file from the WordPress media library."""
     url = f"{WORDPRESS_URL.rstrip('/')}/wp-json/wp/v2/media/{media_id}"
-    response = requests.delete(url, params={"force": True}, auth=auth)
+    headers = {"User-Agent": "Mozilla/5.0 (compatible; MenuUploader/1.0)"}
+    response = requests.delete(url, params={"force": True}, auth=auth, headers=headers)
+    if response.status_code != 200:
+        print(f"    Delete error: {response.status_code} - {response.text[:200]}")
     return response.status_code == 200
 
 
@@ -86,8 +90,8 @@ def upload_to_wordpress(filename, content, content_type):
     """Upload a file to WordPress via REST API, replacing if it already exists."""
     auth = HTTPBasicAuth(WORDPRESS_USER, WORDPRESS_APP_PASSWORD)
 
-    # Find and delete all existing menjador files
-    existing_ids = find_all_existing_media(auth)
+    # Find and delete all existing menjador files (except the original 2025/12 one)
+    existing_ids = find_all_existing_media()
     for existing_id in existing_ids:
         if delete_media(existing_id, auth):
             print(f"  Deleted file (ID: {existing_id})")
