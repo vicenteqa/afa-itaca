@@ -49,18 +49,24 @@ def convert_image_to_pdf(image_content):
     return pdf_buffer.getvalue()
 
 
-def find_existing_media(filename, auth):
-    """Search if a file with the same name already exists in WordPress."""
+def find_all_existing_media(auth):
+    """Find all menjador*.pdf files in WordPress media library."""
     url = f"{WORDPRESS_URL.rstrip('/')}/wp-json/wp/v2/media"
-    response = requests.get(url, params={"search": filename}, auth=auth)
+    found_ids = []
 
+    response = requests.get(url, params={"per_page": 100}, auth=auth)
     if response.status_code == 200:
         for media in response.json():
-            # Compare filename (without path)
             source_url = media.get("source_url", "")
-            if source_url.endswith(f"/{filename}") or media.get("title", {}).get("rendered") == os.path.splitext(filename)[0]:
-                return media.get("id")
-    return None
+            # Match menjador.pdf, menjador-1.pdf, menjador-2.pdf, etc.
+            if "/menjador" in source_url and source_url.endswith(".pdf"):
+                print(f"  Found existing file: {source_url} (ID: {media.get('id')})")
+                found_ids.append(media.get("id"))
+
+    if not found_ids:
+        print("  No existing menjador files found")
+
+    return found_ids
 
 
 def delete_media(media_id, auth):
@@ -74,13 +80,13 @@ def upload_to_wordpress(filename, content, content_type):
     """Upload a file to WordPress via REST API, replacing if it already exists."""
     auth = HTTPBasicAuth(WORDPRESS_USER, WORDPRESS_APP_PASSWORD)
 
-    # Find and delete existing file
-    existing_id = find_existing_media(filename, auth)
-    if existing_id:
+    # Find and delete all existing menjador files
+    existing_ids = find_all_existing_media(auth)
+    for existing_id in existing_ids:
         if delete_media(existing_id, auth):
-            print(f"  Previous file deleted (ID: {existing_id})")
+            print(f"  Deleted file (ID: {existing_id})")
         else:
-            print(f"  Warning: Could not delete previous file (ID: {existing_id})")
+            print(f"  Warning: Could not delete file (ID: {existing_id})")
 
     url = f"{WORDPRESS_URL.rstrip('/')}/wp-json/wp/v2/media"
 
