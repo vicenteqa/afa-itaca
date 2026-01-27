@@ -1,0 +1,78 @@
+---
+import BaseHead from '../components/BaseHead.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import { SITE_TITLE } from '../consts';
+import { getEntry, render } from 'astro:content';
+
+const page = await getEntry('pages', 'lafa');
+if (!page) throw new Error('Page not found');
+const { Content } = await render(page);
+---
+
+<!doctype html>
+<html lang="ca">
+	<head>
+		<BaseHead title={`${page.data.title} | ${SITE_TITLE}`} description={page.data.description} />
+	</head>
+	<body>
+		<Header />
+		<main>
+			<article class="prose">
+				<div class="hero-image">
+					<div class="title">
+						<h1>{page.data.title}</h1>
+						<p class="description">{page.data.description}</p>
+					</div>
+				</div>
+				<div class="content">
+					<Content />
+				</div>
+			</article>
+		</main>
+		<Footer />
+	</body>
+</html>
+
+<style>
+	main {
+		width: calc(100% - 2em);
+		max-width: 100%;
+		margin: 0;
+	}
+	.hero-image {
+		width: 100%;
+		background: var(--accent-gradient);
+		padding: 4rem 2rem;
+	}
+	.hero-image .title {
+		max-width: 960px;
+		margin: 0 auto;
+	}
+	.title {
+		margin-bottom: 1em;
+		padding: 1em 0;
+		text-align: center;
+		line-height: 1;
+	}
+	.title h1 {
+		margin: 0 0 0.5em 0;
+		color: white;
+		font-size: 2.5rem;
+	}
+	.description {
+		margin-bottom: 0;
+		color: rgba(255, 255, 255, 0.9);
+		font-size: 1.2rem;
+	}
+	.content {
+		max-width: 960px;
+		margin: 0 auto;
+		padding: 3rem 2rem;
+	}
+	.prose {
+		width: 100%;
+		max-width: none;
+		color: rgb(var(--gray-dark));
+	}
+</style>

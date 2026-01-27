@@ -1,0 +1,103 @@
+---
+import BaseHead from '../../components/BaseHead.astro';
+import Header from '../../components/Header.astro';
+import Footer from '../../components/Footer.astro';
+import { SITE_TITLE } from '../../consts';
+import { getCollection } from 'astro:content';
+
+const comissions = (await getCollection('comissions')).sort((a, b) => a.data.order - b.data.order);
+---
+
+<!doctype html>
+<html lang="ca">
+	<head>
+		<BaseHead title={`Comissions | ${SITE_TITLE}`} description="Les comissions de l'AFA Ítaca" />
+	</head>
+	<body>
+		<Header />
+		<main>
+			<section>
+				<div class="hero">
+					<h1>Comissions de l'AFA</h1>
+					<p>Coneix les diferents comissions i com pots participar-hi</p>
+				</div>
+				<ul class="comissions-grid">
+					{
+						comissions.map((comissio) => (
+							<li class="comissio-card">
+								<a href={`/comissions/${comissio.id}`}>
+									<h2>{comissio.data.title}</h2>
+									<p>{comissio.data.description}</p>
+								</a>
+							</li>
+						))
+					}
+				</ul>
+			</section>
+		</main>
+		<Footer />
+	</body>
+</html>
+
+<style>
+	main {
+		width: 100%;
+	}
+	.hero {
+		background: var(--accent-gradient);
+		padding: 4rem 2rem;
+		text-align: center;
+		color: white;
+	}
+	.hero h1 {
+		margin: 0 0 0.5em 0;
+		font-size: 2.5rem;
+	}
+	.hero p {
+		margin: 0;
+		font-size: 1.2rem;
+		opacity: 0.9;
+	}
+	section {
+		padding-bottom: 3rem;
+	}
+	ul {
+		list-style-type: none;
+		padding: 0;
+	}
+	.comissions-grid {
+		display: grid;
+		grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+		gap: 2rem;
+		padding: 3rem 2rem;
+		max-width: 1200px;
+		margin: 0 auto;
+	}
+	.comissio-card {
+		background: white;
+		border: 1px solid rgb(var(--gray-light));
+		border-radius: 8px;
+		overflow: hidden;
+		box-shadow: var(--box-shadow);
+		transition: transform 0.2s ease, box-shadow 0.2s ease;
+	}
+	.comissio-card:hover {
+		transform: translateY(-4px);
+		box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+	}
+	.comissio-card a {
+		display: block;
+		padding: 1.5rem;
+		text-decoration: none;
+		color: rgb(var(--gray-dark));
+	}
+	.comissio-card h2 {
+		margin: 0 0 0.5em 0;
+		color: rgb(var(--accent));
+		font-size: 1.5rem;
+	}
+	.comissio-card p {
+		margin: 0;
+		color: rgb(var(--gray));
+	}
+</style>

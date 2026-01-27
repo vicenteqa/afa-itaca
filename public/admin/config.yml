@@ -1,0 +1,80 @@
+backend:
+  name: github
+  repo: vicenteqa/afa-itaca
+  branch: main
+
+media_folder: "public/uploads"
+public_folder: "/uploads"
+
+locale: "ca"
+
+collections:
+  # Notícies (Blog Posts)
+  - name: "noticies"
+    label: "Notícies"
+    folder: "src/content/noticies"
+    create: true
+    slug: "{{year}}-{{month}}-{{day}}-{{slug}}"
+    fields:
+      - {label: "Títol", name: "title", widget: "string"}
+      - {label: "Descripció", name: "description", widget: "text"}
+      - {label: "Data de Publicació", name: "pubDate", widget: "datetime"}
+      - {label: "Imatge Principal", name: "heroImage", widget: "image", required: false}
+      - {label: "Contingut", name: "body", widget: "markdown"}
+
+  # Documents d'Interés
+  - name: "documents"
+    label: "Documents"
+    folder: "src/content/documents"
+    create: true
+    slug: "{{slug}}"
+    fields:
+      - {label: "Títol", name: "title", widget: "string"}
+      - {label: "Descripció", name: "description", widget: "text"}
+      - {label: "Categoria", name: "category", widget: "select", options: ["Menús", "Calendaris", "Normatives", "Altres"]}
+      - {label: "Arxiu", name: "file", widget: "file"}
+      - {label: "Data", name: "date", widget: "datetime"}
+
+  # Pàgines Estàtiques
+  - name: "pages"
+    label: "Pàgines"
+    files:
+      - label: "L'AFA"
+        name: "lafa"
+        file: "src/content/pages/lafa.md"
+        fields:
+          - {label: "Títol", name: "title", widget: "string"}
+          - {label: "Descripció", name: "description", widget: "text"}
+          - {label: "Contingut", name: "body", widget: "markdown"}
+
+      - label: "Documents d'Interés"
+        name: "documents-page"
+        file: "src/content/pages/documents.md"
+        fields:
+          - {label: "Títol", name: "title", widget: "string"}
+          - {label: "Descripció", name: "description", widget: "text"}
+          - {label: "Contingut", name: "body", widget: "markdown"}
+
+      - label: "Contacte"
+        name: "contacte"
+        file: "src/content/pages/contacte.md"
+        fields:
+          - {label: "Títol", name: "title", widget: "string"}
+          - {label: "Descripció", name: "description", widget: "text"}
+          - {label: "Email", name: "email", widget: "string"}
+          - {label: "Telèfon", name: "phone", widget: "string", required: false}
+          - {label: "Adreça", name: "address", widget: "text", required: false}
+          - {label: "Contingut", name: "body", widget: "markdown"}
+
+  # Comissions
+  - name: "comissions"
+    label: "Comissions"
+    folder: "src/content/comissions"
+    create: true
+    slug: "{{slug}}"
+    fields:
+      - {label: "Títol", name: "title", widget: "string"}
+      - {label: "Descripció Curta", name: "description", widget: "text"}
+      - {label: "Icona", name: "icon", widget: "string", hint: "Nom de l'icona (opcional)", required: false}
+      - {label: "Ordre", name: "order", widget: "number", default: 0}
+      - {label: "Contingut", name: "body", widget: "markdown"}
