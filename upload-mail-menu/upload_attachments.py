@@ -7,10 +7,12 @@ import imaplib
 import email
 import os
 import sys
+import io
 from email.header import decode_header
 import requests
 from requests.auth import HTTPBasicAuth
 from dotenv import load_dotenv
+from PIL import Image
 
 load_dotenv()
 
@@ -23,6 +25,7 @@ WORDPRESS_USER = os.environ.get("WORDPRESS_USER")
 WORDPRESS_APP_PASSWORD = os.environ.get("WORDPRESS_APP_PASSWORD")
 
 ALLOWED_EXTENSIONS = {".pdf", ".jpg", ".jpeg", ".png"}
+TARGET_FILENAME = "menjador.pdf"
 
 
 def get_filename(part):
@@ -34,6 +37,16 @@ def get_filename(part):
             return decoded[0][0].decode(decoded[0][1])
         return decoded[0][0] if isinstance(decoded[0][0], str) else decoded[0][0].decode()
     return None
+
+
+def convert_image_to_pdf(image_content):
+    """Convert image bytes to PDF bytes."""
+    image = Image.open(io.BytesIO(image_content))
+    if image.mode in ("RGBA", "P"):
+        image = image.convert("RGB")
+    pdf_buffer = io.BytesIO()
+    image.save(pdf_buffer, format="PDF")
+    return pdf_buffer.getvalue()
 
 
 def find_existing_media(filename, auth):
@@ -137,16 +150,17 @@ def process_emails():
                 continue
 
             content = part.get_payload(decode=True)
-            content_type = part.get_content_type()
 
             print(f"  Attachment found: {filename}")
 
-            # Rename to menjador with the original extension
-            ext = os.path.splitext(filename)[1].lower()
-            new_filename = f"menjador{ext}"
-            print(f"  Renaming to: {new_filename}")
+            # Convert images to PDF if needed
+            if ext in {".jpg", ".jpeg", ".png"}:
+                print(f"  Converting image to PDF...")
+                content = convert_image_to_pdf(content)
 
-            if upload_to_wordpress(new_filename, content, content_type):
+            print(f"  Uploading as: {TARGET_FILENAME}")
+
+            if upload_to_wordpress(TARGET_FILENAME, content, "application/pdf"):
                 total_uploaded += 1
 
         # Mark as read
