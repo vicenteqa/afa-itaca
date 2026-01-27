@@ -54,26 +54,20 @@ def find_all_existing_media(auth):
     """Find all menjador*.pdf files in WordPress media library."""
     base_url = f"{WORDPRESS_URL.rstrip('/')}/wp-json/wp/v2/media"
     found_ids = []
-    page = 1
 
-    while True:
-        response = requests.get(base_url, params={"per_page": 100, "page": page}, auth=auth)
-        if response.status_code != 200 or not response.json():
-            break
+    response = requests.get(base_url, params={"per_page": 100}, auth=auth)
+    print(f"  API status: {response.status_code}, items returned: {len(response.json()) if response.status_code == 200 else 0}")
 
+    if response.status_code == 200:
         for media in response.json():
             source_url = media.get("source_url", "")
             slug = media.get("slug", "")
+            print(f"  Checking: slug={slug}, url={source_url}")
             # Match menjador, menjador-1, menjador-2, etc.
             if slug.startswith("menjador") or "menjador" in source_url:
                 media_id = media.get("id")
-                print(f"  Found: {source_url} (ID: {media_id})")
+                print(f"  >>> MATCH: {source_url} (ID: {media_id})")
                 found_ids.append(media_id)
-
-        page += 1
-        # Safety limit
-        if page > 10:
-            break
 
     if not found_ids:
         print("  No existing menjador files found")
