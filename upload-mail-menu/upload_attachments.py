@@ -41,6 +41,22 @@ def get_filename(part):
     return None
 
 
+def resize_if_needed(image, max_size=2560):
+    """Resize image if any dimension exceeds max_size, preserving aspect ratio."""
+    width, height = image.size
+    if width <= max_size and height <= max_size:
+        return image
+
+    if width > height:
+        new_width = max_size
+        new_height = int(height * max_size / width)
+    else:
+        new_height = max_size
+        new_width = int(width * max_size / height)
+
+    return image.resize((new_width, new_height), Image.LANCZOS)
+
+
 def convert_pdf_to_image(pdf_content):
     """Convert PDF bytes to PNG image bytes (first page only, high quality)."""
     # 300 DPI for high quality output
@@ -48,6 +64,8 @@ def convert_pdf_to_image(pdf_content):
     if not images:
         raise ValueError("Could not convert PDF to image")
     image = images[0]
+    # Resize to avoid WordPress adding "-scaled" suffix
+    image = resize_if_needed(image)
     png_buffer = io.BytesIO()
     image.save(png_buffer, format="PNG", optimize=True)
     return png_buffer.getvalue()
@@ -182,10 +200,12 @@ def process_emails():
                 print(f"  Converting PDF to PNG (300 DPI)...")
                 content = convert_pdf_to_image(content)
             else:
-                # For images, ensure PNG format
+                # For images, ensure PNG format and resize if needed
                 image = Image.open(io.BytesIO(content))
                 if image.mode in ("RGBA", "P"):
                     image = image.convert("RGB")
+                # Resize to avoid WordPress adding "-scaled" suffix
+                image = resize_if_needed(image)
                 png_buffer = io.BytesIO()
                 image.save(png_buffer, format="PNG", optimize=True)
                 content = png_buffer.getvalue()
