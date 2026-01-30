@@ -167,9 +167,23 @@ def process_emails():
     email_ids = messages[0].split()
     print(f"Found {len(email_ids)} unread emails from {sender_desc}")
 
+    if not email_ids:
+        print("No emails to process.")
+        mail.logout()
+        return
+
+    # Mark older emails as read without processing (keep only the most recent)
+    if len(email_ids) > 1:
+        older_emails = email_ids[:-1]
+        print(f"Marking {len(older_emails)} older emails as read (skipping processing)...")
+        for email_id in older_emails:
+            mail.store(email_id, "+FLAGS", "\\Seen")
+
+    # Process only the most recent email
+    most_recent_id = email_ids[-1]
     total_uploaded = 0
 
-    for email_id in email_ids:
+    for email_id in [most_recent_id]:
         status, msg_data = mail.fetch(email_id, "(RFC822)")
 
         if status != "OK":
