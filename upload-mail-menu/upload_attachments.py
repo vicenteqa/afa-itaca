@@ -150,8 +150,13 @@ def process_emails():
     mail.login(GMAIL_USER, GMAIL_APP_PASSWORD)
     mail.select("INBOX")
 
-    # Search unread emails from the allowed sender
-    search_criteria = f'(UNSEEN FROM "{ALLOWED_SENDER}")'
+    # Search unread emails from the allowed sender (or all senders if "*")
+    if ALLOWED_SENDER == "*":
+        search_criteria = "(UNSEEN)"
+        sender_desc = "any sender"
+    else:
+        search_criteria = f'(UNSEEN FROM "{ALLOWED_SENDER}")'
+        sender_desc = ALLOWED_SENDER
     status, messages = mail.search(None, search_criteria)
 
     if status != "OK":
@@ -160,7 +165,7 @@ def process_emails():
         return
 
     email_ids = messages[0].split()
-    print(f"Found {len(email_ids)} unread emails from {ALLOWED_SENDER}")
+    print(f"Found {len(email_ids)} unread emails from {sender_desc}")
 
     total_uploaded = 0
 
