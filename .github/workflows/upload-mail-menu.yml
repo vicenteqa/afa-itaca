@@ -34,7 +34,11 @@ jobs:
         with:
           python-version: '3.12'
 
-      - name: Install dependencies
+      - name: Install system dependencies
+        if: steps.check-should-run.outputs.should_run == 'true'
+        run: sudo apt-get update && sudo apt-get install -y poppler-utils
+
+      - name: Install Python dependencies
         if: steps.check-should-run.outputs.should_run == 'true'
         run: pip install -r upload-mail-menu/requirements.txt
 

@@ -14,6 +14,7 @@ import requests
 from requests.auth import HTTPBasicAuth
 from dotenv import load_dotenv
 from PIL import Image
+from pdf2image import convert_from_bytes
 
 load_dotenv()
 
@@ -26,7 +27,7 @@ WORDPRESS_USER = os.environ.get("WORDPRESS_USER")
 WORDPRESS_APP_PASSWORD = os.environ.get("WORDPRESS_APP_PASSWORD")
 
 ALLOWED_EXTENSIONS = {".pdf", ".jpg", ".jpeg", ".png"}
-TARGET_FILENAME = "menjador.pdf"
+TARGET_FILENAME = "menjador.png"
 
 
 def get_filename(part):
@@ -40,18 +41,38 @@ def get_filename(part):
     return None
 
 
-def convert_image_to_pdf(image_content):
-    """Convert image bytes to PDF bytes."""
-    image = Image.open(io.BytesIO(image_content))
-    if image.mode in ("RGBA", "P"):
-        image = image.convert("RGB")
-    pdf_buffer = io.BytesIO()
-    image.save(pdf_buffer, format="PDF")
-    return pdf_buffer.getvalue()
+def resize_if_needed(image, max_size=2560):
+    """Resize image if any dimension exceeds max_size, preserving aspect ratio."""
+    width, height = image.size
+    if width <= max_size and height <= max_size:
+        return image
+
+    if width > height:
+        new_width = max_size
+        new_height = int(height * max_size / width)
+    else:
+        new_height = max_size
+        new_width = int(width * max_size / height)
+
+    return image.resize((new_width, new_height), Image.LANCZOS)
+
+
+def convert_pdf_to_image(pdf_content):
+    """Convert PDF bytes to PNG image bytes (first page only, high quality)."""
+    # 300 DPI for high quality output
+    images = convert_from_bytes(pdf_content, dpi=300, first_page=1, last_page=1)
+    if not images:
+        raise ValueError("Could not convert PDF to image")
+    image = images[0]
+    # Resize to avoid WordPress adding "-scaled" suffix
+    image = resize_if_needed(image)
+    png_buffer = io.BytesIO()
+    image.save(png_buffer, format="PNG", optimize=True)
+    return png_buffer.getvalue()
 
 
 def find_all_existing_media():
-    """Find all menjador*.pdf files in WordPress media library."""
+    """Find all menjador* files in WordPress media library."""
     base_url = f"{WORDPRESS_URL.rstrip('/')}/wp-json/wp/v2/media"
     found_ids = []
 
@@ -174,14 +195,24 @@ def process_emails():
 
             print(f"  Attachment found: {filename}")
 
-            # Convert images to PDF if needed
-            if ext in {".jpg", ".jpeg", ".png"}:
-                print(f"  Converting image to PDF...")
-                content = convert_image_to_pdf(content)
+            # Convert PDF to image if needed
+            if ext == ".pdf":
+                print(f"  Converting PDF to PNG (300 DPI)...")
+                content = convert_pdf_to_image(content)
+            else:
+                # For images, ensure PNG format and resize if needed
+                image = Image.open(io.BytesIO(content))
+                if image.mode in ("RGBA", "P"):
+                    image = image.convert("RGB")
+                # Resize to avoid WordPress adding "-scaled" suffix
+                image = resize_if_needed(image)
+                png_buffer = io.BytesIO()
+                image.save(png_buffer, format="PNG", optimize=True)
+                content = png_buffer.getvalue()
 
             print(f"  Uploading as: {TARGET_FILENAME}")
 
-            if upload_to_wordpress(TARGET_FILENAME, content, "application/pdf"):
+            if upload_to_wordpress(TARGET_FILENAME, content, "image/png"):
                 total_uploaded += 1
 
         # Mark as read
