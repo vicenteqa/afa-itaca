@@ -1,14 +1,13 @@
-name: Upload Email Attachments to WordPress
+name: Split Combined Menu Image
 
 on:
   schedule:
-    # Last 6 days of month (25-31) + first 5 days (1-5)
-    - cron: '0 8 25-31 * *'
-    - cron: '0 8 1-5 * *'
+    # Run on the 1st of each month at 07:00 UTC (before the upload job at 08:00)
+    - cron: '0 7 1 * *'
   workflow_dispatch:
 
 jobs:
-  upload:
+  split:
     runs-on: ubuntu-latest
 
     steps:
@@ -20,18 +19,12 @@ jobs:
         with:
           python-version: '3.12'
 
-      - name: Install system dependencies
-        run: sudo apt-get update && sudo apt-get install -y poppler-utils
-
       - name: Install Python dependencies
         run: pip install -r upload-mail-menu/requirements.txt
 
-      - name: Run upload script
+      - name: Run split script
         env:
-          GMAIL_USER: ${{ secrets.GMAIL_USER }}
-          GMAIL_APP_PASSWORD: ${{ secrets.GMAIL_APP_PASSWORD }}
-          ALLOWED_SENDER: ${{ secrets.ALLOWED_SENDER }}
           WORDPRESS_URL: ${{ secrets.WORDPRESS_URL }}
           WORDPRESS_USER: ${{ secrets.WORDPRESS_USER }}
           WORDPRESS_APP_PASSWORD: ${{ secrets.WORDPRESS_APP_PASSWORD }}
-        run: python upload-mail-menu/upload_attachments.py
+        run: python upload-mail-menu/split_menu.py

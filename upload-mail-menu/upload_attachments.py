@@ -1,6 +1,9 @@
 #!/usr/bin/env python3
 """
-Downloads attachments from emails of a specific sender and uploads them to WordPress.
+Downloads menu attachments from emails and uploads them to WordPress.
+During the last 6 days of the month, combines the current menu (top)
+with the new one (bottom). During the first 5 days, uploads directly
+(late menu for the current month).
 """
 
 import imaplib
@@ -9,6 +12,8 @@ import os
 import sys
 import io
 import time
+import calendar
+from datetime import date
 from email.header import decode_header
 import requests
 from requests.auth import HTTPBasicAuth
@@ -28,6 +33,18 @@ WORDPRESS_APP_PASSWORD = os.environ.get("WORDPRESS_APP_PASSWORD")
 
 ALLOWED_EXTENSIONS = {".pdf", ".jpg", ".jpeg", ".png"}
 TARGET_FILENAME = "menjador.png"
+
+
+def is_end_of_month():
+    """Check if today is within the last 6 days of the month."""
+    today = date.today()
+    last_day = calendar.monthrange(today.year, today.month)[1]
+    return today.day > last_day - 6
+
+
+def is_start_of_month():
+    """Check if today is within the first 5 days of the month."""
+    return date.today().day <= 5
 
 
 def get_filename(part):
@@ -59,16 +76,86 @@ def resize_if_needed(image, max_size=2560):
 
 def convert_pdf_to_image(pdf_content):
     """Convert PDF bytes to PNG image bytes (first page only, high quality)."""
-    # 300 DPI for high quality output
     images = convert_from_bytes(pdf_content, dpi=300, first_page=1, last_page=1)
     if not images:
         raise ValueError("Could not convert PDF to image")
     image = images[0]
-    # Resize to avoid WordPress adding "-scaled" suffix
     image = resize_if_needed(image)
     png_buffer = io.BytesIO()
     image.save(png_buffer, format="PNG", optimize=True)
     return png_buffer.getvalue()
+
+
+def attachment_to_image(content, ext):
+    """Convert attachment bytes to a PIL Image, handling PDF and image formats."""
+    if ext == ".pdf":
+        print("  Converting PDF to PNG (300 DPI)...")
+        images = convert_from_bytes(content, dpi=300, first_page=1, last_page=1)
+        if not images:
+            raise ValueError("Could not convert PDF to image")
+        return resize_if_needed(images[0])
+    else:
+        image = Image.open(io.BytesIO(content))
+        if image.mode in ("RGBA", "P"):
+            image = image.convert("RGB")
+        return resize_if_needed(image)
+
+
+def image_to_png_bytes(image):
+    """Convert a PIL Image to PNG bytes."""
+    png_buffer = io.BytesIO()
+    image.save(png_buffer, format="PNG", optimize=True)
+    return png_buffer.getvalue()
+
+
+def download_current_menu():
+    """Download the current menjador.png from WordPress media library."""
+    base_url = f"{WORDPRESS_URL.rstrip('/')}/wp-json/wp/v2/media"
+    headers = {"User-Agent": "Mozilla/5.0 (compatible; MenuUploader/1.0)"}
+    response = requests.get(base_url, params={"per_page": 100}, headers=headers)
+
+    if response.status_code != 200:
+        print("  Could not fetch media library")
+        return None
+
+    for media in response.json():
+        slug = media.get("slug", "")
+        source_url = media.get("source_url", "")
+        if slug.startswith("menjador") or "/menjador" in source_url:
+            print(f"  Downloading current menu from: {source_url}")
+            img_response = requests.get(source_url, headers=headers)
+            if img_response.status_code == 200:
+                return Image.open(io.BytesIO(img_response.content))
+            else:
+                print(f"  Error downloading image: {img_response.status_code}")
+                return None
+
+    print("  No current menu found in WordPress")
+    return None
+
+
+def combine_images(top_image, bottom_image):
+    """Combine two images vertically (top above bottom), scaling to same width."""
+    # Scale both to the same width
+    target_width = max(top_image.width, bottom_image.width)
+
+    if top_image.width != target_width:
+        ratio = target_width / top_image.width
+        top_image = top_image.resize(
+            (target_width, int(top_image.height * ratio)), Image.LANCZOS
+        )
+    if bottom_image.width != target_width:
+        ratio = target_width / bottom_image.width
+        bottom_image = bottom_image.resize(
+            (target_width, int(bottom_image.height * ratio)), Image.LANCZOS
+        )
+
+    combined_height = top_image.height + bottom_image.height
+    combined = Image.new("RGB", (target_width, combined_height), (255, 255, 255))
+    combined.paste(top_image, (0, 0))
+    combined.paste(bottom_image, (0, top_image.height))
+
+    return combined
 
 
 def find_all_existing_media():
@@ -76,7 +163,6 @@ def find_all_existing_media():
     base_url = f"{WORDPRESS_URL.rstrip('/')}/wp-json/wp/v2/media"
     found_ids = []
 
-    # List media without auth (public endpoint) but with User-Agent
     headers = {"User-Agent": "Mozilla/5.0 (compatible; MenuUploader/1.0)"}
     response = requests.get(base_url, params={"per_page": 100}, headers=headers)
     print(f"  API status: {response.status_code}, items returned: {len(response.json()) if response.status_code == 200 else 0}")
@@ -85,7 +171,6 @@ def find_all_existing_media():
         for media in response.json():
             source_url = media.get("source_url", "")
             slug = media.get("slug", "")
-            # Match menjador, menjador-1, menjador-2, etc.
             if slug.startswith("menjador") or "/menjador" in source_url:
                 media_id = media.get("id")
                 print(f"  Found: {source_url} (ID: {media_id})")
@@ -111,7 +196,6 @@ def upload_to_wordpress(filename, content, content_type):
     """Upload a file to WordPress via REST API, replacing if it already exists."""
     auth = HTTPBasicAuth(WORDPRESS_USER, WORDPRESS_APP_PASSWORD)
 
-    # Find and delete all existing menjador files (except the original 2025/12 one)
     existing_ids = find_all_existing_media()
     for existing_id in existing_ids:
         if delete_media(existing_id, auth):
@@ -119,7 +203,6 @@ def upload_to_wordpress(filename, content, content_type):
         else:
             print(f"  Warning: Could not delete file (ID: {existing_id})")
 
-    # Wait for WordPress to fully process deletions
     if existing_ids:
         print("  Waiting for WordPress to process deletions...")
         time.sleep(2)
@@ -150,7 +233,6 @@ def process_emails():
     mail.login(GMAIL_USER, GMAIL_APP_PASSWORD)
     mail.select("INBOX")
 
-    # Search unread emails from the allowed sender (or all senders if "*")
     if ALLOWED_SENDER == "*":
         search_criteria = "(UNSEEN)"
         sender_desc = "any sender"
@@ -172,16 +254,25 @@ def process_emails():
         mail.logout()
         return
 
-    # Mark older emails as read without processing (keep only the most recent)
     if len(email_ids) > 1:
         older_emails = email_ids[:-1]
         print(f"Marking {len(older_emails)} older emails as read (skipping processing)...")
         for email_id in older_emails:
             mail.store(email_id, "+FLAGS", "\\Seen")
 
-    # Process only the most recent email
     most_recent_id = email_ids[-1]
     total_uploaded = 0
+
+    # Determine upload mode based on day of month
+    if is_end_of_month():
+        mode = "combine"
+        print(f"Mode: COMBINE (last 6 days of month - will merge current + new menu)")
+    elif is_start_of_month():
+        mode = "direct"
+        print(f"Mode: DIRECT (first 5 days - late menu upload)")
+    else:
+        mode = "direct"
+        print(f"Mode: DIRECT (mid-month upload)")
 
     for email_id in [most_recent_id]:
         status, msg_data = mail.fetch(email_id, "(RFC822)")
@@ -210,31 +301,28 @@ def process_emails():
                 print(f"  Ignoring {filename} (extension not allowed)")
                 continue
 
-            content = part.get_payload(decode=True)
-
+            raw_content = part.get_payload(decode=True)
             print(f"  Attachment found: {filename}")
 
-            # Convert PDF to image if needed
-            if ext == ".pdf":
-                print(f"  Converting PDF to PNG (300 DPI)...")
-                content = convert_pdf_to_image(content)
+            new_image = attachment_to_image(raw_content, ext)
+
+            if mode == "combine":
+                current_image = download_current_menu()
+                if current_image:
+                    print("  Combining current menu (top) + new menu (bottom)...")
+                    combined = combine_images(current_image, new_image)
+                    content = image_to_png_bytes(combined)
+                else:
+                    print("  No current menu found, uploading new menu directly")
+                    content = image_to_png_bytes(new_image)
             else:
-                # For images, ensure PNG format and resize if needed
-                image = Image.open(io.BytesIO(content))
-                if image.mode in ("RGBA", "P"):
-                    image = image.convert("RGB")
-                # Resize to avoid WordPress adding "-scaled" suffix
-                image = resize_if_needed(image)
-                png_buffer = io.BytesIO()
-                image.save(png_buffer, format="PNG", optimize=True)
-                content = png_buffer.getvalue()
+                content = image_to_png_bytes(new_image)
 
             print(f"  Uploading as: {TARGET_FILENAME}")
 
             if upload_to_wordpress(TARGET_FILENAME, content, "image/png"):
                 total_uploaded += 1
 
-        # Mark as read
         mail.store(email_id, "+FLAGS", "\\Seen")
 
     mail.logout()
