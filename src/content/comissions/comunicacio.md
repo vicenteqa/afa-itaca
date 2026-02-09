@@ -1,28 +1,30 @@
 ---
-title: "Comissió de Comunicació"
-description: "Gestió de la comunicació i difusió de l'AFA"
-icon: "megaphone"
-order: 9
+title: "COMUNICACIÓ"
+description: "COMUNICACIÓ"
+icon: "bullhorn"
+order: 7
 ---
 
-## Comissió de Comunicació
+## Què fem a la comissió?
 
-La comissió de comunicació s'encarrega de difondre la informació de l'AFA i mantenir els canals de comunicació amb les famílies.
+La **Comissió Comunicació** **impulsa i gestiona els diferents canals de comunicació** entre l’AFA i la resta de la comunitat educativa.
 
-### Funcions principals
+El nostre objectiu és **apropar l’AFA a la comunitat** donant a conèixer les tasques que fa i informar dels serveis que s’hi gestionen.
 
-- Gestió de xarxes socials i web
-- Elaboració de butlletins informatius
-- Disseny de materials de comunicació
-- Coordinació amb altres comissions per difondre activitats
+La comissió coordina la comunicació interna i externa de l’AFA (correu electrònic, compte d’Instagram i pàgina web).
 
-### Canals de comunicació
+**Dissenyem el material gràfic** amb el que es fa difusió de les activitats que s’organitzen des de les diferents comissions (cartells, fulletons, vídeos, etc.) i creem la documentació necessària per a la seva gestió.
 
-- Web de l'AFA
-- Instagram: @afa_itaca_vng
-- Butlletí electrònic
-- Cartells i comunicats
+Hem dissenyat i creat íntegrament aquesta web i ens encarreguem de la seva actualització.
 
-### Com participar
+![](/images/wp/5f7da340-cabecera-comunicacio.jpg)
 
-Si tens habilitats en comunicació, disseny o xarxes socials, aquesta és la teva comissió!
+*Vols fer una consulta o unir-te a la comissió? Contacta amb nosaltres!*
+
+**[comunicacio@afaitaca.org](mailto:comunicacio@afaitaca.org)**
+
+## Fes-te família sòcia de l'AFA!
+
+##### vols saber com?
+
+[Fes clic aquí](/familia-socia/)

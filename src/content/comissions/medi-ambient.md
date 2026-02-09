@@ -1,28 +1,42 @@
 ---
-title: "Comissió de Medi Ambient"
-description: "Promoció de la sostenibilitat i cura del medi ambient"
+title: "MEDI AMBIENT"
+description: "MEDI AMBIENT"
 icon: "leaf"
-order: 5
+order: 8
 ---
 
-## Comissió de Medi Ambient
+## Què fem a la comissió?
 
-La comissió de medi ambient promou la consciència ecològica i desenvolupa iniciatives sostenibles a l'escola.
+La **Comissió Medi Ambient** dona suport i comparteix idees i projectes amb la comissió d’Agenda 21 de l’escola, esdevenint una comissió mixta.
 
-### Funcions principals
+**Busquem sensibilitzar sobre la importància de cuidar el nostre planeta, cercant eines per afavorir hàbits saludables per a les persones i el seu entorn.**
 
-- Promoció del reciclatge i reducció de residus
-- Organització d'activitats de sensibilització ambiental
-- Proposta de millores sostenibles a l'escola
-- Coordinació d'horts escolars i projectes verds
+Som una comissió que de manera transversal vetlla per la sostenibilitat en les diferents accions que es realitzen des de l’AFA.
 
-### Projectes actuals
+Col·laborem en el **manteniment de l’hort escolar**, treballem en accions que fomentin la **naturalització dels espais**, proposem **xerrades**, **contes**, **trobades** i altres accions que afavoreixin la **consciència ecològica**.
 
-- Programa de reciclatge
-- Hort escolar
-- Campanya de reducció de plàstics
-- Activitats de conscienciació
+![hort1](/images/wp/f7a2424a-hort1.jpg)
 
-### Com participar
+![hort8](/images/wp/209b53b8-hort8.jpg)
 
-Ajuda'ns a fer de l'escola un espai més sostenible. Uneix-te a la comissió!
+![hort7](/images/wp/9401f825-hort7.jpg)
+
+![hort6](/images/wp/acfc74ba-hort6.jpg)
+
+![hort5](/images/wp/8e517e2b-hort5.jpg)
+
+![hort4](/images/wp/96e2e65f-hort4.jpg)
+
+![hort3](/images/wp/a15dde61-hort3.jpg)
+
+![hort2](/images/wp/41bfe9ab-hort2.jpg)
+
+*Vols fer una consulta o unir-te a la comissió? Contacta amb nosaltres!*
+
+**[mediambient@afaitaca.org](mailto:mediambient@afaitaca.org)**
+
+## Fes-te família sòcia de l'AFA!
+
+##### vols saber com?
+
+[Fes clic aquí](/familia-socia)

@@ -1,31 +1,30 @@
 ---
-title: "Comissió de Casals d'Estiu"
-description: "Organització dels casals d'estiu i altres períodes no lectius"
-icon: "summer"
-order: 8
+title: "CASALS"
+description: "CASALS"
+icon: "campground"
+order: 4
 ---
 
-## Comissió de Casals d'Estiu
+## Servei de Casals
 
-La comissió de casals d'estiu organitza activitats lúdiques i educatives durant els períodes de vacances escolars.
+L’AFA ofereix el casalet de juny i el casal d’estiu gestionat actualment per l’associació Kitxalla.
 
-### Funcions principals
+Col·laborem estretament amb Kitxalla per a perfilar propostes lúdiques de qualitat. També fem d’enllaç entre l’associació Kitxalla i les famílies de l’escola vetllant especialment perquè la comunicació entre elles sigui fluïda.
 
-- Planificació dels casals d'estiu
-- Selecció de monitors i activitats
-- Gestió d'inscripcions
-- Seguiment de la qualitat del casal
+Informació i inscripció:
 
-### Períodes
+– Casalet de juny
 
-- Casal d'estiu (juliol)
-- Casal de Setmana Santa
-- Casal de Nadal
+– [Casal d’estiu](https://kitxalla.org/2024-casal-itaca-i-cossetania)
 
-### Activitats
+![](/images/wp/7d32222b-menjador-acollida-casals-1024x683.jpg)
 
-Oferim una gran varietat d'activitats: tallers, esports, excursions, jocs d'aigua, manualitats i molt més!
+*Vols fer una consulta o unir-te a la comissió? Contacta amb nosaltres!*
 
-### Com participar
+[**casal@afaitaca.org**](mailto:casal@afaitaca.org)
 
-Si vols col·laborar en l'organització o tens propostes, contacta amb nosaltres!
+## Fes-te família sòcia de l'AFA!
+
+##### vols saber com?
+
+[Fes clic aquí](/familia-socia)

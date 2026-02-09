@@ -18,13 +18,12 @@ const blog = defineCollection({
 
 const noticies = defineCollection({
 	loader: glob({ base: './src/content/noticies', pattern: '**/*.{md,mdx}' }),
-	schema: ({ image }) =>
-		z.object({
-			title: z.string(),
-			description: z.string(),
-			pubDate: z.coerce.date(),
-			heroImage: image().optional(),
-		}),
+	schema: z.object({
+		title: z.string(),
+		description: z.string(),
+		pubDate: z.coerce.date(),
+		heroImage: z.string().optional(),
+	}),
 });
 
 const documents = defineCollection({
