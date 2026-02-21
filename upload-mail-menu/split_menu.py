@@ -8,6 +8,7 @@ from the combined image, leaving only the current month's menu.
 import os
 import sys
 import io
+import re
 import time
 import requests
 from requests.auth import HTTPBasicAuth
@@ -20,8 +21,8 @@ WORDPRESS_URL = os.environ.get("WORDPRESS_URL")
 WORDPRESS_USER = os.environ.get("WORDPRESS_USER")
 WORDPRESS_APP_PASSWORD = os.environ.get("WORDPRESS_APP_PASSWORD")
 
-TARGET_FILENAME = "menjador.png"
 HEADERS = {"User-Agent": "Mozilla/5.0 (compatible; MenuUploader/1.0)"}
+MENU_PAGE_ID = 3224
 
 
 def find_menu_media():
@@ -84,10 +85,48 @@ def upload_image(filename, image, auth):
 
     if response.status_code == 201:
         data = response.json()
-        print(f"Uploaded: {filename} -> {data.get('source_url', 'URL not available')}")
-        return True
+        source_url = data.get("source_url", "")
+        print(f"Uploaded: {filename} -> {source_url}")
+        return source_url
     else:
         print(f"Error uploading: {response.status_code} - {response.text}")
+        return None
+
+
+def update_page_iframe(new_source_url, auth):
+    """Update the iframe src in the WordPress menu page to point to the new image URL."""
+    url = f"{WORDPRESS_URL.rstrip('/')}/wp-json/wp/v2/pages/{MENU_PAGE_ID}"
+
+    response = requests.get(url, auth=auth, headers=HEADERS)
+    if response.status_code != 200:
+        print(f"Error fetching page {MENU_PAGE_ID}: {response.status_code}")
+        return False
+
+    page = response.json()
+    content = page["content"]["raw"]
+
+    new_content = re.sub(
+        r'https?://[^"]*?/wp-content/uploads/[^"]*menjador[^"]*\.png',
+        new_source_url,
+        content,
+    )
+
+    if new_content == content:
+        print("Warning: Could not find menjador iframe URL to update in page content")
+        return False
+
+    response = requests.post(
+        url,
+        json={"content": new_content},
+        auth=auth,
+        headers=HEADERS,
+    )
+
+    if response.status_code == 200:
+        print(f"Updated page iframe to: {new_source_url}")
+        return True
+    else:
+        print(f"Error updating page: {response.status_code} - {response.text[:200]}")
         return False
 
 
@@ -113,6 +152,22 @@ def main():
     bottom = split_bottom_half(image)
     print(f"Cropped to bottom half: {bottom.width}x{bottom.height}")
 
+    # Extract the second month from the combined filename (e.g. menjador020326.png -> 03, 26)
+    # Combined: menjadorMMmmYY.png (MM=current month, mm=next month, YY=year)
+    # Single:   menjadorMMYY.png
+    basename = source_url.rsplit("/", 1)[-1]  # e.g. "menjador020326.png"
+    match = re.match(r'menjador(\d{2})(\d{2})(\d{2})\.png', basename)
+    if match:
+        # Combined image: use second month + year
+        second_month = match.group(2)
+        year = match.group(3)
+        target_filename = f"menjador{second_month}{year}.png"
+        print(f"Combined filename detected: {basename} -> keeping month {second_month}")
+    else:
+        # Single month image or unexpected format, keep as-is
+        print(f"Single-month filename: {basename}, nothing to rename")
+        target_filename = basename
+
     # Delete old and upload new
     if delete_media(media_id, auth):
         print(f"Deleted old image (ID: {media_id})")
@@ -120,7 +175,9 @@ def main():
     else:
         print("Warning: Could not delete old image, uploading anyway")
 
-    upload_image(TARGET_FILENAME, bottom, auth)
+    new_source_url = upload_image(target_filename, bottom, auth)
+    if new_source_url:
+        update_page_iframe(new_source_url, auth)
     print("Done.")
 
 

@@ -11,9 +11,10 @@ import email
 import os
 import sys
 import io
+import re
 import time
 import calendar
-from datetime import date
+from datetime import date, timedelta
 from email.header import decode_header
 import requests
 from requests.auth import HTTPBasicAuth
@@ -32,14 +33,69 @@ WORDPRESS_USER = os.environ.get("WORDPRESS_USER")
 WORDPRESS_APP_PASSWORD = os.environ.get("WORDPRESS_APP_PASSWORD")
 
 ALLOWED_EXTENSIONS = {".pdf", ".jpg", ".jpeg", ".png"}
-TARGET_FILENAME = "menjador.png"
+MENU_PAGE_ID = 3224
+
+
+def get_target_filename(mode):
+    """Generate filename like menjadorMMYY.png based on upload mode."""
+    today = date.today()
+    if mode == "combine":
+        # Combining = adding next month's menu
+        if today.month == 12:
+            target = date(today.year + 1, 1, 1)
+        else:
+            target = date(today.year, today.month + 1, 1)
+        # Filename includes both months: current + next
+        return f"menjador{today.month:02d}{target.month:02d}{today.year % 100:02d}.png"
+    else:
+        # Direct = menu for current month
+        return f"menjador{today.month:02d}{today.year % 100:02d}.png"
+
+
+def update_page_iframe(new_source_url, auth):
+    """Update the iframe src in the WordPress menu page to point to the new image URL."""
+    url = f"{WORDPRESS_URL.rstrip('/')}/wp-json/wp/v2/pages/{MENU_PAGE_ID}"
+    headers = {"User-Agent": "Mozilla/5.0 (compatible; MenuUploader/1.0)"}
+
+    response = requests.get(url, auth=auth, headers=headers)
+    if response.status_code != 200:
+        print(f"  Error fetching page {MENU_PAGE_ID}: {response.status_code}")
+        return False
+
+    page = response.json()
+    content = page["content"]["raw"]
+
+    # Replace the full menjador image URL in the iframe src
+    new_content = re.sub(
+        r'https?://[^"]*?/wp-content/uploads/[^"]*menjador[^"]*\.png',
+        new_source_url,
+        content,
+    )
+
+    if new_content == content:
+        print("  Warning: Could not find menjador iframe URL to update in page content")
+        return False
+
+    response = requests.post(
+        url,
+        json={"content": new_content},
+        auth=auth,
+        headers=headers,
+    )
+
+    if response.status_code == 200:
+        print(f"  Updated page iframe to: {new_source_url}")
+        return True
+    else:
+        print(f"  Error updating page: {response.status_code} - {response.text[:200]}")
+        return False
 
 
 def is_end_of_month():
     """Check if today is within the last 6 days of the month."""
     today = date.today()
     last_day = calendar.monthrange(today.year, today.month)[1]
-    return today.day > last_day - 6
+    return today.day >= last_day - 6
 
 
 def is_start_of_month():
@@ -218,11 +274,12 @@ def upload_to_wordpress(filename, content, content_type):
 
     if response.status_code == 201:
         data = response.json()
-        print(f"  Uploaded: {filename} -> {data.get('source_url', 'URL not available')}")
-        return True
+        source_url = data.get("source_url", "")
+        print(f"  Uploaded: {filename} -> {source_url}")
+        return source_url
     else:
         print(f"  Error uploading {filename}: {response.status_code} - {response.text}")
-        return False
+        return None
 
 
 def process_emails():
@@ -263,8 +320,12 @@ def process_emails():
     most_recent_id = email_ids[-1]
     total_uploaded = 0
 
-    # Determine upload mode based on day of month
-    if is_end_of_month():
+    # Determine upload mode based on trigger type and day of month
+    event_name = os.environ.get("GITHUB_EVENT_NAME", "")
+    if event_name == "workflow_dispatch":
+        mode = "combine"
+        print(f"Mode: COMBINE (manual trigger - always combines)")
+    elif is_end_of_month():
         mode = "combine"
         print(f"Mode: COMBINE (last 6 days of month - will merge current + new menu)")
     elif is_start_of_month():
@@ -318,10 +379,14 @@ def process_emails():
             else:
                 content = image_to_png_bytes(new_image)
 
-            print(f"  Uploading as: {TARGET_FILENAME}")
+            target_filename = get_target_filename(mode)
+            print(f"  Uploading as: {target_filename}")
 
-            if upload_to_wordpress(TARGET_FILENAME, content, "image/png"):
+            source_url = upload_to_wordpress(target_filename, content, "image/png")
+            if source_url:
                 total_uploaded += 1
+                auth = HTTPBasicAuth(WORDPRESS_USER, WORDPRESS_APP_PASSWORD)
+                update_page_iframe(source_url, auth)
 
         mail.store(email_id, "+FLAGS", "\\Seen")
 

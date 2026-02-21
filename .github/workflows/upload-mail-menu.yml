@@ -34,4 +34,5 @@ jobs:
           WORDPRESS_URL: ${{ secrets.WORDPRESS_URL }}
           WORDPRESS_USER: ${{ secrets.WORDPRESS_USER }}
           WORDPRESS_APP_PASSWORD: ${{ secrets.WORDPRESS_APP_PASSWORD }}
+          GITHUB_EVENT_NAME: ${{ github.event_name }}
         run: python upload-mail-menu/upload_attachments.py
