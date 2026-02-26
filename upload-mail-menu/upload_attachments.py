@@ -9,12 +9,12 @@ with the new one (bottom). During the first 5 days, uploads directly
 import imaplib
 import email
 import os
+import re
 import sys
 import io
-import re
 import time
 import calendar
-from datetime import date, timedelta
+from datetime import date, datetime
 from email.header import decode_header
 import requests
 from requests.auth import HTTPBasicAuth
@@ -33,62 +33,8 @@ WORDPRESS_USER = os.environ.get("WORDPRESS_USER")
 WORDPRESS_APP_PASSWORD = os.environ.get("WORDPRESS_APP_PASSWORD")
 
 ALLOWED_EXTENSIONS = {".pdf", ".jpg", ".jpeg", ".png"}
+TARGET_FILENAME = "menjador.jpg"
 MENU_PAGE_ID = 3224
-
-
-def get_target_filename(mode):
-    """Generate filename like menjadorMMYY.png based on upload mode."""
-    today = date.today()
-    if mode == "combine":
-        # Combining = adding next month's menu
-        if today.month == 12:
-            target = date(today.year + 1, 1, 1)
-        else:
-            target = date(today.year, today.month + 1, 1)
-        # Filename includes both months: current + next
-        return f"menjador{today.month:02d}{target.month:02d}{today.year % 100:02d}.png"
-    else:
-        # Direct = menu for current month
-        return f"menjador{today.month:02d}{today.year % 100:02d}.png"
-
-
-def update_page_iframe(new_source_url, auth):
-    """Update the iframe src in the WordPress menu page to point to the new image URL."""
-    url = f"{WORDPRESS_URL.rstrip('/')}/wp-json/wp/v2/pages/{MENU_PAGE_ID}"
-    headers = {"User-Agent": "Mozilla/5.0 (compatible; MenuUploader/1.0)"}
-
-    response = requests.get(url, auth=auth, headers=headers)
-    if response.status_code != 200:
-        print(f"  Error fetching page {MENU_PAGE_ID}: {response.status_code}")
-        return False
-
-    page = response.json()
-    content = page["content"]["raw"]
-
-    # Replace the full menjador image URL in the iframe src
-    new_content = re.sub(
-        r'https?://[^"]*?/wp-content/uploads/[^"]*menjador[^"]*\.png',
-        new_source_url,
-        content,
-    )
-
-    if new_content == content:
-        print("  Warning: Could not find menjador iframe URL to update in page content")
-        return False
-
-    response = requests.post(
-        url,
-        json={"content": new_content},
-        auth=auth,
-        headers=headers,
-    )
-
-    if response.status_code == 200:
-        print(f"  Updated page iframe to: {new_source_url}")
-        return True
-    else:
-        print(f"  Error updating page: {response.status_code} - {response.text[:200]}")
-        return False
 
 
 def is_end_of_month():
@@ -114,7 +60,7 @@ def get_filename(part):
     return None
 
 
-def resize_if_needed(image, max_size=2560):
+def resize_if_needed(image, max_size=1800):
     """Resize image if any dimension exceeds max_size, preserving aspect ratio."""
     width, height = image.size
     if width <= max_size and height <= max_size:
@@ -128,18 +74,6 @@ def resize_if_needed(image, max_size=2560):
         new_width = int(width * max_size / height)
 
     return image.resize((new_width, new_height), Image.LANCZOS)
-
-
-def convert_pdf_to_image(pdf_content):
-    """Convert PDF bytes to PNG image bytes (first page only, high quality)."""
-    images = convert_from_bytes(pdf_content, dpi=300, first_page=1, last_page=1)
-    if not images:
-        raise ValueError("Could not convert PDF to image")
-    image = images[0]
-    image = resize_if_needed(image)
-    png_buffer = io.BytesIO()
-    image.save(png_buffer, format="PNG", optimize=True)
-    return png_buffer.getvalue()
 
 
 def attachment_to_image(content, ext):
@@ -157,15 +91,17 @@ def attachment_to_image(content, ext):
         return resize_if_needed(image)
 
 
-def image_to_png_bytes(image):
-    """Convert a PIL Image to PNG bytes."""
-    png_buffer = io.BytesIO()
-    image.save(png_buffer, format="PNG", optimize=True)
-    return png_buffer.getvalue()
+def image_to_jpeg_bytes(image, quality=85):
+    """Convert a PIL Image to JPEG bytes."""
+    if image.mode in ("RGBA", "P"):
+        image = image.convert("RGB")
+    jpeg_buffer = io.BytesIO()
+    image.save(jpeg_buffer, format="JPEG", quality=quality, optimize=True)
+    return jpeg_buffer.getvalue()
 
 
 def download_current_menu():
-    """Download the current menjador.png from WordPress media library."""
+    """Download the current menjador image from WordPress media library."""
     base_url = f"{WORDPRESS_URL.rstrip('/')}/wp-json/wp/v2/media"
     headers = {"User-Agent": "Mozilla/5.0 (compatible; MenuUploader/1.0)"}
     response = requests.get(base_url, params={"per_page": 100}, headers=headers)
@@ -177,7 +113,7 @@ def download_current_menu():
     for media in response.json():
         slug = media.get("slug", "")
         source_url = media.get("source_url", "")
-        if slug.startswith("menjador") or "/menjador" in source_url:
+        if (slug.startswith("menjador") or "/menjador" in source_url) and "scaled" not in slug:
             print(f"  Downloading current menu from: {source_url}")
             img_response = requests.get(source_url, headers=headers)
             if img_response.status_code == 200:
@@ -192,7 +128,6 @@ def download_current_menu():
 
 def combine_images(top_image, bottom_image):
     """Combine two images vertically (top above bottom), scaling to same width."""
-    # Scale both to the same width
     target_width = max(top_image.width, bottom_image.width)
 
     if top_image.width != target_width:
@@ -274,12 +209,64 @@ def upload_to_wordpress(filename, content, content_type):
 
     if response.status_code == 201:
         data = response.json()
-        source_url = data.get("source_url", "")
-        print(f"  Uploaded: {filename} -> {source_url}")
-        return source_url
+        print(f"  Uploaded: {filename} -> {data.get('source_url', 'URL not available')}")
+        return True
     else:
         print(f"  Error uploading {filename}: {response.status_code} - {response.text}")
-        return None
+        return False
+
+
+def update_page_iframe(version):
+    """Update the menu iframe URL in the WordPress page with a cache-busting version."""
+    auth = HTTPBasicAuth(WORDPRESS_USER, WORDPRESS_APP_PASSWORD)
+    headers = {"User-Agent": "Mozilla/5.0 (compatible; MenuUploader/1.0)"}
+    base = WORDPRESS_URL.rstrip('/')
+
+    response = requests.get(
+        f"{base}/wp-json/wp/v2/pages/{MENU_PAGE_ID}",
+        params={"context": "edit"},
+        auth=auth,
+        headers=headers,
+    )
+    if response.status_code != 200:
+        print(f"  Could not fetch page: {response.status_code}")
+        return False
+
+    elementor_data = response.json().get("meta", {}).get("_elementor_data", "")
+    if not elementor_data:
+        print("  No Elementor data found in page")
+        return False
+
+    # Replace only the menjador file directly in /uploads/ (not subfolders like 2022/05/menjador2.jpg)
+    new_elementor_data = re.sub(
+        r'\\/uploads\\/menjador[^\\/\\"]*',
+        f'\\/uploads\\/{TARGET_FILENAME}?v={version}',
+        elementor_data,
+    )
+
+    if new_elementor_data == elementor_data:
+        print("  iframe URL unchanged (pattern not found)")
+        return False
+
+    update_resp = requests.post(
+        f"{base}/wp-json/wp/v2/pages/{MENU_PAGE_ID}",
+        auth=auth,
+        headers={**headers, "Content-Type": "application/json"},
+        json={"meta": {"_elementor_data": new_elementor_data}},
+    )
+    if update_resp.status_code != 200:
+        print(f"  Error updating page: {update_resp.status_code}")
+        return False
+
+    print(f"  iframe updated -> {TARGET_FILENAME}?v={version}")
+
+    cache_resp = requests.delete(
+        f"{base}/wp-json/elementor/v1/cache",
+        auth=auth,
+        headers=headers,
+    )
+    print(f"  Elementor cache cleared (status: {cache_resp.status_code})")
+    return True
 
 
 def process_emails():
@@ -370,23 +357,23 @@ def process_emails():
             if mode == "combine":
                 current_image = download_current_menu()
                 if current_image:
+                    current_image = resize_if_needed(current_image)
                     print("  Combining current menu (top) + new menu (bottom)...")
                     combined = combine_images(current_image, new_image)
-                    content = image_to_png_bytes(combined)
+                    content = image_to_jpeg_bytes(combined)
                 else:
                     print("  No current menu found, uploading new menu directly")
-                    content = image_to_png_bytes(new_image)
+                    content = image_to_jpeg_bytes(new_image)
             else:
-                content = image_to_png_bytes(new_image)
+                content = image_to_jpeg_bytes(new_image)
 
-            target_filename = get_target_filename(mode)
-            print(f"  Uploading as: {target_filename}")
+            print(f"  Uploading as: {TARGET_FILENAME}")
 
-            source_url = upload_to_wordpress(target_filename, content, "image/png")
-            if source_url:
+            if upload_to_wordpress(TARGET_FILENAME, content, "image/jpeg"):
                 total_uploaded += 1
-                auth = HTTPBasicAuth(WORDPRESS_USER, WORDPRESS_APP_PASSWORD)
-                update_page_iframe(source_url, auth)
+                version = datetime.now().strftime("%Y%m%d%H%M")
+                print(f"  Updating page iframe (v={version})...")
+                update_page_iframe(version)
 
         mail.store(email_id, "+FLAGS", "\\Seen")
 

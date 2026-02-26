@@ -6,10 +6,11 @@ from the combined image, leaving only the current month's menu.
 """
 
 import os
+import re
 import sys
 import io
-import re
 import time
+from datetime import date, datetime
 import requests
 from requests.auth import HTTPBasicAuth
 from dotenv import load_dotenv
@@ -21,8 +22,9 @@ WORDPRESS_URL = os.environ.get("WORDPRESS_URL")
 WORDPRESS_USER = os.environ.get("WORDPRESS_USER")
 WORDPRESS_APP_PASSWORD = os.environ.get("WORDPRESS_APP_PASSWORD")
 
-HEADERS = {"User-Agent": "Mozilla/5.0 (compatible; MenuUploader/1.0)"}
+TARGET_FILENAME = "menjador.jpg"
 MENU_PAGE_ID = 3224
+HEADERS = {"User-Agent": "Mozilla/5.0 (compatible; MenuUploader/1.0)"}
 
 
 def find_menu_media():
@@ -37,7 +39,7 @@ def find_menu_media():
     for media in response.json():
         slug = media.get("slug", "")
         source_url = media.get("source_url", "")
-        if slug.startswith("menjador") or "/menjador" in source_url:
+        if (slug.startswith("menjador") or "/menjador" in source_url) and "scaled" not in slug:
             return media.get("id"), source_url
 
     return None, None
@@ -69,65 +71,80 @@ def delete_media(media_id, auth):
 
 
 def upload_image(filename, image, auth):
-    """Upload a PIL Image to WordPress as PNG."""
-    png_buffer = io.BytesIO()
-    image.save(png_buffer, format="PNG", optimize=True)
-    content = png_buffer.getvalue()
+    """Upload a PIL Image to WordPress as JPEG."""
+    if image.mode in ("RGBA", "P"):
+        image = image.convert("RGB")
+    jpeg_buffer = io.BytesIO()
+    image.save(jpeg_buffer, format="JPEG", quality=85, optimize=True)
+    content = jpeg_buffer.getvalue()
 
     url = f"{WORDPRESS_URL.rstrip('/')}/wp-json/wp/v2/media"
     headers = {
         **HEADERS,
         "Content-Disposition": f'attachment; filename="{filename}"',
-        "Content-Type": "image/png",
+        "Content-Type": "image/jpeg",
     }
 
     response = requests.post(url, headers=headers, data=content, auth=auth)
 
     if response.status_code == 201:
         data = response.json()
-        source_url = data.get("source_url", "")
-        print(f"Uploaded: {filename} -> {source_url}")
-        return source_url
+        print(f"Uploaded: {filename} -> {data.get('source_url', 'URL not available')}")
+        return True
     else:
         print(f"Error uploading: {response.status_code} - {response.text}")
-        return None
-
-
-def update_page_iframe(new_source_url, auth):
-    """Update the iframe src in the WordPress menu page to point to the new image URL."""
-    url = f"{WORDPRESS_URL.rstrip('/')}/wp-json/wp/v2/pages/{MENU_PAGE_ID}"
-
-    response = requests.get(url, auth=auth, headers=HEADERS)
-    if response.status_code != 200:
-        print(f"Error fetching page {MENU_PAGE_ID}: {response.status_code}")
         return False
 
-    page = response.json()
-    content = page["content"]["raw"]
 
-    new_content = re.sub(
-        r'https?://[^"]*?/wp-content/uploads/[^"]*menjador[^"]*\.png',
-        new_source_url,
-        content,
-    )
+def update_page_iframe(version, auth):
+    """Update the menu iframe URL in the WordPress page with a cache-busting version."""
+    base = WORDPRESS_URL.rstrip('/')
 
-    if new_content == content:
-        print("Warning: Could not find menjador iframe URL to update in page content")
-        return False
-
-    response = requests.post(
-        url,
-        json={"content": new_content},
+    response = requests.get(
+        f"{base}/wp-json/wp/v2/pages/{MENU_PAGE_ID}",
+        params={"context": "edit"},
         auth=auth,
         headers=HEADERS,
     )
-
-    if response.status_code == 200:
-        print(f"Updated page iframe to: {new_source_url}")
-        return True
-    else:
-        print(f"Error updating page: {response.status_code} - {response.text[:200]}")
+    if response.status_code != 200:
+        print(f"Could not fetch page: {response.status_code}")
         return False
+
+    elementor_data = response.json().get("meta", {}).get("_elementor_data", "")
+    if not elementor_data:
+        print("No Elementor data found in page")
+        return False
+
+    # Replace only the menjador file directly in /uploads/ (not subfolders like 2022/05/menjador2.jpg)
+    new_elementor_data = re.sub(
+        r'\\/uploads\\/menjador[^\\/\\"]*',
+        f'\\/uploads\\/{TARGET_FILENAME}?v={version}',
+        elementor_data,
+    )
+
+    if new_elementor_data == elementor_data:
+        print("iframe URL unchanged (pattern not found)")
+        return False
+
+    update_resp = requests.post(
+        f"{base}/wp-json/wp/v2/pages/{MENU_PAGE_ID}",
+        auth=auth,
+        headers={**HEADERS, "Content-Type": "application/json"},
+        json={"meta": {"_elementor_data": new_elementor_data}},
+    )
+    if update_resp.status_code != 200:
+        print(f"Error updating page: {update_resp.status_code}")
+        return False
+
+    print(f"iframe updated -> {TARGET_FILENAME}?v={version}")
+
+    cache_resp = requests.delete(
+        f"{base}/wp-json/elementor/v1/cache",
+        auth=auth,
+        headers=HEADERS,
+    )
+    print(f"Elementor cache cleared (status: {cache_resp.status_code})")
+    return True
 
 
 def main():
@@ -152,22 +169,6 @@ def main():
     bottom = split_bottom_half(image)
     print(f"Cropped to bottom half: {bottom.width}x{bottom.height}")
 
-    # Extract the second month from the combined filename (e.g. menjador020326.png -> 03, 26)
-    # Combined: menjadorMMmmYY.png (MM=current month, mm=next month, YY=year)
-    # Single:   menjadorMMYY.png
-    basename = source_url.rsplit("/", 1)[-1]  # e.g. "menjador020326.png"
-    match = re.match(r'menjador(\d{2})(\d{2})(\d{2})\.png', basename)
-    if match:
-        # Combined image: use second month + year
-        second_month = match.group(2)
-        year = match.group(3)
-        target_filename = f"menjador{second_month}{year}.png"
-        print(f"Combined filename detected: {basename} -> keeping month {second_month}")
-    else:
-        # Single month image or unexpected format, keep as-is
-        print(f"Single-month filename: {basename}, nothing to rename")
-        target_filename = basename
-
     # Delete old and upload new
     if delete_media(media_id, auth):
         print(f"Deleted old image (ID: {media_id})")
@@ -175,9 +176,10 @@ def main():
     else:
         print("Warning: Could not delete old image, uploading anyway")
 
-    new_source_url = upload_image(target_filename, bottom, auth)
-    if new_source_url:
-        update_page_iframe(new_source_url, auth)
+    if upload_image(TARGET_FILENAME, bottom, auth):
+        version = datetime.now().strftime("%Y%m%d%H%M")
+        print(f"Updating page iframe (v={version})...")
+        update_page_iframe(version, auth)
     print("Done.")
 
 
