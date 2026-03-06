@@ -10,6 +10,4 @@ La comissió de menjador s'encarrega del seguiment del servei d'espai de migdia 
 
 Properament ampliarem aquesta informació.
 
-
-
-Preu menjador 7,9€
+Preu menjador 8€
