@@ -11,17 +11,6 @@ const noticies = defineCollection({
 	}),
 });
 
-const documents = defineCollection({
-	loader: glob({ base: './src/content/documents', pattern: '**/*.{md,mdx}' }),
-	schema: z.object({
-		title: z.string(),
-		description: z.string(),
-		category: z.enum(['Menús', 'Calendaris', 'Normatives', 'Altres']),
-		file: z.string(),
-		date: z.coerce.date(),
-	}),
-});
-
 const pages = defineCollection({
 	loader: glob({ base: './src/content/pages', pattern: '**/*.{md,mdx}' }),
 	schema: z.object({
@@ -43,4 +32,5 @@ const comissions = defineCollection({
 	}),
 });
 
-export const collections = { noticies, documents, pages, comissions };
+export const collections = { noticies, pages, comissions };
+
