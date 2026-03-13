@@ -1,0 +1,65 @@
+---
+import BaseHead from '../components/BaseHead.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import { SITE_TITLE } from '../consts';
+---
+
+<!doctype html>
+<html lang="ca">
+	<head>
+		<BaseHead title={`Avís Legal | ${SITE_TITLE}`} description="Informació legal i privacitat de l'AFA Escola Ítaca" />
+	</head>
+	<body>
+		<Header />
+		<main>
+			<article class="legal-minimal">
+				<h1>Avís Legal i Privacitat</h1>
+				
+				<p>Aquest lloc web és gestionat per l'<strong>ASSOCIACIÓ DE FAMÍLIES D’ALUMNES DE L’ESCOLA ÍTACA DE VILANOVA I LA GELTRÚ</strong> (AFA ESCOLA ÍTACA), amb CIF G63886956, domicili a la Rambla d’Arnau de Vilanova, 65 (Vilanova i la Geltrú) i inscrita al registre d’associacions amb el número 31027.</p>
+
+				<section>
+					<h2>Protecció de dades</h2>
+					<p>Les dades que ens faciliteu per correu electrònic o formularis es tractaran amb l'única finalitat de gestionar la comunicació amb les famílies i les activitats de l'associació. No cedirem les vostres dades a tercers, excepte per obligació legal.</p>
+					<p>Podeu exercir els vostres drets d'accés, rectificació o supressió enviant un correu a <a href="mailto:info@afaitaca.org">info@afaitaca.org</a>.</p>
+				</section>
+
+				<section>
+					<h2>Galetes (cookies)</h2>
+					<p>Aquesta web <strong>no utilitza galetes de rastreig ni publicitàries</strong>. Només fem servir galetes tècniques imprescindibles per al correcte funcionament de la pàgina, les quals no recullen cap informació personal.</p>
+				</section>
+
+				<section>
+					<h2>Propietat i Responsabilitat</h2>
+					<p>Tots els continguts d'aquesta web són propietat de l'AFA ESCOLA ÍTACA o dels seus autors. L'associació no es fa responsable de possibles errors tècnics o continguts d'enllaços externs.</p>
+				</section>
+			</article>
+		</main>
+		<Footer />
+	</body>
+</html>
+
+<style>
+	.legal-minimal {
+		max-width: 700px;
+		margin: 0 auto;
+	}
+	h1 {
+		font-size: 2.2rem;
+		margin-bottom: 2rem;
+		text-align: center;
+	}
+	h2 {
+		font-size: 1.3rem;
+		margin-top: 2rem;
+		color: var(--accent-dark);
+		border-bottom: 2px solid var(--accent-pastel);
+		display: inline-block;
+		margin-bottom: 1rem;
+	}
+	p {
+		margin-bottom: 1.2rem;
+		font-size: 1rem;
+		color: var(--text-main);
+	}
+</style>
