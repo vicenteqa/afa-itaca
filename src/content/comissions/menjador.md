@@ -47,7 +47,7 @@ Jocs i Taula gestiona directament les inscripcions a través de la seva platafor
 
 En aquesta secció podeu consultar tota la documentació relativa a l'alimentació:
 
-*   📄 [**Menú del mes:**](https://www.jocsitaula.com/) Podeu consultar el menú actualitzat elaborat per Jocs i Taula.
+*   📄 [**Menú del mes:**](/menu-del-mes) Podeu consultar el menú actualitzat elaborat per Jocs i Taula.
 *   ⚠️ [**Al·lèrgies i intoleràncies**](https://drive.google.com/file/d/1A80O1GmP-RjB_ldz81Iq0tG1wIQ96vbL/view?usp=drive_link)
 *   🥗 [**Propostes de sopars**](https://drive.google.com/file/d/1_zLER7KruaOIcb9DOFubZfciRYT4joie/view?usp=drive_link) (per a una dieta equilibrada)
 

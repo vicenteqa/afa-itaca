@@ -46,6 +46,14 @@ collections:
           - {label: "Descripció", name: "description", widget: "text"}
           - {label: "Contingut", name: "body", widget: "markdown"}
 
+      - label: "Menú del Mes"
+        name: "menu-del-mes"
+        file: "src/content/pages/menu-del-mes.md"
+        fields:
+          - {label: "Títol", name: "title", widget: "string"}
+          - {label: "Descripció", name: "description", widget: "text"}
+          - {label: "Contingut", name: "body", widget: "markdown"}
+
       - label: "Documents d'Interés"
         name: "documents-page"
         file: "src/content/pages/documents.md"

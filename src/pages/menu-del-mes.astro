@@ -1,0 +1,82 @@
+---
+import BaseHead from '../components/BaseHead.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import { SITE_TITLE } from '../consts';
+import { getEntry, render } from 'astro:content';
+
+const page = await getEntry('pages', 'menu-del-mes');
+if (!page) throw new Error('Pàgina no trobada');
+const { Content } = await render(page);
+---
+
+<!doctype html>
+<html lang="ca">
+	<head>
+		<BaseHead title={`${page.data.title} | ${SITE_TITLE}`} description={page.data.description} />
+	</head>
+	<body>
+		<Header />
+		<main>
+			<section class="hero">
+				<h1>{page.data.title}</h1>
+				<p class="description">{page.data.description}</p>
+			</section>
+
+			<article class="prose">
+				<div class="content">
+					<Content />
+					<!-- Imatge amb cache-busting per assegurar que es veu l'última versió -->
+					<div class="menu-container">
+						<a href={`/uploads/menjador.jpg?v=${new Date().getTime()}`} target="_blank" title="Amplia el menú">
+							<img 
+								src={`/uploads/menjador.jpg?v=${new Date().getTime()}`} 
+								alt="Menú del mes de l'escola Ítaca" 
+							/>
+						</a>
+					</div>
+				</div>
+				<div class="back-link">
+					<a href="/comissions/menjador">← Torna a la Comissió de Menjador</a>
+				</div>
+			</article>
+		</main>
+		<Footer />
+	</body>
+</html>
+
+<style>
+	main {
+		width: 100%;
+	}
+	.content {
+		max-width: 960px;
+		margin: 0 auto;
+		padding: 2rem;
+		text-align: center;
+	}
+	/* Estils específics per a la imatge del menú */
+	.content :global(img) {
+		max-width: 100%;
+		height: auto;
+		border: 5px solid white;
+		box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+		margin: 2rem 0;
+	}
+	.prose {
+		width: 100%;
+		max-width: none;
+		color: rgb(var(--gray-dark));
+	}
+	.back-link {
+		max-width: 960px;
+		margin: 2rem auto;
+		padding: 0 2rem 4rem;
+		text-align: center;
+	}
+	.back-link a {
+		color: var(--accent-dark);
+		text-decoration: none;
+		font-weight: 600;
+	}
+</style>
