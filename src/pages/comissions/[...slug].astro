@@ -25,13 +25,15 @@ const { Content } = await render(comissio);
 	<body>
 		<Header />
 		<main>
+			<section class="hero">
+				<h1>{comissio.data.title}</h1>
+				{comissio.data.description && <p class="description">{comissio.data.description}</p>}
+			</section>
+
 			<article class="prose">
-				<div class="title">
-					<h1>{comissio.data.title}</h1>
-					<p class="description">{comissio.data.description}</p>
-					<hr />
+				<div class="content">
+					<Content />
 				</div>
-				<Content />
 				<div class="back-link">
 					<a href="/">← Tornar a l'Inici</a>
 				</div>
@@ -42,26 +44,22 @@ const { Content } = await render(comissio);
 </html>
 
 <style>
-	.title {
-		margin-bottom: 2em;
-		padding: 1em 0;
-		text-align: center;
-		line-height: 1.2;
+	main {
+		width: 100%;
 	}
-	.title h1 {
-		margin: 0 0 0.5rem 0;
-		color: var(--accent-dark); /* Azul oscuro de la marca */
-		font-size: 3rem;
+	.prose {
+		width: 100%;
+		max-width: none;
 	}
-	.description {
-		margin-bottom: 0;
-		color: var(--text-light);
-		font-size: 1.2rem;
+	.content {
+		max-width: 960px;
+		margin: 0 auto;
+		padding: 3rem 2rem;
 	}
 	.back-link {
-		margin-top: 3rem;
-		padding-top: 2rem;
-		border-top: 1px solid #eee;
+		max-width: 960px;
+		margin: 0 auto;
+		padding: 0 2rem 3rem 2rem;
 	}
 	.back-link a {
 		color: var(--accent-dark);

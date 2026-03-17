@@ -19,10 +19,11 @@ const posts = (await getCollection('noticies')).sort(
 	<body>
 		<Header />
 		<main>
-			<section>
-				<div class="hero">
-					<h1>Notícies</h1>
-				</div>
+			<section class="hero">
+				<h1>Notícies</h1>
+				<p class="description">Últimes notícies i novetats de l'AFA Ítaca</p>
+			</section>
+			<section class="posts-list">
 				<ul>
 					{
 						posts.map((post) => (
@@ -49,20 +50,10 @@ const posts = (await getCollection('noticies')).sort(
 	main {
 		width: 100%;
 	}
-	.hero {
-		background: var(--accent-gradient);
-		padding: 4rem 2rem;
-		text-align: center;
-		color: white;
-	}
-	.hero h1 {
-		margin: 0 0 0.5em 0;
-		font-size: 2.5rem;
-	}
-	.hero p {
-		margin: 0;
-		font-size: 1.2rem;
-		opacity: 0.9;
+	.posts-list {
+		max-width: 1200px;
+		margin: 0 auto;
+		padding: 0 0 4rem 0;
 	}
 	ul {
 		display: flex;
@@ -70,9 +61,7 @@ const posts = (await getCollection('noticies')).sort(
 		gap: 2rem;
 		list-style-type: none;
 		margin: 0;
-		padding: 3rem 2rem;
-		max-width: 1200px;
-		margin: 0 auto;
+		padding: 0 2rem;
 	}
 	ul li {
 		width: calc(50% - 1rem);

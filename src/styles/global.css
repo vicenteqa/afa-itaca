@@ -220,3 +220,22 @@ hr {
 	clip-path: inset(50%);
 	white-space: nowrap;
 }
+
+/* Unified Hero Styles */
+.hero {
+    text-align: center;
+    padding: 1rem 0 2rem 0;
+    width: 100%;
+    margin: 0 auto;
+}
+.hero h1 {
+    margin: 0;
+    font-size: 3.5rem;
+    line-height: 1.2;
+    color: var(--accent-dark);
+}
+.description {
+    margin-top: 0.5rem;
+    font-size: 1.2rem;
+    color: var(--text-light);
+}

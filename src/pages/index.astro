@@ -22,8 +22,8 @@ const latestNews = (await getCollection('noticies'))
 		<main>
 			<section class="hero">
 				<h1>Benvinguts a l'AFA de l'escola Ítaca!</h1>
+				<p class="description">{SITE_DESCRIPTION}</p>
 			</section>
-
 			<InstagramFeed />
 
 			<section class="quick-links">
@@ -73,33 +73,7 @@ const latestNews = (await getCollection('noticies'))
 		width: 100%;
 	}
 
-	.hero {
-		background: var(--accent-gradient);
-		color: white;
-		text-align: center;
-		padding: 2rem 2rem 1rem 2rem;
-	}
-
-	.hero h1 {
-		margin: 0 0 0.5rem 0;
-		font-size: 3rem;
-		line-height: 1.2;
-	}
-
-	.hero-subtitle {
-		font-size: 1.5rem;
-		margin: 0 0 1rem 0;
-		opacity: 0.95;
-	}
-
-	.hero p {
-		font-size: 1.1rem;
-		max-width: 800px;
-		margin: 0 auto;
-		opacity: 0.9;
-	}
-
-	section {
+	main section:not(.hero) {
 		max-width: 1200px;
 		margin: 0 auto;
 		padding: 3rem 2rem;
