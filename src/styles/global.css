@@ -26,6 +26,11 @@
 
 	--box-shadow:
 		0 4px 15px rgba(1, 143, 210, 0.15), 0 8px 30px rgba(1, 143, 210, 0.1);
+	--accent-gradient: linear-gradient(
+		135deg,
+		var(--accent) 0%,
+		var(--accent-dark) 100%
+	);
 }
 
 @font-face {

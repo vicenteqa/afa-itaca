@@ -1,52 +1,57 @@
 ---
-title: "Espai de Migdia (Menjador)"
+title: "Espai de Migdia"
 description: "Gestió del menjador i del temps de lleure de l'escola Ítaca."
 icon: "utensils"
 order: 1
 ---
 
-## Què fem a la comissió?
+La **Comissió Espai de Migdia** de l'AFA vetlla per una alimentació saludable i un temps de lleure de qualitat per a l'alumnat de l'escola Ítaca. Treballem en col·laboració amb **Jocs i Taula**, l'empresa que gestiona el servei, mitjançant reunions periòdiques de seguiment.
 
-L’AFA ofereix el servei de menjador a través de Jocs i Taula, l’empresa que gestiona l’espai migdia, vetllant per una **alimentació saludable** i per oferir un **temps de lleure de qualitat**.
+Podeu conèixer més sobre el seu projecte al seu [web](http://www.jocsitaula.com/) o seguir-los a [Instagram](https://www.instagram.com/cuinadejocsitaulaitaca/).
 
-Des de la **Comissió Espai de Migdia** mantenim un contacte estret amb Jocs i Taula i ens reunim periòdicament en comissió mixta (escola -Jocs i Taula – AFA) per fer el seguiment del servei.
+## Funcionament de l'espai
 
-Si vols conèixer més sobre Jocs i Taula pots visitar el seu [web](http://www.jocsitaula.com/) i el seu [Instagram](https://www.instagram.com/cuinadejocsitaula/).
+### Horaris de menjador
+L'alumnat dina en diferents torns segons l'edat per garantir el confort i l'aforament:
 
-## Com funciona?
+*   **I3:** Dinem a les seves pròpies aules de **12:30h a 13:30h**.
+*   **I4, I5 i Primària:** Dinem al menjador de l'escola en dos torns:
+    *   **1r torn:** de 12:45h a 13:45h.
+    *   **2n torn:** de 13:45h a 14:45h.
 
-**I3 dina en les seves aules** en horari de 12:30h a 13:30h.
-**I4, I5 i primària dina en el menjador de l’escola en dos torns** establerts tenint en compte l’aforament de l’espai:
+### Temps de lleure
+Durant l'estona de descans, els infants poden participar en activitats programades, jugar lliurement o descansar. Els infants d'**I3 fan la migdiada** per respectar el seu ritme biològic.
 
-1r torn de 12:45h a les 13:45h 2n torn de 13:45h a les 14:45hDurant el **temps de lleure**, els nens i les nenes poden participar en **activitats programades**, **jugar** segons els seus interessos o **descansar** en els diferents espais de l’escola que conviden a la calma.
+## Inscripcions i Gestió (Curs 25-26)
 
-Durant l’estona de lleure, els infants més petits de l’escola (I3) fan la **migdiada**.
+Jocs i Taula gestiona directament les inscripcions a través de la seva plataforma digital:
 
-El **preu del servei** és:
-**7€** per a les famílies que fan un **ús del servei habitual** (3 o més dies fixos per setmana)
-**7,8€** per a les famílies que fan un **ús del servei esporàdic**.
+> 🌐 **Plataforma d'inscripcions:** [inscripcionsjocsitaula.com](http://inscripcionsjocsitaula.com/)
 
-Jocs i Taula ofereix també la possibilitat de demanar esmorzar:
-**0,40€** peça de fruita
-entrepà petit **1,5€**/gran **2€**								
-				
-				
-				
-**NOVETAT en la gestió del servei de menjador per aquest curs 25-26:**
-			
-**Voleu fer ús de l’Espai de Migdia?** Jocs i Taula gestiona directament les inscripcions a través de la seva plataforma: [http://inscripcionsjocsitaula.com/](http://inscripcionsjocsitaula.com/).
+*Cal utilitzar l'usuari i contrasenya rebuts per correu (reviseu la carpeta de correu brossa).*
 
-Per accedir cal introduir l’usuari i contrasenya que haureu rebut per correu electrònic (comprovar correu brossa). Per a qualsevol dubte o consulta contacteu amb la coordinadora de menjador, al telèfon **656 671 347** o envieu un correu a [menjadoritacavng@gmail.com](mailto:menjadoritacavng@gmail.com)
-				
+**Contacte de coordinació:**
+*   **Telèfon:** 656 671 347
+*   **Correu:** [menjadoritacavng@gmail.com](mailto:menjadoritacavng@gmail.com)
 
-## Menú Menjador
+## Preus del servei
 
-## [Al·lèrgies - intol·leràncies](https://drive.google.com/file/d/1A80O1GmP-RjB_ldz81Iq0tG1wIQ96vbL/view?usp=drive_link)
+| Servei | Preu |
+| :--- | :--- |
+| **Ús habitual** (3 o més dies fixos/setmana) | **7,00€** / dia |
+| **Ús esporàdic** | **7,80€** / dia |
+| **Esmorzar: Peça de fruita** | **0,40€** |
+| **Esmorzar: Entrepà petit / gran** | **1,50€ / 2,00€** |
 
-## [Propostes de sopars](https://drive.google.com/file/d/1_zLER7KruaOIcb9DOFubZfciRYT4joie/view?usp=drive_link)
+## Recursos i Menús
 
-Vols fer una consulta o unir-te a la comissió? Contacta amb nosaltres!
-[**info@afaitaca.org**](mailto:menjador@afaitaca.org)
+En aquesta secció podeu consultar tota la documentació relativa a l'alimentació:
 
-### Menú del mes
-Podeu consultar el menú actualitzat en aquesta secció. El menú és elaborat per l'empresa Jocs i Taula.
+*   📄 [**Menú del mes:**](https://www.jocsitaula.com/) Podeu consultar el menú actualitzat elaborat per Jocs i Taula.
+*   ⚠️ [**Al·lèrgies i intoleràncies**](https://drive.google.com/file/d/1A80O1GmP-RjB_ldz81Iq0tG1wIQ96vbL/view?usp=drive_link)
+*   🥗 [**Propostes de sopars**](https://drive.google.com/file/d/1_zLER7KruaOIcb9DOFubZfciRYT4joie/view?usp=drive_link) (per a una dieta equilibrada)
+
+---
+
+**Vols fer una consulta o unir-te a la comissió?**
+Contacta amb nosaltres a: [**menjador@afaitaca.org**](mailto:menjador@afaitaca.org)

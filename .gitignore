@@ -22,3 +22,7 @@ pnpm-debug.log*
 
 # jetbrains setting folder
 .idea/
+
+# agents and local config
+.agents/
+DECAP_SETUP.md
