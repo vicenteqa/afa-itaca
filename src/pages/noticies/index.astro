@@ -22,7 +22,6 @@ const posts = (await getCollection('noticies')).sort(
 			<section>
 				<div class="hero">
 					<h1>Notícies</h1>
-					<p>Mantén-te informat de les últimes novetats de l'AFA</p>
 				</div>
 				<ul>
 					{
@@ -89,11 +88,16 @@ const posts = (await getCollection('noticies')).sort(
 	}
 	ul li:first-child img {
 		width: 100%;
+		aspect-ratio: 4 / 1;
+		object-fit: cover;
 	}
 	ul li:first-child .title {
 		font-size: 2.369rem;
 	}
 	ul li img {
+		width: 100%;
+		aspect-ratio: 2 / 1;
+		object-fit: cover;
 		margin-bottom: 0.5rem;
 		border-radius: 12px;
 	}
@@ -103,7 +107,8 @@ const posts = (await getCollection('noticies')).sort(
 	.title {
 		margin: 0;
 		color: rgb(var(--black));
-		line-height: 1;
+		font-size: 1.5rem;
+		line-height: 1.2;
 	}
 	.date {
 		margin: 0;
