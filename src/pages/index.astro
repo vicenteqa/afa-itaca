@@ -29,17 +29,17 @@ const latestNews = (await getCollection('noticies'))
 			<section class="quick-links">
 				<h2>Accés ràpid</h2>
 				<div class="links-grid">
-					<a href="/noticies" class="link-card">
-						<h3>Notícies</h3>
-						<p>Estigues al dia de tot el que passa a l'escola</p>
+					<a href="/menu-del-mes" class="link-card highlight">
+						<h3>🍽️ Menú del Mes</h3>
+						<p>Consulta el menú escolar actualitzat</p>
+					</a>
+					<a href="https://www.imet.cat/doc/doc_31402494.pdf" target="_blank" rel="noopener noreferrer" class="link-card">
+						<h3>📅 Calendari Escolar</h3>
+						<p>Consulta el calendari de curs actual</p>
 					</a>
 					<a href="/lafa" class="link-card">
 						<h3>Sobre l'AFA</h3>
 						<p>Coneix qui som i què fem</p>
-					</a>
-					<a href="/menu-del-mes" class="link-card highlight">
-						<h3>🍽️ Menú del Mes</h3>
-						<p>Consulta el menú escolar actualitzat</p>
 					</a>
 				</div>
 			</section>
@@ -50,11 +50,15 @@ const latestNews = (await getCollection('noticies'))
 					{latestNews.map((post) => (
 						<article class="news-card">
 							<a href={`/noticies/${post.id}/`}>
-								<h3>{post.data.title}</h3>
 								<p class="date">
 									<FormattedDate date={post.data.pubDate} />
 								</p>
-								<p class="description">{post.data.description}</p>
+								<h3>{post.data.title}</h3>
+								<p class="news-description">
+									{post.data.description.length > 140 
+										? post.data.description.substring(0, 140) + '...' 
+										: post.data.description}
+								</p>
 							</a>
 						</article>
 					))}
@@ -96,7 +100,7 @@ const latestNews = (await getCollection('noticies'))
 	.link-card {
 		background: white;
 		border: 2px solid var(--gray-light);
-		border-top: 6px solid var(--accent); /* Borde superior de color */
+		border-top: 6px solid var(--accent-dark); /* Color por defecto */
 		border-radius: 16px;
 		padding: 2.5rem 2rem;
 		text-decoration: none;
@@ -109,21 +113,24 @@ const latestNews = (await getCollection('noticies'))
 		text-align: center;
 	}
 
-	/* Colores diferentes para cada tarjeta */
+	/* Colores de acento solo en el borde superior */
+	.link-card.highlight {
+		border-top-color: #a7c957; /* Verde para el Menú */
+		background: white;
+	}
+
 	.link-card:nth-child(2) {
-		border-top-color: var(--tertiary);
+		border-top-color: var(--accent-dark); /* Azul para Notícies */
 	}
 	
-	.link-card.highlight {
-		border-top-color: var(--secondary);
-		background: var(--nav-hover-bg);
-		border-color: var(--accent-pastel);
+	.link-card:nth-child(3) {
+		border-top-color: #8e74a5; /* Lila para L'AFA */
 	}
 
 	.link-card:hover {
 		transform: translateY(-8px);
-		box-shadow: 0 12px 25px rgba(1, 143, 210, 0.12);
-		border-color: var(--accent-pastel);
+		box-shadow: 0 12px 25px rgba(0, 0, 0, 0.08);
+		border-color: var(--accent-pastel); /* Un toque de color al hover en todo el borde */
 	}
 
 	.link-card h3 {
@@ -133,12 +140,16 @@ const latestNews = (await getCollection('noticies'))
 		font-family: 'Fredoka', sans-serif;
 	}
 
-	.link-card:nth-child(2) h3 {
-		color: #8e74a5; /* Tono lila para Sobre l'AFA */
+	.link-card.highlight h3 {
+		color: #a7c957;
 	}
 
-	.link-card.highlight h3 {
-		color: #d67a91; /* Tono rosado para Menú */
+	.link-card:nth-child(2) h3 {
+		color: var(--accent-dark);
+	}
+
+	.link-card:nth-child(3) h3 {
+		color: #8e74a5;
 	}
 
 	.link-card p {
@@ -150,47 +161,65 @@ const latestNews = (await getCollection('noticies'))
 
 	.news-grid {
 		display: grid;
-		grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-		gap: 2rem;
-		margin-bottom: 2rem;
+		grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+		gap: 2.5rem;
+		margin-bottom: 3rem;
 	}
 
 	.news-card {
 		background: white;
-		border: 1px solid rgb(var(--gray-light));
-		border-radius: 8px;
+		border: 2px solid var(--gray-light);
+		border-top: 6px solid var(--accent-pastel); /* Azul clarito consistente */
+		border-radius: 16px;
 		overflow: hidden;
-		box-shadow: var(--box-shadow);
-		transition: transform 0.2s ease;
+		box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+		transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+		display: flex;
+		flex-direction: column;
+		text-align: center;
 	}
 
 	.news-card:hover {
-		transform: translateY(-4px);
+		transform: translateY(-8px);
+		box-shadow: 0 12px 25px rgba(0, 0, 0, 0.08);
+		border-color: var(--accent-pastel);
 	}
 
 	.news-card a {
 		display: block;
-		padding: 1.5rem;
+		padding: 2.5rem 2rem;
 		text-decoration: none;
-		color: rgb(var(--gray-dark));
+		color: var(--gray-dark);
+		height: 100%;
 	}
 
 	.news-card h3 {
-		margin: 0 0 0.5rem 0;
-		color: rgb(var(--accent));
-		font-size: 1.3rem;
+		margin: 0 0 1rem 0;
+		color: var(--accent-dark);
+		font-size: 1.4rem;
+		font-family: 'Fredoka', sans-serif;
+		line-height: 1.3;
 	}
 
 	.date {
 		margin: 0 0 0.75rem 0;
-		color: rgb(var(--gray-light));
+		color: var(--gray);
 		font-size: 0.9rem;
+		font-weight: 700;
+		text-transform: uppercase;
+		letter-spacing: 0.05em;
 	}
 
-	.description {
+	.news-description {
 		margin: 0;
-		color: rgb(var(--gray));
-		line-height: 1.5;
+		color: var(--gray);
+		line-height: 1.6;
+		font-size: 1rem;
+		display: -webkit-box;
+		-webkit-line-clamp: 3;
+		-webkit-box-orient: vertical;
+		overflow: hidden;
+		height: 4.8em; /* Altura fija para asegurar que todas las tarjetas midan lo mismo */
 	}
 
 	.view-all {
