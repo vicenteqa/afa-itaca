@@ -108,6 +108,11 @@ const comissions = (await getCollection('comissions')).sort((a, b) => a.data.ord
 		top: 0;
 		z-index: 1000;
 	}
+	@media (max-width: 720px) {
+		.main-header {
+			padding: 0.75rem 1rem;
+		}
+	}
 	nav {
 		display: flex;
 		align-items: center;

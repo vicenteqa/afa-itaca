@@ -90,7 +90,13 @@ const latestNews = (await getCollection('noticies'))
 	main section:not(.hero) {
 		max-width: 1200px;
 		margin: 0 auto;
-		padding: 3rem 2rem;
+		padding: 3rem 1.5rem;
+	}
+
+	@media (max-width: 720px) {
+		main section:not(.hero) {
+			padding: 2rem 1rem;
+		}
 	}
 
 	section h2 {
@@ -102,7 +108,7 @@ const latestNews = (await getCollection('noticies'))
 
 	.links-grid {
 		display: grid;
-		grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+		grid-template-columns: repeat(3, 1fr);
 		gap: 2rem;
 		margin-top: 1rem;
 	}
@@ -171,7 +177,7 @@ const latestNews = (await getCollection('noticies'))
 
 	.news-grid {
 		display: grid;
-		grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+		grid-template-columns: repeat(3, 1fr);
 		gap: 2.5rem;
 		margin-bottom: 3rem;
 	}

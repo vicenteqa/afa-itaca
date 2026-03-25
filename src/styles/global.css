@@ -62,12 +62,12 @@ body {
 }
 
 main {
-	width: 850px;
-	max-width: calc(100% - 2em);
+	width: 100%;
+	max-width: 1200px;
 	margin: 0 auto;
-	padding: 2.5em 2.5em;
+	padding: 2em 1.5em;
 	background: white;
-	box-shadow: none; /* Quitamos la sombra para un look totalmente plano y blanco */
+	box-shadow: none;
 	border: none;
 	position: relative;
 	box-sizing: border-box;
@@ -193,15 +193,14 @@ hr {
 }
 @media (max-width: 720px) {
 	body {
-		font-size: 18px;
+		font-size: 17px;
 	}
 	main {
-		padding: 2em 1.5em;
-		margin: 0 auto 2em; /* Mantener sin margen superior */
-		border-radius: 0; /* Eliminar borde redondeado */
+		padding: 1rem 0.75rem;
+		margin: 0 auto;
 	}
 	h1 {
-		font-size: 2.5em;
+		font-size: 2.2rem;
 	}
 }
 

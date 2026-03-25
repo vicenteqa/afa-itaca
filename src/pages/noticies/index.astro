@@ -61,7 +61,7 @@ const posts = (await getCollection('noticies')).sort(
 		gap: 2rem;
 		list-style-type: none;
 		margin: 0;
-		padding: 0 2rem;
+		padding: 0 1.5rem;
 	}
 	ul li {
 		width: calc(50% - 1rem);
@@ -116,7 +116,8 @@ const posts = (await getCollection('noticies')).sort(
 	}
 	@media (max-width: 720px) {
 		ul {
-			gap: 0.5em;
+			gap: 1.5rem;
+			padding: 0 0.5rem;
 		}
 		ul li {
 			width: 100%;

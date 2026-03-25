@@ -73,10 +73,15 @@ const { title, description, pubDate, updatedDate, heroImage } = Astro.props;
 		font-style: italic;
 	}
 	.prose {
-		width: 960px;
-		max-width: calc(100% - 2em);
+		width: 100%;
+		max-width: 800px;
 		margin: auto;
-		padding: 3rem 2rem;
+		padding: 3rem 1.5rem;
 		color: rgb(var(--gray-dark));
+	}
+	@media (max-width: 720px) {
+		.prose {
+			padding: 1.5rem 0.5rem;
+		}
 	}
 </style>
