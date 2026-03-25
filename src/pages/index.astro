@@ -29,7 +29,7 @@ const latestNews = (await getCollection('noticies'))
 			<section class="quick-links">
 				<h2>Accés ràpid</h2>
 				<div class="links-grid">
-					<a href="/menu-del-mes" class="link-card highlight">
+					<a href="https://www.afaitaca.org/wp-content/uploads/menjador.jpg" target="_blank" rel="noopener noreferrer" class="link-card highlight" id="menu-link">
 						<h3>🍽️ Menú del Mes</h3>
 						<p>Consulta el menú escolar actualitzat</p>
 					</a>
@@ -69,6 +69,16 @@ const latestNews = (await getCollection('noticies'))
 			</section>
 		</main>
 		<Footer />
+		<script>
+			// Actualizar el link del menú con un timestamp fresco al hacer clic
+			const menuLink = document.getElementById('menu-link') as HTMLAnchorElement;
+			if (menuLink) {
+				menuLink.addEventListener('click', (e) => {
+					const timestamp = Date.now();
+					menuLink.href = `https://www.afaitaca.org/wp-content/uploads/menjador.jpg?v=${timestamp}`;
+				});
+			}
+		</script>
 	</body>
 </html>
 
