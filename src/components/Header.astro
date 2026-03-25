@@ -334,13 +334,12 @@ const comissions = (await getCollection('comissions')).sort((a, b) => a.data.ord
 			top: 100%;
 			left: 0;
 			right: 0;
-			background: var(--bg-color, #ffffff);
+			background: white;
 			flex-direction: column;
 			padding: 2rem;
 			box-shadow: 0 10px 20px rgba(0,0,0,0.08);
 			clip-path: polygon(0 0, 100% 0, 100% 0, 0 0);
 			transition: clip-path 0.4s ease-in-out;
-			border-bottom: 3px dashed var(--accent-pastel);
 		}
 		.menu-content.is-open {
 			clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);

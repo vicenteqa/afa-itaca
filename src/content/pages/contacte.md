@@ -3,7 +3,7 @@ title: "Contacte"
 description: "Posa't en contacte amb l'AFA Ítaca"
 email: "info@afaitaca.org"
 phone: ""
-address: "Vilanova i la Geltrú"
+address: "Rambla d'Arnau de Vilanova, 65, 08800 Vilanova i la Geltrú, Barcelona"
 ---
 
 ## Com contactar amb nosaltres?

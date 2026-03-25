@@ -45,6 +45,23 @@ const { Content } = await render(page);
 	.prose {
 		width: 100%;
 		max-width: none;
-		color: rgb(var(--gray-dark));
+		color: var(--text-main);
+	}
+	.prose :global(img) {
+		display: block;
+		margin: 2rem auto;
+		border-radius: 20px;
+		box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+	}
+	.prose :global(ul) {
+		margin-bottom: 2rem;
+	}
+	.prose :global(li) {
+		margin-bottom: 0.5rem;
+	}
+	.prose :global(hr) {
+		margin: 3rem 0;
+		border: none;
+		border-top: 2px dashed var(--accent-pastel);
 	}
 </style>

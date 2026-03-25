@@ -25,59 +25,119 @@ const { Content } = await render(page);
 
 			<article class="prose">
 				<div class="content">
-					<div class="contact-info">
-						{page.data.email && (
-							<div class="info-item">
-								<strong>Email:</strong>
-								<a href={`mailto:${page.data.email}`}>{page.data.email}</a>
-							</div>
-						)}
-						{page.data.phone && (
-							<div class="info-item">
-								<strong>Telèfon:</strong>
-								<a href={`tel:${page.data.phone}`}>{page.data.phone}</a>
-							</div>
-						)}
-						{page.data.address && (
-							<div class="info-item">
-								<strong>Adreça:</strong>
-								<span>{page.data.address}</span>
-							</div>
-						)}
-					</div>
-
-					<Content />
-
-					<div class="form-section">
-						<h2>Formulari de contacte</h2>
-						<form name="contact" method="POST" data-netlify="true" netlify-honeypot="bot-field">
+					<div class="form-wrapper">
+						<form name="contact" method="POST" data-netlify="true" netlify-honeypot="bot-field" class="contact-form">
 							<input type="hidden" name="form-name" value="contact" />
 							<p style="display: none;">
 								<label>No omplis això si ets humà: <input name="bot-field" /></label>
 							</p>
 
-							<div class="form-group">
-								<label for="name">Nom *</label>
-								<input type="text" id="name" name="name" required />
+							<div class="form-grid">
+								<div class="form-group">
+									<label for="name">Nom *</label>
+									<input type="text" id="name" name="name" placeholder="Escriu el teu nom complet" required />
+								</div>
+
+								<div class="form-group">
+									<label for="email">Correu electrònic *</label>
+									<input type="email" id="email" name="email" placeholder="la-teva@adreca.com" required />
+								</div>
 							</div>
 
 							<div class="form-group">
-								<label for="email">Email *</label>
-								<input type="email" id="email" name="email" required />
+								<label for="recipient">A qui va dirigit el missatge? *</label>
+								<select id="recipient" name="recipient" required>
+									<option value="info@afaitaca.org" selected>Informació General (AFA Ítaca)</option>
+									<option value="menjador@afaitaca.org">Comissió de Menjador</option>
+									<option value="acollida@afaitaca.org">Comissió d'Acollida</option>
+									<option value="extraescolars@afaitaca.org">Comissió d'Extraescolars</option>
+									<option value="formacio@afaitaca.org">Comissió de Formació</option>
+									<option value="mediambient@afaitaca.org">Comissió de Medi Ambient</option>
+									<option value="patis@afaitaca.org">Comissió de Patis</option>
+									<option value="festes@afaitaca.org">Comissió de Festes</option>
+									<option value="casal@afaitaca.org">Comissió de Casal</option>
+									<option value="comunicacio@afaitaca.org">Comissió de Comunicació</option>
+								</select>
 							</div>
 
 							<div class="form-group">
 								<label for="subject">Assumpte</label>
-								<input type="text" id="subject" name="subject" />
+								<input type="text" id="subject" name="subject" placeholder="De què tracta el teu missatge?" />
 							</div>
 
 							<div class="form-group">
-								<label for="message">Missatge *</label>
-								<textarea id="message" name="message" rows="6" required></textarea>
+								<label for="message">El teu missatge *</label>
+								<textarea id="message" name="message" rows="6" placeholder="Com et podem ayudar?" required></textarea>
 							</div>
 
-							<button type="submit">Enviar missatge</button>
+							<div class="privacy-section">
+								<label class="checkbox-container">
+									<input type="checkbox" name="privacy" required />
+									<span class="checkmark"></span>
+									Accepto la <a href="/legal" target="_blank">Política de privacitat</a> *
+								</label>
+								
+								<div class="legal-notice">
+									<p><strong>Info. bàsica:</strong> afaitaca.org usarà les dades per respondre sol·licituds. No se cediran dades a tercers. Pots retirar el consentiment o accedir a les teves dades a <a href="mailto:info@afaitaca.org">info@afaitaca.org</a>. <a href="/legal" target="_blank">Més informació</a>.</p>
+								</div>
+							</div>
+
+							<div class="form-footer">
+								<button type="submit" class="submit-btn">
+									<span>Enviar missatge</span>
+									<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="20" height="20" fill="currentColor" style="margin-top: 2px;">
+										<path d="M476 3.2L12.5 270.6c-18.1 10.4-15.8 35.6 2.2 43.2L121 358.4l287.3-253.2c5.5-4.9 13.3 2.6 8.6 8.3L176 407v80.5c0 23.6 28.5 32.9 42.5 15.8L282 426l124.6 52.2c14.2 6 30.4-2.9 33-18.2l72-432C515 7.8 493.3-6.8 476 3.2z"/>
+									</svg>
+								</button>
+							</div>
 						</form>
+					</div>
+
+					<div class="prose-content">
+						<Content />
+					</div>
+
+					<div class="contact-info-grid">
+						{page.data.email && (
+							<div class="info-card">
+								<div class="info-icon">✉️</div>
+								<div class="info-details">
+									<a href={`mailto:${page.data.email}`}>{page.data.email}</a>
+								</div>
+							</div>
+						)}
+						{page.data.phone && (
+							<div class="info-card">
+								<div class="info-icon">📞</div>
+								<div class="info-details">
+									<strong>Telèfon</strong>
+									<a href={`tel:${page.data.phone}`}>{page.data.phone}</a>
+								</div>
+							</div>
+						)}
+						{page.data.address && (
+							<a href="https://www.google.com/maps/place/Rambla+d'Arnau+de+Vilanova,+65,+08800+Vilanova+i+la+Geltr%C3%BA,+Barcelona" target="_blank" rel="noopener noreferrer" class="info-card">
+								<div class="info-icon">📍</div>
+								<div class="info-details">
+									<span>{page.data.address}</span>
+								</div>
+							</a>
+						)}
+					</div>
+
+					<div class="commissions-section">
+						<h3>Si vols contactar amb les comissions:</h3>
+						<ul class="commissions-list">
+							<li><a href="mailto:menjador@afaitaca.org">menjador@afaitaca.org</a></li>
+							<li><a href="mailto:acollida@afaitaca.org">acollida@afaitaca.org</a></li>
+							<li><a href="mailto:extraescolars@afaitaca.org">extraescolars@afaitaca.org</a></li>
+							<li><a href="mailto:formacio@afaitaca.org">formacio@afaitaca.org</a></li>
+							<li><a href="mailto:mediambient@afaitaca.org">mediambient@afaitaca.org</a></li>
+							<li><a href="mailto:patis@afaitaca.org">patis@afaitaca.org</a></li>
+							<li><a href="mailto:festes@afaitaca.org">festes@afaitaca.org</a></li>
+							<li><a href="mailto:casal@afaitaca.org">casal@afaitaca.org</a></li>
+							<li><a href="mailto:comunicacio@afaitaca.org">comunicacio@afaitaca.org</a></li>
+						</ul>
 					</div>
 				</div>
 			</article>
@@ -91,83 +151,270 @@ const { Content } = await render(page);
 		width: 100%;
 	}
 	.content {
-		max-width: 960px;
+		max-width: 900px;
 		margin: 0 auto;
-		padding: 3rem 2rem;
+		padding: 1rem 2rem 5rem 2rem;
 	}
-	.prose {
-		width: 100%;
-		max-width: none;
-		color: rgb(var(--gray-dark));
-	}
-	.contact-info {
-		background: rgb(var(--gray-light));
-		padding: 1.5rem;
-		border-radius: 8px;
-		margin-bottom: 2rem;
-	}
-	.info-item {
-		margin-bottom: 0.75rem;
-	}
-	.info-item:last-child {
-		margin-bottom: 0;
-	}
-	.info-item strong {
-		display: inline-block;
-		width: 100px;
-		color: rgb(var(--gray-dark));
-	}
-	.info-item a {
-		color: rgb(var(--accent));
-		text-decoration: none;
-	}
-	.info-item a:hover {
-		text-decoration: underline;
-	}
-	.form-section {
+	
+	/* Info Cards */
+	.contact-info-grid {
+		display: grid;
+		grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+		gap: 1.5rem;
 		margin-top: 3rem;
-		padding-top: 3rem;
-		border-top: 2px solid rgb(var(--gray-light));
 	}
-	.form-section h2 {
-		color: rgb(var(--accent));
-		margin-bottom: 1.5rem;
+	.info-card {
+		background: #f8fafc;
+		padding: 1.5rem;
+		border-radius: 16px;
+		display: flex;
+		align-items: center;
+		gap: 1rem;
+		border: 1px solid var(--accent-pastel);
+		transition: transform 0.2s ease;
 	}
+	.info-card:hover {
+		transform: translateY(-5px);
+	}
+	.info-icon {
+		font-size: 2rem;
+		background: white;
+		width: 50px;
+		height: 50px;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		border-radius: 12px;
+		box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+	}
+	.info-details strong {
+		display: block;
+		font-size: 0.9rem;
+		color: var(--gray-dark);
+		font-family: 'Fredoka', sans-serif;
+	}
+	.info-details a, .info-details span {
+		color: var(--accent-dark);
+		text-decoration: none !important;
+		font-weight: 600;
+	}
+	.contact-info-grid a {
+		text-decoration: none !important;
+	}
+
+	.prose-content {
+		margin-top: 3rem;
+		margin-bottom: 3rem;
+		text-align: center;
+		color: var(--gray);
+	}
+
+	/* Form Wrapper */
+	.form-wrapper {
+		background: white;
+		border-radius: 24px;
+		padding: 3rem;
+		box-shadow: 0 20px 50px rgba(1, 143, 210, 0.08);
+		border: 1px solid var(--gray-light);
+	}
+
+	.form-grid {
+		display: grid;
+		grid-template-columns: 1fr 1fr;
+		gap: 1.5rem;
+	}
+
 	.form-group {
 		margin-bottom: 1.5rem;
 	}
 	.form-group label {
 		display: block;
-		margin-bottom: 0.5rem;
-		color: rgb(var(--gray-dark));
-		font-weight: 500;
+		margin-bottom: 0.6rem;
+		color: var(--accent-dark);
+		font-weight: 600;
+		font-size: 0.95rem;
+		font-family: 'Fredoka', sans-serif;
 	}
 	.form-group input,
-	.form-group textarea {
+	.form-group textarea,
+	.form-group select {
 		width: 100%;
-		padding: 0.75rem;
-		border: 1px solid rgb(var(--gray-light));
-		border-radius: 4px;
-		font-family: inherit;
+		padding: 1rem;
+		border: 2px solid #f1f5f9;
+		border-radius: 12px;
+		font-family: 'Quicksand', sans-serif;
 		font-size: 1rem;
+		background: #f8fafc;
+		transition: all 0.2s ease;
+		box-sizing: border-box;
+		appearance: none; /* Eliminar flecha por defecto */
+		background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%2394a3b8' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+		background-repeat: no-repeat;
+		background-position: right 1rem center;
+		background-size: 1.2rem;
+		cursor: pointer;
 	}
 	.form-group input:focus,
-	.form-group textarea:focus {
+	.form-group textarea:focus,
+	.form-group select:focus {
 		outline: none;
-		border-color: rgb(var(--accent));
+		background: white;
+		border-color: var(--accent);
+		box-shadow: 0 0 0 4px rgba(1, 143, 210, 0.1);
 	}
-	button[type="submit"] {
-		background: rgb(var(--accent));
-		color: white;
-		padding: 0.75rem 2rem;
-		border: none;
-		border-radius: 4px;
-		font-size: 1rem;
-		font-weight: 500;
+
+	/* Privacy Section */
+	.privacy-section {
+		margin-top: 1.5rem;
+		padding: 1rem;
+		background: #fdfdfd;
+		border-radius: 12px;
+		border: 1px solid #f1f5f9;
+	}
+	.checkbox-container {
+		display: block;
+		position: relative;
+		padding-left: 30px;
+		margin-bottom: 0.75rem;
 		cursor: pointer;
-		transition: opacity 0.2s ease;
+		font-size: 0.85rem;
+		color: var(--text-light);
+		font-weight: 500;
+		user-select: none;
 	}
-	button[type="submit"]:hover {
-		opacity: 0.9;
+	.checkbox-container input {
+		position: absolute;
+		opacity: 0;
+		cursor: pointer;
+		height: 0;
+		width: 0;
+	}
+	.checkmark {
+		position: absolute;
+		top: 0;
+		left: 0;
+		height: 18px;
+		width: 18px;
+		background-color: #e2e8f0;
+		border-radius: 4px;
+		transition: all 0.2s ease;
+	}
+	.checkbox-container:hover input ~ .checkmark {
+		background-color: #cbd5e1;
+	}
+	.checkbox-container input:checked ~ .checkmark {
+		background-color: var(--accent);
+	}
+	.checkmark:after {
+		content: "";
+		position: absolute;
+		display: none;
+	}
+	.checkbox-container input:checked ~ .checkmark:after {
+		display: block;
+	}
+	.checkbox-container .checkmark:after {
+		left: 6px;
+		top: 2px;
+		width: 4px;
+		height: 8px;
+		border: solid white;
+		border-width: 0 2px 2px 0;
+		transform: rotate(45deg);
+	}
+
+	.legal-notice {
+		font-size: 0.75rem;
+		color: #94a3b8;
+		line-height: 1.4;
+	}
+	.legal-notice p {
+		margin: 0;
+	}
+	.legal-notice strong {
+		color: var(--gray-dark);
+	}
+
+	.form-footer {
+		margin-top: 2.5rem;
+		text-align: center;
+	}
+	.submit-btn {
+		background: var(--accent);
+		color: white;
+		padding: 1.2rem 3rem;
+		border: none;
+		border-radius: 50px;
+		font-size: 1.1rem;
+		font-weight: 700;
+		font-family: 'Fredoka', sans-serif;
+		cursor: pointer;
+		box-shadow: 0 10px 20px rgba(1, 143, 210, 0.2);
+		transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		gap: 0.75rem;
+	}
+	.submit-btn svg {
+		transition: transform 0.3s ease;
+	}
+	.submit-btn:hover {
+		transform: translateY(-3px) scale(1.02);
+		box-shadow: 0 15px 30px rgba(1, 143, 210, 0.3);
+		background: var(--accent-dark);
+	}
+	.submit-btn:hover svg {
+		transform: translate(5px, -5px);
+	}
+	.submit-btn:active {
+		transform: translateY(1px);
+	}
+
+	/* Commissions Section */
+	.commissions-section {
+		margin-top: 4rem;
+		text-align: center;
+		background: #f8fafc;
+		padding: 2.5rem;
+		border-radius: 20px;
+		border: 1px solid #f1f5f9;
+	}
+	.commissions-section h3 {
+		font-size: 1.4rem;
+		color: var(--accent-dark);
+		margin-bottom: 1.5rem;
+		font-family: 'Fredoka', sans-serif;
+	}
+	.commissions-list {
+		list-style-type: none !important;
+		padding: 0 !important;
+		margin: 0 !important;
+		display: flex;
+		flex-direction: column;
+		gap: 0.75rem;
+	}
+	.commissions-list a {
+		color: var(--accent);
+		text-decoration: none;
+		font-weight: 600;
+		font-size: 1.05rem;
+		transition: color 0.2s;
+	}
+	.commissions-list a:hover {
+		color: var(--accent-dark);
+		text-decoration: underline !important;
+	}
+
+	@media (max-width: 720px) {
+		.form-grid {
+			grid-template-columns: 1fr;
+		}
+		.form-wrapper {
+			padding: 2rem 1.5rem;
+		}
+		.content {
+			padding: 1rem;
+		}
 	}
 </style>
