@@ -103,12 +103,10 @@ const comissions = (await getCollection('comissions')).sort((a, b) => a.data.ord
 	.main-header {
 		margin: 0;
 		padding: 1rem 2rem;
-		background: var(--bg-color, #ffffff);
-		box-shadow: 0 4px 20px rgba(0,0,0, 0.05);
+		background: white;
 		position: sticky;
 		top: 0;
 		z-index: 1000;
-		border-bottom: 3px dashed var(--accent-pastel);
 	}
 	nav {
 		display: flex;
@@ -248,7 +246,7 @@ const comissions = (await getCollection('comissions')).sort((a, b) => a.data.ord
 
 	.nav-cta-button {
 		display: inline-block;
-		background: var(--secondary, #ffb3c6);
+		background: var(--accent);
 		color: white !important;
 		font-family: 'Fredoka', sans-serif;
 		font-weight: 600;
@@ -256,19 +254,19 @@ const comissions = (await getCollection('comissions')).sort((a, b) => a.data.ord
 		padding: 0.5rem 1.2rem;
 		border-radius: 20px;
 		margin-left: 0.5rem;
-		box-shadow: 0 4px 0 #e56b82;
+		box-shadow: 0 4px 0 var(--accent-dark);
 		transition: all 0.15s ease;
 	}
 	
 	.nav-cta-button:hover {
 		transform: translateY(-2px);
-		box-shadow: 0 6px 0 #e56b82, 0 8px 15px rgba(255, 179, 198, 0.4);
+		box-shadow: 0 6px 0 var(--accent-dark), 0 8px 15px rgba(1, 143, 210, 0.3);
 		color: white;
 	}
 	
 	.nav-cta-button:active {
 		transform: translateY(4px);
-		box-shadow: 0 0 0 #e56b82;
+		box-shadow: 0 0 0 var(--accent-dark);
 	}
 
 	.social-links {

@@ -88,36 +88,64 @@ const latestNews = (await getCollection('noticies'))
 
 	.links-grid {
 		display: grid;
-		grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-		gap: 1.5rem;
+		grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+		gap: 2rem;
+		margin-top: 1rem;
 	}
 
 	.link-card {
 		background: white;
-		border: 1px solid rgb(var(--gray-light));
-		border-radius: 8px;
-		padding: 2rem;
+		border: 2px solid var(--gray-light);
+		border-top: 6px solid var(--accent); /* Borde superior de color */
+		border-radius: 16px;
+		padding: 2.5rem 2rem;
 		text-decoration: none;
-		color: rgb(var(--gray-dark));
-		transition: all 0.2s ease;
-		box-shadow: var(--box-shadow);
+		color: var(--gray-dark);
+		transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+		box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		text-align: center;
+	}
+
+	/* Colores diferentes para cada tarjeta */
+	.link-card:nth-child(2) {
+		border-top-color: var(--tertiary);
+	}
+	
+	.link-card.highlight {
+		border-top-color: var(--secondary);
+		background: var(--nav-hover-bg);
+		border-color: var(--accent-pastel);
 	}
 
 	.link-card:hover {
-		transform: translateY(-4px);
-		box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
-		border-color: rgb(var(--accent));
+		transform: translateY(-8px);
+		box-shadow: 0 12px 25px rgba(1, 143, 210, 0.12);
+		border-color: var(--accent-pastel);
 	}
 
 	.link-card h3 {
-		margin: 0 0 0.5rem 0;
-		color: rgb(var(--accent));
-		font-size: 1.5rem;
+		margin: 0 0 0.75rem 0;
+		color: var(--accent-dark);
+		font-size: 1.6rem;
+		font-family: 'Fredoka', sans-serif;
+	}
+
+	.link-card:nth-child(2) h3 {
+		color: #8e74a5; /* Tono lila para Sobre l'AFA */
+	}
+
+	.link-card.highlight h3 {
+		color: #d67a91; /* Tono rosado para Menú */
 	}
 
 	.link-card p {
 		margin: 0;
-		color: rgb(var(--gray));
+		color: var(--gray);
+		font-size: 1.1rem;
+		line-height: 1.4;
 	}
 
 	.news-grid {
