@@ -91,10 +91,10 @@ collections:
         name: "carouselImages"
         widget: "list"
         required: false
-        collapsed: true
-        summary: "{{fields.alt}}"
+        collapsed: false
+        summary: "{{fields.src}}"
         fields:
-          - {label: "Imatge", name: "src", widget: "image"}
+          - {label: "Imatge (src)", name: "src", widget: "image", hint: "Ruta de la imatge del carrusel (ex: /uploads/hort1.jpg)"}
           - {label: "Text alternatiu", name: "alt", widget: "string", required: false}
           - {label: "Peu de foto", name: "caption", widget: "string", required: false}
       - {label: "Contingut", name: "body", widget: "markdown"}
