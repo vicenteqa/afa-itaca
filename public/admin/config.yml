@@ -85,3 +85,18 @@ collections:
       - {label: "Icona", name: "icon", widget: "string", hint: "Nom de l'icona (opcional)", required: false}
       - {label: "Ordre", name: "order", widget: "number", default: 0}
       - {label: "Contingut", name: "body", widget: "markdown"}
+
+  # Comissions en MDX (per contingut avançat com carrusels)
+  - name: "comissions_mdx"
+    label: "Comissions (MDX)"
+    folder: "src/content/comissions"
+    extension: "mdx"
+    format: "frontmatter"
+    create: true
+    slug: "{{slug}}"
+    fields:
+      - {label: "Títol", name: "title", widget: "string"}
+      - {label: "Descripció Curta", name: "description", widget: "text"}
+      - {label: "Icona", name: "icon", widget: "string", hint: "Nom de l'icona (opcional)", required: false}
+      - {label: "Ordre", name: "order", widget: "number", default: 0}
+      - {label: "Contingut", name: "body", widget: "markdown"}
