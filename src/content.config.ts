@@ -23,14 +23,23 @@ const pages = defineCollection({
 });
 
 const comissions = defineCollection({
-	loader: glob({ base: './src/content/comissions', pattern: '**/*.{md,mdx}' }),
+	loader: glob({ base: './src/content/comissions', pattern: '**/*.md' }),
 	schema: z.object({
 		title: z.string(),
 		description: z.string(),
 		icon: z.string().optional(),
 		order: z.number().default(0),
+		carouselLabel: z.string().optional(),
+		carouselImages: z
+			.array(
+				z.object({
+					src: z.string(),
+					alt: z.string().optional(),
+					caption: z.string().optional(),
+				})
+			)
+			.optional(),
 	}),
 });
 
 export const collections = { noticies, pages, comissions };
-

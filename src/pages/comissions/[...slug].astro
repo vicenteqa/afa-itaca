@@ -2,6 +2,7 @@
 import BaseHead from '../../components/BaseHead.astro';
 import Header from '../../components/Header.astro';
 import Footer from '../../components/Footer.astro';
+import ImageCarousel from '../../components/ImageCarousel.astro';
 import { SITE_TITLE } from '../../consts';
 import { getCollection, render } from 'astro:content';
 
@@ -33,6 +34,14 @@ const { Content } = await render(comissio);
 			<article class="prose">
 				<div class="content">
 					<Content />
+					{
+						comissio.data.carouselImages && comissio.data.carouselImages.length > 0 && (
+							<ImageCarousel
+								images={comissio.data.carouselImages}
+								label={comissio.data.carouselLabel ?? `Carrusel d'imatges de ${comissio.data.title}`}
+							/>
+						)
+					}
 				</div>
 				<div class="back-link">
 					<a href="/">← Tornar a l'Inici</a>

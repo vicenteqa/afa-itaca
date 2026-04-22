@@ -3,9 +3,55 @@ title: "Patis"
 description: "Comissió per al redisseny inclusiu, coeducador i sostenible dels espais exteriors de l'escola."
 icon: "tree"
 order: 7
+carouselLabel: "Carrusel d'imatges de la comissió Patis"
+carouselImages:
+  - src: "/uploads/cuineta-infantil.jpg"
+    alt: "Pati - cuineta infantil 1"
+  - src: "/uploads/cuineta-infantil2.jpg"
+    alt: "Pati - cuineta infantil 2"
+  - src: "/uploads/sorral-infantil.jpg"
+    alt: "Pati - sorral infantil"
+  - src: "/uploads/caseta-infantil.jpg"
+    alt: "Pati - caseta infantil"
+  - src: "/uploads/families-picnic1.jpg"
+    alt: "Pati - zona pícnic 1"
+  - src: "/uploads/families-picnic2.jpg"
+    alt: "Pati - zona pícnic 2"
+  - src: "/uploads/families-picnic3.jpg"
+    alt: "Pati - zona pícnic 3"
+  - src: "/uploads/agora1.jpg"
+    alt: "Pati - àgora 1"
+  - src: "/uploads/agora2.jpg"
+    alt: "Pati - àgora 2"
+  - src: "/uploads/biblio1.jpg"
+    alt: "Pati - biblioteca 1"
+  - src: "/uploads/biblio3.jpg"
+    alt: "Pati - biblioteca 2"
+  - src: "/uploads/biblio2.jpg"
+    alt: "Pati - biblioteca 3"
+  - src: "/uploads/biblio4.jpg"
+    alt: "Pati - biblioteca 4"
+  - src: "/uploads/biblio5.jpg"
+    alt: "Pati - biblioteca 5"
+  - src: "/uploads/biblio6.jpg"
+    alt: "Pati - biblioteca 6"
+  - src: "/uploads/particip.jpg"
+    alt: "Pati - espai participatiu"
+  - src: "/uploads/plafon-musical.jpg"
+    alt: "Pati - plafó musical"
+  - src: "/uploads/raco-porxo.jpg"
+    alt: "Pati - racó del porxo"
+  - src: "/uploads/materials-naturals.jpg"
+    alt: "Pati - materials naturals"
+  - src: "/uploads/materials.jpg"
+    alt: "Pati - materials"
+  - src: "/uploads/pissarra.jpg"
+    alt: "Pati - pissarra"
+  - src: "/uploads/rodes.jpg"
+    alt: "Pati - rodes"
+  - src: "/uploads/taules-bobina.jpg"
+    alt: "Pati - taules bobina"
 ---
-
-import ImageCarousel from '../../components/ImageCarousel.astro';
 
 ## Què fem a la comissió?
 
@@ -27,34 +73,5 @@ D'ençà que va sorgir la il·lusió per repensar els nostres patis, aquests s'h
 - **Materials naturals** com bambú, suro, discs de troncs, etc. I **reciclats** com caixes, rodes, etc.
 
 ###### _"El pati és nostre!" és un projecte viu i molt dinàmic que requereix una gran implicació i suport comunitari, **t'animes a participar-hi?**_
-
-<ImageCarousel
-	label="Carrusel d'imatges de la comissió Patis"
-	images={[
-		{ src: '/uploads/cuineta-infantil.jpg', alt: 'Pati - cuineta infantil 1' },
-		{ src: '/uploads/cuineta-infantil2.jpg', alt: 'Pati - cuineta infantil 2' },
-		{ src: '/uploads/sorral-infantil.jpg', alt: 'Pati - sorral infantil' },
-		{ src: '/uploads/caseta-infantil.jpg', alt: 'Pati - caseta infantil' },
-		{ src: '/uploads/families-picnic1.jpg', alt: 'Pati - zona pícnic 1' },
-		{ src: '/uploads/families-picnic2.jpg', alt: 'Pati - zona pícnic 2' },
-		{ src: '/uploads/families-picnic3.jpg', alt: 'Pati - zona pícnic 3' },
-		{ src: '/uploads/agora1.jpg', alt: 'Pati - àgora 1' },
-		{ src: '/uploads/agora2.jpg', alt: 'Pati - àgora 2' },
-		{ src: '/uploads/biblio1.jpg', alt: 'Pati - biblioteca 1' },
-		{ src: '/uploads/biblio3.jpg', alt: 'Pati - biblioteca 2' },
-		{ src: '/uploads/biblio2.jpg', alt: 'Pati - biblioteca 3' },
-		{ src: '/uploads/biblio4.jpg', alt: 'Pati - biblioteca 4' },
-		{ src: '/uploads/biblio5.jpg', alt: 'Pati - biblioteca 5' },
-		{ src: '/uploads/biblio6.jpg', alt: 'Pati - biblioteca 6' },
-		{ src: '/uploads/particip.jpg', alt: 'Pati - espai participatiu' },
-		{ src: '/uploads/plafon-musical.jpg', alt: 'Pati - plafó musical' },
-		{ src: '/uploads/raco-porxo.jpg', alt: 'Pati - racó del porxo' },
-		{ src: '/uploads/materials-naturals.jpg', alt: 'Pati - materials naturals' },
-		{ src: '/uploads/materials.jpg', alt: 'Pati - materials' },
-		{ src: '/uploads/pissarra.jpg', alt: 'Pati - pissarra' },
-		{ src: '/uploads/rodes.jpg', alt: 'Pati - rodes' },
-		{ src: '/uploads/taules-bobina.jpg', alt: 'Pati - taules bobina' },
-	]}
-/>
 
 _Vols fer una consulta o unir-te a la comissió? Contacta amb nosaltres a [**patis@afaitaca.org**](mailto:patis@afaitaca.org)._
