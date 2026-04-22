@@ -1,0 +1,229 @@
+---
+interface CarouselImage {
+	src: string;
+	alt?: string;
+	caption?: string;
+}
+
+interface Props {
+	images: CarouselImage[];
+	label?: string;
+	id?: string;
+}
+
+const { images, label = 'Galeria d’imatges', id }: Props = Astro.props;
+const carouselId = id ?? `carousel-${Math.random().toString(36).slice(2, 10)}`;
+---
+
+{
+	images.length > 0 && (
+		<div class="carousel" data-carousel id={carouselId} aria-label={label}>
+			<div class="carousel-viewport">
+				{images.map((image, index) => (
+					<figure class:list={['carousel-slide', index === 0 && 'is-active']} data-slide>
+						<img
+							src={image.src}
+							alt={image.alt ?? `Imatge ${index + 1}`}
+							loading={index === 0 ? 'eager' : 'lazy'}
+							decoding="async"
+						/>
+						{image.caption && <figcaption>{image.caption}</figcaption>}
+					</figure>
+				))}
+			</div>
+
+			{
+				images.length > 1 && (
+					<>
+						<button type="button" class="carousel-control prev" data-prev aria-label="Imatge anterior">
+							‹
+						</button>
+						<button type="button" class="carousel-control next" data-next aria-label="Imatge següent">
+							›
+						</button>
+						<div class="carousel-dots" role="tablist" aria-label="Navegació del carrusel">
+							{images.map((_, index) => (
+								<button
+									type="button"
+									class:list={['carousel-dot', index === 0 && 'is-active']}
+									data-dot
+									data-index={index}
+									role="tab"
+									aria-label={`Anar a la imatge ${index + 1}`}
+									aria-selected={index === 0 ? 'true' : 'false'}
+								/>
+							))}
+						</div>
+					</>
+				)
+			}
+		</div>
+	)
+}
+
+<script is:inline>
+	function setupCarousels() {
+		const carousels = document.querySelectorAll('[data-carousel]');
+		carousels.forEach((carousel) => {
+			if (carousel.getAttribute('data-initialized') === 'true') return;
+			carousel.setAttribute('data-initialized', 'true');
+
+			const slides = Array.from(carousel.querySelectorAll('[data-slide]'));
+			const dots = Array.from(carousel.querySelectorAll('[data-dot]'));
+			const prevButton = carousel.querySelector('[data-prev]');
+			const nextButton = carousel.querySelector('[data-next]');
+
+			if (slides.length <= 1) return;
+
+			let activeIndex = 0;
+
+			const setActiveSlide = (nextIndex) => {
+				activeIndex = (nextIndex + slides.length) % slides.length;
+
+				slides.forEach((slide, index) => {
+					slide.classList.toggle('is-active', index === activeIndex);
+				});
+
+				dots.forEach((dot, index) => {
+					const isActive = index === activeIndex;
+					dot.classList.toggle('is-active', isActive);
+					dot.setAttribute('aria-selected', isActive ? 'true' : 'false');
+				});
+			};
+
+			prevButton?.addEventListener('click', (event) => {
+				event.preventDefault();
+				setActiveSlide(activeIndex - 1);
+			});
+			nextButton?.addEventListener('click', (event) => {
+				event.preventDefault();
+				setActiveSlide(activeIndex + 1);
+			});
+
+			dots.forEach((dot, index) => {
+				dot.addEventListener('click', (event) => {
+					event.preventDefault();
+					setActiveSlide(index);
+				});
+			});
+		});
+	}
+
+	document.addEventListener('astro:page-load', setupCarousels);
+	setupCarousels();
+</script>
+
+<style>
+	.carousel {
+		position: relative;
+		width: min(100%, 420px);
+		margin: 1.5rem auto;
+	}
+
+	.carousel-viewport {
+		position: relative;
+		overflow: hidden;
+		border-radius: 14px;
+		background: #f5f5f5;
+		height: 280px;
+	}
+
+	.carousel-slide {
+		display: none;
+		margin: 0;
+		height: 100%;
+	}
+
+	.carousel-slide.is-active {
+		display: block;
+	}
+
+	.carousel-slide img {
+		display: block;
+		width: 100%;
+		height: 100%;
+		object-fit: contain;
+		object-position: center;
+	}
+
+	.carousel-slide figcaption {
+		padding: 0.75rem 1rem 1rem;
+		font-size: 0.95rem;
+		color: #475569;
+		text-align: center;
+	}
+
+	.carousel-control {
+		position: absolute;
+		top: 50%;
+		transform: translateY(-50%);
+		width: 2.25rem;
+		height: 2.25rem;
+		border: 0;
+		border-radius: 999px;
+		background: rgba(17, 24, 39, 0.65);
+		color: white;
+		font-size: 1.6rem;
+		line-height: 1;
+		cursor: pointer;
+		display: grid;
+		place-items: center;
+	}
+
+	.carousel-control.prev {
+		left: 0.6rem;
+	}
+
+	.carousel-control.next {
+		right: 0.6rem;
+	}
+
+	.carousel-control:hover,
+	.carousel-control:focus-visible {
+		background: rgba(17, 24, 39, 0.8);
+	}
+
+	.carousel-dots {
+		display: flex;
+		justify-content: center;
+		gap: 0.45rem;
+		margin-top: 0.85rem;
+	}
+
+	.carousel-dot {
+		width: 0.62rem;
+		height: 0.62rem;
+		border-radius: 999px;
+		border: 0;
+		background: #cbd5e1;
+		cursor: pointer;
+	}
+
+	.carousel-dot.is-active {
+		background: #334155;
+	}
+
+	@media (max-width: 720px) {
+		.carousel {
+			width: min(100%, 320px);
+		}
+
+		.carousel-viewport {
+			height: 220px;
+		}
+
+		.carousel-control {
+			width: 2rem;
+			height: 2rem;
+			font-size: 1.35rem;
+		}
+
+		.carousel-control.prev {
+			left: 0.4rem;
+		}
+
+		.carousel-control.next {
+			right: 0.4rem;
+		}
+	}
+</style>
