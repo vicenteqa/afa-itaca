@@ -26,8 +26,7 @@ const { Content } = await render(page);
 			<article class="prose">
 				<div class="content">
 					<div class="form-wrapper">
-						<form name="contact" method="POST" data-netlify="true" netlify-honeypot="bot-field" class="contact-form">
-							<input type="hidden" name="form-name" value="contact" />
+						<form id="contact-form" name="contact" method="POST" action="/api/contact" class="contact-form">
 							<p style="display: none;">
 								<label>No omplis això si ets humà: <input name="bot-field" /></label>
 							</p>
@@ -89,6 +88,7 @@ const { Content } = await render(page);
 										<path d="M476 3.2L12.5 270.6c-18.1 10.4-15.8 35.6 2.2 43.2L121 358.4l287.3-253.2c5.5-4.9 13.3 2.6 8.6 8.3L176 407v80.5c0 23.6 28.5 32.9 42.5 15.8L282 426l124.6 52.2c14.2 6 30.4-2.9 33-18.2l72-432C515 7.8 493.3-6.8 476 3.2z"/>
 									</svg>
 								</button>
+								<p id="contact-form-status" class="form-status" role="status" aria-live="polite"></p>
 							</div>
 						</form>
 					</div>
@@ -145,6 +145,58 @@ const { Content } = await render(page);
 		<Footer />
 	</body>
 </html>
+
+<script>
+	const form = document.querySelector('#contact-form');
+	const status = document.querySelector('#contact-form-status');
+	const submitButton = form?.querySelector('button[type="submit"]');
+	const submitButtonText = submitButton?.querySelector('span');
+
+	form?.addEventListener('submit', async (event) => {
+		event.preventDefault();
+
+		if (
+			!(form instanceof HTMLFormElement) ||
+			!(status instanceof HTMLElement) ||
+			!(submitButton instanceof HTMLButtonElement) ||
+			!(submitButtonText instanceof HTMLSpanElement)
+		) {
+			return;
+		}
+
+		status.textContent = '';
+		status.className = 'form-status';
+		submitButton.disabled = true;
+		submitButtonText.textContent = 'Enviant...';
+
+		try {
+			const formData = new FormData(form);
+			const response = await fetch(form.action, {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json',
+				},
+				body: JSON.stringify(Object.fromEntries(formData.entries())),
+			});
+			const data = await response.json();
+
+			if (!response.ok) {
+				throw new Error(data.message || 'No s’ha pogut enviar el missatge.');
+			}
+
+			form.reset();
+			status.textContent = data.message || 'Missatge enviat correctament.';
+			status.classList.add('success');
+		} catch (error) {
+			console.error('Contact form error:', error);
+			status.textContent = error instanceof Error ? error.message : 'No s’ha pogut enviar el missatge. Torna-ho a provar més tard.';
+			status.classList.add('error');
+		} finally {
+			submitButton.disabled = false;
+			submitButtonText.textContent = 'Enviar missatge';
+		}
+	});
+</script>
 
 <style>
 	main {
@@ -369,6 +421,22 @@ const { Content } = await render(page);
 	}
 	.submit-btn:active {
 		transform: translateY(1px);
+	}
+	.submit-btn:disabled {
+		cursor: not-allowed;
+		opacity: 0.7;
+		transform: none;
+	}
+	.form-status {
+		min-height: 1.4rem;
+		margin: 1rem 0 0;
+		font-weight: 700;
+	}
+	.form-status.success {
+		color: #15803d;
+	}
+	.form-status.error {
+		color: #b91c1c;
 	}
 
 	/* Commissions Section */

@@ -6,6 +6,8 @@ import ImageCarousel from '../../components/ImageCarousel.astro';
 import { SITE_TITLE } from '../../consts';
 import { getCollection, render } from 'astro:content';
 
+export const prerender = true;
+
 export async function getStaticPaths() {
 	const comissions = await getCollection('comissions');
 	return comissions.map((comissio) => ({

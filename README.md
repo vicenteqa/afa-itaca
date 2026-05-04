@@ -53,6 +53,19 @@ All commands are run from the root of the project, from a terminal:
 | `npm run astro ...`       | Run CLI commands like `astro add`, `astro check` |
 | `npm run astro -- --help` | Get help using the Astro CLI                     |
 
+## Correu del formulari de contacte
+
+El formulari de contacte envia les dades a `/api/contact` i envia el correu amb Nodemailer. Configura aquestes variables d'entorn en producció:
+
+```sh
+SMTP_HOST=smtp.gmail.com
+SMTP_PORT=465
+SMTP_USER=your-smtp-user@example.com
+SMTP_PASS=your-smtp-password
+```
+
+Els missatges s'envien a la comissió seleccionada al formulari. Opcionalment, pots definir `CONTACT_EMAIL` per enviar tots els missatges a una única adreça independentment de la comissió seleccionada.
+
 ## 👀 Want to learn more?
 
 Check out [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).
