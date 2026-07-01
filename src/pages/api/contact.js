@@ -16,6 +16,7 @@ const RECIPIENTS = new Set([
 ]);
 
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+const ENABLED_VALUES = new Set(['1', 'true', 'yes', 'on']);
 
 const json = (body, status = 200) =>
   new Response(JSON.stringify(body), {
@@ -30,6 +31,28 @@ const getString = (value) => (typeof value === 'string' ? value.trim() : '');
 const stripHeaderLineBreaks = (value) => value.replace(/[\r\n]+/g, ' ').trim();
 
 const getEnv = (name) => getString(process.env[name]);
+
+const isEnabled = (value) => ENABLED_VALUES.has(getString(value).toLowerCase());
+
+const getMailErrorDetails = (error) => {
+  if (!error || typeof error !== 'object') {
+    return { name: 'UnknownError' };
+  }
+
+  const details = {};
+  for (const key of ['name', 'code', 'command', 'responseCode']) {
+    const value = error[key];
+    if (typeof value === 'string' || typeof value === 'number') {
+      details[key] = value;
+    }
+  }
+
+  if (error instanceof Error) {
+    details.message = error.message;
+  }
+
+  return details;
+};
 
 const escapeHtml = (value) =>
   value
@@ -90,10 +113,19 @@ export async function POST({ request }) {
   const smtpHost = getEnv('SMTP_HOST');
   const smtpPort = getEnv('SMTP_PORT') || '465';
   const contactEmail = getEnv('CONTACT_EMAIL');
+  const showDebugErrors = isEnabled(getEnv('CONTACT_DEBUG_ERRORS'));
 
   if (!smtpHost || !smtpUser || !smtpPass) {
-    console.error('SMTP credentials missing in environment variables');
-    return json({ message: 'Error de configuració del servidor de correu.' }, 500);
+    const missingVariables = [
+      !smtpHost && 'SMTP_HOST',
+      !smtpUser && 'SMTP_USER',
+      !smtpPass && 'SMTP_PASS',
+    ].filter(Boolean);
+    console.error('SMTP credentials missing in environment variables:', missingVariables);
+    return json({
+      message: 'Error de configuració del servidor de correu.',
+      ...(showDebugErrors ? { debug: { missingVariables } } : {}),
+    }, 500);
   }
 
   const transporter = nodemailer.createTransport({
@@ -146,7 +178,11 @@ ${message}
 
     return json({ message: 'Missatge enviat correctament.' });
   } catch (error) {
-    console.error('Nodemailer error:', error);
-    return json({ message: 'No s’ha pogut enviar el missatge. Torna-ho a provar més tard.' }, 500);
+    const debug = getMailErrorDetails(error);
+    console.error('Nodemailer error:', debug);
+    return json({
+      message: 'No s’ha pogut enviar el missatge. Torna-ho a provar més tard.',
+      ...(showDebugErrors ? { debug } : {}),
+    }, 500);
   }
 }
