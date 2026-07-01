@@ -1,7 +1,7 @@
 // @ts-check
 
 import mdx from '@astrojs/mdx';
-import node from '@astrojs/node';
+import netlify from '@astrojs/netlify';
 import sitemap from '@astrojs/sitemap';
 import { defineConfig } from 'astro/config';
 
@@ -11,9 +11,7 @@ import tailwindcss from '@tailwindcss/vite';
 export default defineConfig({
   site: 'https://www.afaitaca.org',
   output: 'static',
-  adapter: node({
-    mode: 'standalone',
-  }),
+  adapter: netlify(),
   integrations: [mdx(), sitemap()],
 
   vite: {
