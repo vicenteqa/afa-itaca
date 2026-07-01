@@ -29,7 +29,7 @@ const getString = (value) => (typeof value === 'string' ? value.trim() : '');
 
 const stripHeaderLineBreaks = (value) => value.replace(/[\r\n]+/g, ' ').trim();
 
-const getEnv = (name) => getString(process.env[name]) || getString(import.meta.env[name]);
+const getEnv = (name) => getString(process.env[name]);
 
 const escapeHtml = (value) =>
   value
@@ -87,11 +87,11 @@ export async function POST({ request }) {
 
   const smtpUser = getEnv('SMTP_USER');
   const smtpPass = getEnv('SMTP_PASS');
-  const smtpHost = getEnv('SMTP_HOST') || 'smtp.gmail.com';
+  const smtpHost = getEnv('SMTP_HOST');
   const smtpPort = getEnv('SMTP_PORT') || '465';
   const contactEmail = getEnv('CONTACT_EMAIL');
 
-  if (!smtpUser || !smtpPass) {
+  if (!smtpHost || !smtpUser || !smtpPass) {
     console.error('SMTP credentials missing in environment variables');
     return json({ message: 'Error de configuració del servidor de correu.' }, 500);
   }

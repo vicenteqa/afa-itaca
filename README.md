@@ -58,10 +58,10 @@ All commands are run from the root of the project, from a terminal:
 El formulari de contacte envia les dades a `/api/contact` i envia el correu amb Nodemailer. Configura aquestes variables d'entorn en producció:
 
 ```sh
-SMTP_HOST=smtp.gmail.com
+SMTP_HOST=
 SMTP_PORT=465
-SMTP_USER=your-smtp-user@example.com
-SMTP_PASS=your-smtp-password
+SMTP_USER=
+SMTP_PASS=
 ```
 
 Els missatges s'envien a la comissió seleccionada al formulari. Opcionalment, pots definir `CONTACT_EMAIL` per enviar tots els missatges a una única adreça independentment de la comissió seleccionada.
