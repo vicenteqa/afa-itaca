@@ -54,6 +54,19 @@ const getMailErrorDetails = (error) => {
   return details;
 };
 
+const getSmtpDebugDetails = ({ smtpHost, smtpPort, smtpUser, smtpPass, contactEmail }) => ({
+  hostSet: Boolean(smtpHost),
+  port: smtpPort,
+  secure: smtpPort === '465',
+  userSet: Boolean(smtpUser),
+  userLength: smtpUser.length,
+  userHasWhitespace: /\s/.test(smtpUser),
+  passSet: Boolean(smtpPass),
+  passLength: smtpPass.length,
+  passHasWhitespace: /\s/.test(smtpPass),
+  contactEmailSet: Boolean(contactEmail),
+});
+
 const escapeHtml = (value) =>
   value
     .replaceAll('&', '&amp;')
@@ -114,6 +127,7 @@ export async function POST({ request }) {
   const smtpPort = getEnv('SMTP_PORT') || '465';
   const contactEmail = getEnv('CONTACT_EMAIL');
   const showDebugErrors = isEnabled(getEnv('CONTACT_DEBUG_ERRORS'));
+  const smtpDebug = getSmtpDebugDetails({ smtpHost, smtpPort, smtpUser, smtpPass, contactEmail });
 
   if (!smtpHost || !smtpUser || !smtpPass) {
     const missingVariables = [
@@ -124,7 +138,7 @@ export async function POST({ request }) {
     console.error('SMTP credentials missing in environment variables:', missingVariables);
     return json({
       message: 'Error de configuració del servidor de correu.',
-      ...(showDebugErrors ? { debug: { missingVariables } } : {}),
+      ...(showDebugErrors ? { debug: { missingVariables, smtp: smtpDebug } } : {}),
     }, 500);
   }
 
@@ -178,7 +192,7 @@ ${message}
 
     return json({ message: 'Missatge enviat correctament.' });
   } catch (error) {
-    const debug = getMailErrorDetails(error);
+    const debug = { ...getMailErrorDetails(error), smtp: smtpDebug };
     console.error('Nodemailer error:', debug);
     return json({
       message: 'No s’ha pogut enviar el missatge. Torna-ho a provar més tard.',
