@@ -4,7 +4,7 @@ import Footer from '../components/Footer.astro';
 import Header from '../components/Header.astro';
 import FormattedDate from '../components/FormattedDate.astro';
 import InstagramFeed from '../components/InstagramFeed.astro';
-import { SITE_DESCRIPTION, SITE_TITLE } from '../consts';
+import { SHOW_HOME_INSTAGRAM_FEED, SITE_DESCRIPTION, SITE_TITLE } from '../consts';
 import { getCollection } from 'astro:content';
 
 const latestNews = (await getCollection('noticies'))
@@ -24,7 +24,7 @@ const latestNews = (await getCollection('noticies'))
 				<h1>Benvinguts a l'AFA de l'escola Ítaca!</h1>
 				<p class="description">{SITE_DESCRIPTION}</p>
 			</section>
-			<InstagramFeed />
+			{SHOW_HOME_INSTAGRAM_FEED && <InstagramFeed />}
 
 			<section class="quick-links">
 				<h2>Accés ràpid</h2>
