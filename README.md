@@ -66,6 +66,10 @@ SMTP_PASS=your-smtp-password
 
 Els missatges s'envien a la comissió seleccionada al formulari. Opcionalment, pots definir `CONTACT_EMAIL` per enviar tots els missatges a una única adreça independentment de la comissió seleccionada.
 
+## Seccions opcionals
+
+La secció d'Instagram de la home està desactivada per defecte. Defineix `SHOW_HOME_INSTAGRAM_FEED=true` per mostrar-la.
+
 ## 👀 Want to learn more?
 
 Check out [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).
