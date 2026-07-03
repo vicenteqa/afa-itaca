@@ -20,6 +20,7 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           HEAD_SHA: ${{ github.event.workflow_run.head_sha }}
           REPOSITORY: ${{ github.repository }}
+          APPROVER_LOGIN: ${{ github.repository_owner }}
         run: |
           set -euo pipefail
 
@@ -33,5 +34,19 @@ jobs:
           fi
 
           for pr in $prs; do
+            reviews="$(gh api "repos/${REPOSITORY}/pulls/${pr}/reviews" -H "Accept: application/vnd.github+json")"
+            approval="$(jq -r --arg approver "$APPROVER_LOGIN" '
+              map(select(.user.login == $approver))
+              | sort_by(.submitted_at)
+              | last
+              | select(.state == "APPROVED")
+              | .state // empty
+            ' <<<"$reviews")"
+
+            if [ -z "$approval" ]; then
+              echo "Skipping PR #$pr: waiting for approval from ${APPROVER_LOGIN}."
+              continue
+            fi
+
             gh pr merge "$pr" --repo "$REPOSITORY" --squash --delete-branch
           done
