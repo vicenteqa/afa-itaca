@@ -16,7 +16,6 @@ const RECIPIENTS = new Set([
 ]);
 
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-const ENABLED_VALUES = new Set(['1', 'true', 'yes', 'on']);
 
 const json = (body, status = 200) =>
   new Response(JSON.stringify(body), {
@@ -31,8 +30,6 @@ const getString = (value) => (typeof value === 'string' ? value.trim() : '');
 const stripHeaderLineBreaks = (value) => value.replace(/[\r\n]+/g, ' ').trim();
 
 const getEnv = (name) => getString(process.env[name]);
-
-const isEnabled = (value) => ENABLED_VALUES.has(getString(value).toLowerCase());
 
 const getMailErrorDetails = (error) => {
   if (!error || typeof error !== 'object') {
@@ -53,19 +50,6 @@ const getMailErrorDetails = (error) => {
 
   return details;
 };
-
-const getSmtpDebugDetails = ({ smtpHost, smtpPort, smtpUser, smtpPass, contactEmail }) => ({
-  hostSet: Boolean(smtpHost),
-  port: smtpPort,
-  secure: smtpPort === '465',
-  userSet: Boolean(smtpUser),
-  userLength: smtpUser.length,
-  userHasWhitespace: /\s/.test(smtpUser),
-  passSet: Boolean(smtpPass),
-  passLength: smtpPass.length,
-  passHasWhitespace: /\s/.test(smtpPass),
-  contactEmailSet: Boolean(contactEmail),
-});
 
 const escapeHtml = (value) =>
   value
@@ -126,8 +110,6 @@ export async function POST({ request }) {
   const smtpHost = getEnv('SMTP_HOST');
   const smtpPort = getEnv('SMTP_PORT') || '465';
   const contactEmail = getEnv('CONTACT_EMAIL');
-  const showDebugErrors = isEnabled(getEnv('CONTACT_DEBUG_ERRORS'));
-  const smtpDebug = getSmtpDebugDetails({ smtpHost, smtpPort, smtpUser, smtpPass, contactEmail });
 
   if (!smtpHost || !smtpUser || !smtpPass) {
     const missingVariables = [
@@ -136,10 +118,7 @@ export async function POST({ request }) {
       !smtpPass && 'SMTP_PASS',
     ].filter(Boolean);
     console.error('SMTP credentials missing in environment variables:', missingVariables);
-    return json({
-      message: 'Error de configuració del servidor de correu.',
-      ...(showDebugErrors ? { debug: { missingVariables, smtp: smtpDebug } } : {}),
-    }, 500);
+    return json({ message: 'Error de configuració del servidor de correu.' }, 500);
   }
 
   const transporter = nodemailer.createTransport({
@@ -192,11 +171,7 @@ ${message}
 
     return json({ message: 'Missatge enviat correctament.' });
   } catch (error) {
-    const debug = { ...getMailErrorDetails(error), smtp: smtpDebug };
-    console.error('Nodemailer error:', debug);
-    return json({
-      message: 'No s’ha pogut enviar el missatge. Torna-ho a provar més tard.',
-      ...(showDebugErrors ? { debug } : {}),
-    }, 500);
+    console.error('Nodemailer error:', getMailErrorDetails(error));
+    return json({ message: 'No s’ha pogut enviar el missatge. Torna-ho a provar més tard.' }, 500);
   }
 }

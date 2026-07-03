@@ -66,8 +66,6 @@ SMTP_PASS=
 
 Els missatges s'envien a la comissió seleccionada al formulari. Opcionalment, pots definir `CONTACT_EMAIL` per enviar tots els missatges a una única adreça independentment de la comissió seleccionada.
 
-Per depurar errors SMTP a Netlify, pots activar temporalment `CONTACT_DEBUG_ERRORS=true`. La resposta de `/api/contact` inclourà camps segurs com `code`, `command` o `responseCode`, però no credencials.
-
 ## Seccions opcionals
 
 La secció d'Instagram de la home està desactivada per defecte. Defineix `SHOW_HOME_INSTAGRAM_FEED=true` per mostrar-la.
