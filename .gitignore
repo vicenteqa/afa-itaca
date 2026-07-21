@@ -27,3 +27,7 @@ pnpm-debug.log*
 # agents and local config
 .agents/
 DECAP_SETUP.md
+
+# playwright
+playwright-report/
+test-results/
