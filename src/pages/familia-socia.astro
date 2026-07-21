@@ -1,0 +1,75 @@
+---
+import BaseHead from '../components/BaseHead.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import { SITE_TITLE } from '../consts';
+import { getEntry, render } from 'astro:content';
+
+const page = await getEntry('pages', 'familia-socia');
+if (!page) throw new Error('Page not found');
+const { Content } = await render(page);
+---
+
+<!doctype html>
+<html lang="ca">
+	<head>
+		<BaseHead title={`${page.data.title} | ${SITE_TITLE}`} description={page.data.description} />
+	</head>
+	<body>
+		<Header />
+		<main>
+			<section class="hero">
+				<h1>{page.data.title}</h1>
+				{page.data.description && <p class="description">{page.data.description}</p>}
+			</section>
+
+			<article class="prose">
+				<div class="content">
+					<Content />
+				</div>
+			</article>
+		</main>
+		<Footer />
+	</body>
+</html>
+
+<style>
+	main {
+		width: 100%;
+	}
+	.content {
+		max-width: 960px;
+		margin: 0 auto;
+		padding: 3rem 1.5rem;
+	}
+	@media (max-width: 720px) {
+		.content {
+			padding: 1.5rem 0.75rem;
+		}
+	}
+	.prose {
+		width: 100%;
+		max-width: none;
+		color: var(--text-main);
+	}
+	.prose :global(ul) {
+		margin-bottom: 2rem;
+	}
+	.prose :global(li) {
+		margin-bottom: 0.5rem;
+	}
+	.prose :global(hr) {
+		margin: 3rem 0;
+		border: none;
+		border-top: 2px dashed var(--accent-pastel);
+	}
+	.prose :global(blockquote) {
+		border-left: 4px solid var(--accent-pastel);
+		margin: 1.5rem 0;
+		padding: 0.75rem 1.25rem;
+		background: #f0f8ff;
+		border-radius: 0 12px 12px 0;
+		color: var(--text-light);
+		font-style: normal;
+	}
+</style>
