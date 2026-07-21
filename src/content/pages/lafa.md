@@ -78,6 +78,8 @@ Situada al barri de La Collada de Vilanova i la Geltrú, va començar a funciona
 
 ---
 
-## Fes-te família sòcia de l'AFA!
-
-*vols saber com?* [Fes clic aquí](/familia-socia/)
+<div style="text-align: center; margin: 2rem 0;">
+  <a href="/familia-socia/" style="display: inline-block; background: var(--accent); color: white; font-family: 'Fredoka', sans-serif; font-weight: 600; text-decoration: none; padding: 0.75rem 2rem; border-radius: 20px; box-shadow: 0 4px 0 var(--accent-dark); font-size: 1.1rem; transition: all 0.15s ease;">
+    Fes-te família sòcia de l'AFA! ✨
+  </a>
+</div>

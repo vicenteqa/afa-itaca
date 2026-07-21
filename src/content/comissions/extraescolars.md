@@ -30,3 +30,8 @@ Trobareu tota la informació i el procediment per inscriure-us al seu [web](http
 <p style="text-align: center;">
   <img src="/uploads/extraescolars-curs-25-26.jpeg" alt="Graella d'activitats extraescolars 25-26" />
 </p>
+
+## Documents d'interès
+
+- 🏊 Piscina: [Autorització i normativa d'ús](https://drive.google.com/file/d/1ksq9jQbBeW_UslEOe3QKhmoy1kIQfn7v/view?usp=sharing)
+- 📋 Activitats extraescolars excepte piscina: [Autoritzacions](https://drive.google.com/file/d/1oaFBp3ZIR3-ZrolSGvBfvEP1bdfjEc8X/view?usp=sharing)

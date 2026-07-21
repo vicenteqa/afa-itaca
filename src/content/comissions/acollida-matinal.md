@@ -38,7 +38,7 @@ Durant aquesta estona els infants poden esmorzar i fer activitats lúdiques (con
 
 La inscripció es fa a [**afaitaca.ampasoft.net/login**](https://afaitaca.ampasoft.net/login).
 
-Les famílies no sòcies també s’hi poden registrar seguint els passos de [**afaitaca.org/familia-socia**](https://www.afaitaca.org/familia-socia/) i indicant l’opció de no ser família sòcia durant el procés.
+Les famílies no sòcies també s’hi poden registrar seguint els passos de [**afaitaca.org/familia-socia**](/familia-socia) i indicant l’opció de no ser família sòcia durant el procés.
 
 Un cop a Ampasoft, cal anar a **Serveis Gestió assistències acollida → Noves preinscripcions**, seleccionar l’infant i introduir les dades requerides.
 
