@@ -6,6 +6,15 @@ on:
     - cron: '0 8 25-31 * *'
     - cron: '0 8 1-5 * *'
   workflow_dispatch:
+    inputs:
+      mode:
+        description: 'Què fer amb el menú adjunt al correu'
+        type: choice
+        required: true
+        default: merge
+        options:
+          - merge
+          - replace
 
 jobs:
   upload:
@@ -34,5 +43,5 @@ jobs:
           WORDPRESS_URL: ${{ secrets.WORDPRESS_URL }}
           WORDPRESS_USER: ${{ secrets.WORDPRESS_USER }}
           WORDPRESS_APP_PASSWORD: ${{ secrets.WORDPRESS_APP_PASSWORD }}
-          GITHUB_EVENT_NAME: ${{ github.event_name }}
+          MENU_MODE: ${{ inputs.mode }}
         run: python upload-mail-menu/upload_attachments.py

@@ -36,6 +36,14 @@ ALLOWED_EXTENSIONS = {".pdf", ".jpg", ".jpeg", ".png"}
 TARGET_FILENAME = "menjador.jpg"
 MENU_PAGE_ID = 3224
 
+# Accepted MENU_MODE values, mapped to the internal mode names
+MODE_ALIASES = {
+    "combine": "combine",
+    "merge": "combine",
+    "direct": "direct",
+    "replace": "direct",
+}
+
 
 def is_end_of_month():
     """Check if today is within the last 6 days of the month."""
@@ -307,11 +315,11 @@ def process_emails():
     most_recent_id = email_ids[-1]
     total_uploaded = 0
 
-    # Determine upload mode based on trigger type and day of month
-    event_name = os.environ.get("GITHUB_EVENT_NAME", "")
-    if event_name == "workflow_dispatch":
-        mode = "combine"
-        print(f"Mode: COMBINE (manual trigger - always combines)")
+    # Manual runs pick the mode explicitly via MENU_MODE; scheduled runs use the day of month
+    forced_mode = MODE_ALIASES.get(os.environ.get("MENU_MODE", "").strip().lower())
+    if forced_mode:
+        mode = forced_mode
+        print(f"Mode: {mode.upper()} (chosen manually)")
     elif is_end_of_month():
         mode = "combine"
         print(f"Mode: COMBINE (last 6 days of month - will merge current + new menu)")
