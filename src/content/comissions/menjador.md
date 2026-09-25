@@ -38,8 +38,8 @@ Jocs i Taula gestiona directament les inscripcions a través de la seva platafor
 
 | Servei | Preu |
 | :--- | :--- |
-| **Ús habitual** (3 o més dies fixos/setmana) | **7,00€** / dia |
-| **Ús esporàdic** | **7,80€** / dia |
+| **Ús habitual** (3 o més dies fixos/setmana) | **7,55€** / dia |
+| **Ús esporàdic** | **8,00€** / dia |
 | **Esmorzar: Peça de fruita** | **0,40€** |
 | **Esmorzar: Entrepà petit / gran** | **1,50€ / 2,00€** |
 
