@@ -53,6 +53,11 @@ import cv2
 import numpy as np
 import pytesseract
 
+try:
+    import pdfplumber
+except ImportError:  # pragma: no cover - optional dependency
+    pdfplumber = None
+
 WEEKDAYS_CA = ["DILLUNS", "DIMARTS", "DIMECRES", "DIJOUS", "DIVENDRES"]
 MONTHS_CA = {
     "GENER": 1, "FEBRER": 2, "MARC": 3, "ABRIL": 4, "MAIG": 5, "JUNY": 6,
@@ -259,6 +264,66 @@ def fit_date_offset(candidates: list[tuple[int, int, int]]) -> tuple[int, float]
     return offset, confidence
 
 
+def fit_grid(badge_candidates: list[tuple[int, int, float]], header_bottom: float,
+             footer_top: float) -> tuple[list[float], int, float]:
+    """Turn (col, value, top) day-badge candidates into row Y-boundaries plus
+    the fitted date/offset confidence. Shared by the OCR and PDF-text paths.
+    Returns (row_bounds, offset, confidence) where row_bounds has n_rows+1
+    entries and date(row, col) = offset + row*7 + col."""
+    if not badge_candidates:
+        raise ValueError("No s'ha detectat cap número de dia a la graella.")
+
+    tops_sorted = sorted(t for _, _, t in badge_candidates)
+    diffs = [b - a for a, b in zip(tops_sorted, tops_sorted[1:]) if b - a > 5]
+    median_gap = float(np.median(diffs)) if diffs else 200.0
+    min_gap = max(median_gap * ROW_GAP_FRACTION, 40.0)
+
+    anchors_y = [t for _, _, t in badge_candidates]
+    clusters = cluster_rows(anchors_y, min_gap)
+    n_rows = len(clusters)
+
+    row_of_candidate = [-1] * len(badge_candidates)
+    row_anchor_top = [0.0] * n_rows
+    for row_idx, members in enumerate(clusters):
+        row_anchor_top[row_idx] = float(np.median([anchors_y[i] for i in members]))
+        for i in members:
+            row_of_candidate[i] = row_idx
+
+    fit_input = [
+        (row_of_candidate[i], badge_candidates[i][0], badge_candidates[i][1])
+        for i in range(len(badge_candidates))
+    ]
+    offset, confidence = fit_date_offset(fit_input)
+
+    row_margin = median_gap * ROW_TOP_MARGIN_FRACTION
+    row_top = [max(header_bottom, row_anchor_top[i] - row_margin) for i in range(n_rows)]
+    row_bounds = row_top + [footer_top]
+    return row_bounds, offset, confidence
+
+
+def build_output(days: list[DayCell], month_name: str | None, month_num: int | None,
+                  year: int | None, confidence: float, source: str) -> dict:
+    days = sorted(days, key=lambda d: (d.date if d.date is not None else 0))
+    return {
+        "month": month_name,
+        "month_number": month_num,
+        "year": year,
+        "source": source,
+        "date_offset_confidence": round(confidence, 2),
+        "days": [
+            {
+                "date": d.date,
+                "weekday": d.weekday,
+                "holiday": d.holiday,
+                "items": d.items,
+                "allergens": d.allergens,
+                "raw_text": d.raw_text,
+            }
+            for d in days
+        ],
+    }
+
+
 def extract_allergens(text: str) -> list[int]:
     codes: set[int] = set()
     for match in re.finditer(r"\(([\d,\s]+)\)", text):
@@ -295,7 +360,10 @@ def clean_join(words: list[Word]) -> str:
     return " ".join(out)
 
 
-def extract_menu(image_path: str, lang: str = "cat", debug: bool = False) -> dict:
+def extract_menu_ocr(image_path: str, lang: str = "cat", debug: bool = False) -> dict:
+    """Extract the menu by OCR'ing a raster image (or a rasterized PDF page).
+    Used for plain images, and as the fallback when a PDF has no usable text
+    layer (see extract_menu_from_pdf_text)."""
     img = load_image(image_path)
     img, _scale = upscale_if_small(img)
     h, w = img.shape[:2]
@@ -329,43 +397,15 @@ def extract_menu(image_path: str, lang: str = "cat", debug: bool = False) -> dic
                 top = sw.top // crop_scale + int(header_bottom)
                 badge_candidates.append((col, val, top))
 
-    if not badge_candidates:
-        raise ValueError("No s'ha detectat cap número de dia a la graella.")
-
-    # --- Row clustering across all columns' badge candidates ---
-    tops_sorted = sorted(t for _, _, t in badge_candidates)
-    diffs = [b - a for a, b in zip(tops_sorted, tops_sorted[1:]) if b - a > 5]
-    median_gap = float(np.median(diffs)) if diffs else 200.0
-    min_gap = max(median_gap * ROW_GAP_FRACTION, 40.0)
-
-    anchors_y = [t for _, _, t in badge_candidates]
-    clusters = cluster_rows(anchors_y, min_gap)
-    n_rows = len(clusters)
-
-    row_of_candidate = [-1] * len(badge_candidates)
-    row_anchor_top = [0.0] * n_rows
-    for row_idx, members in enumerate(clusters):
-        row_anchor_top[row_idx] = float(np.median([anchors_y[i] for i in members]))
-        for i in members:
-            row_of_candidate[i] = row_idx
-
-    fit_input = [
-        (row_of_candidate[i], badge_candidates[i][0], badge_candidates[i][1])
-        for i in range(len(badge_candidates))
-    ]
-    offset, confidence = fit_date_offset(fit_input)
+    row_bounds, offset, confidence = fit_grid(badge_candidates, header_bottom, footer_top)
+    n_rows = len(row_bounds) - 1
 
     if debug:
         print(f"[debug] columns bounds: {col_bounds}", file=sys.stderr)
         print(f"[debug] header_bottom={header_bottom} footer_top={footer_top}", file=sys.stderr)
-        print(f"[debug] {len(badge_candidates)} badge candidates, {n_rows} row clusters, "
-              f"median_gap={median_gap:.0f}", file=sys.stderr)
+        print(f"[debug] {len(badge_candidates)} badge candidates, {n_rows} row clusters",
+              file=sys.stderr)
         print(f"[debug] date offset={offset} confidence={confidence:.2f}", file=sys.stderr)
-
-    # --- Row Y boundaries: row_top[i] = anchor[i] - margin, clamped to header/footer ---
-    row_margin = median_gap * ROW_TOP_MARGIN_FRACTION
-    row_top = [max(header_bottom, row_anchor_top[i] - row_margin) for i in range(n_rows)]
-    row_bounds = row_top + [footer_top]
 
     # last day of month, to drop out-of-range (row, col) combinations (e.g. padding cells)
     last_day = _days_in_month(month_num, year)
@@ -442,25 +482,122 @@ def extract_menu(image_path: str, lang: str = "cat", debug: bool = False) -> dic
                 raw_text=raw_text,
             ))
 
-    days.sort(key=lambda d: (d.date if d.date is not None else 0))
+    return build_output(days, month_name, month_num, year, confidence, source="ocr")
 
-    return {
-        "month": month_name,
-        "month_number": month_num,
-        "year": year,
-        "date_offset_confidence": round(confidence, 2),
-        "days": [
-            {
-                "date": d.date,
-                "weekday": d.weekday,
-                "holiday": d.holiday,
-                "items": d.items,
-                "allergens": d.allergens,
-                "raw_text": d.raw_text,
-            }
-            for d in days
-        ],
-    }
+
+MIN_PDF_TEXT_WORDS = 30  # below this, treat the PDF as image-only and fall back to OCR
+
+
+def extract_menu_from_pdf_text(pdf_path: str, debug: bool = False) -> dict | None:
+    """Extract the menu straight from a PDF's embedded text layer, when it has
+    one: many of these menus are exported from a design tool as real text,
+    not a scanned/flattened image, in which case this is exact (no OCR
+    guessing at all) and much simpler than the OCR path, since every word is
+    already known instead of having to re-read cells or hunt for badges the
+    first OCR pass missed. Returns None if the PDF turns out to have no
+    (or too little) extractable text, so the caller can fall back to OCR."""
+    if pdfplumber is None:
+        return None
+
+    with pdfplumber.open(pdf_path) as pdf:
+        page = pdf.pages[0]
+        raw_words = page.extract_words()
+        if len(raw_words) < MIN_PDF_TEXT_WORDS:
+            return None
+
+        page_width, page_height = float(page.width), float(page.height)
+
+    # Group words into lines by rounding their (vector-precise) top position;
+    # unlike OCR there's no glyph-ascender noise to worry about.
+    words: list[Word] = []
+    for rw in raw_words:
+        line_id = (0, 0, round(rw["top"]))
+        words.append(Word(
+            text=rw["text"], left=rw["x0"], top=rw["top"],
+            width=rw["x1"] - rw["x0"], height=rw["bottom"] - rw["top"],
+            conf=100.0, line_id=line_id,
+        ))
+
+    header = find_weekday_header(words)
+    if len(header) < 5:
+        if debug:
+            print(f"[debug] PDF text layer only matched {len(header)}/5 weekday "
+                  "headers; falling back to OCR", file=sys.stderr)
+        return None
+
+    month_name, month_num, year = find_month_year(words)
+    header_bottom = max(header[wd].bottom for wd in WEEKDAYS_CA)
+    footer_top = find_footer_top(words, page_height)
+    col_bounds = compute_column_bounds(header, page_width)
+
+    badge_candidates: list[tuple[int, int, float]] = []
+    for wd in words:
+        val = is_bare_day_number(wd.text)
+        if val is None or wd.top <= header_bottom:
+            continue
+        col = next((c for c in range(5) if col_bounds[c] <= wd.cx < col_bounds[c + 1]), None)
+        if col is not None:
+            badge_candidates.append((col, val, wd.top))
+
+    row_bounds, offset, confidence = fit_grid(badge_candidates, header_bottom, footer_top)
+    n_rows = len(row_bounds) - 1
+
+    if debug:
+        print(f"[debug] PDF text layer: {len(raw_words)} words, columns {col_bounds}",
+              file=sys.stderr)
+        print(f"[debug] {len(badge_candidates)} badge candidates, {n_rows} row clusters",
+              file=sys.stderr)
+        print(f"[debug] date offset={offset} confidence={confidence:.2f}", file=sys.stderr)
+
+    last_day = _days_in_month(month_num, year)
+
+    days: list[DayCell] = []
+    for row_idx in range(n_rows):
+        y0, y1 = row_bounds[row_idx], row_bounds[row_idx + 1]
+        for col in range(5):
+            date = offset + row_idx * 7 + col
+            if last_day is not None and not (1 <= date <= last_day):
+                continue
+
+            col_x0, col_x1 = col_bounds[col], col_bounds[col + 1]
+            cell_words = [
+                wd for wd in words
+                if y0 <= wd.cy < y1 and col_x0 <= wd.cx < col_x1
+                and is_bare_day_number(wd.text) != date
+            ]
+            if not cell_words:
+                continue
+
+            raw_text = clean_join(cell_words)
+            if not raw_text.strip():
+                continue
+
+            is_holiday = any(k in normalize(raw_text) for k in HOLIDAY_KEYWORDS)
+            days.append(DayCell(
+                date=date,
+                weekday=WEEKDAYS_CA[col].capitalize(),
+                col=col,
+                row=row_idx,
+                holiday=is_holiday,
+                items=[] if is_holiday else split_items(raw_text),
+                allergens=extract_allergens(raw_text),
+                raw_text=raw_text,
+            ))
+
+    return build_output(days, month_name, month_num, year, confidence, source="pdf_text")
+
+
+def extract_menu(image_path: str, lang: str = "cat", debug: bool = False) -> dict:
+    """Extract the menu from a PDF or image. PDFs are tried as a text layer
+    first (exact, no OCR); this function only falls back to OCR when that
+    isn't available, and always for plain images."""
+    if image_path.lower().endswith(".pdf"):
+        result = extract_menu_from_pdf_text(image_path, debug=debug)
+        if result is not None:
+            return result
+        if debug:
+            print("[debug] no usable PDF text layer, falling back to OCR", file=sys.stderr)
+    return extract_menu_ocr(image_path, lang=lang, debug=debug)
 
 
 def _days_in_month(month_num: int | None, year: int | None) -> int | None:
