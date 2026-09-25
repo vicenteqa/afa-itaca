@@ -380,13 +380,44 @@ def extract_menu(image_path: str, lang: str = "cat", debug: bool = False) -> dic
 
             cell_words = ocr_cell(img, col_bounds[col], col_bounds[col + 1], y0, y1, lang=lang)
 
-            # the day-number badge itself sits near the top of the cell; drop it
-            # from the body text once we've matched it against the fitted date.
+            # The day-number badge sits near the top-right corner of the cell
+            # and is often misread: either as digits merged onto the same
+            # tesseract line as the first dish words ("25" glued to "AMB."),
+            # or as a short garbled "word" standing alone on its own line
+            # ("28" -> "Va.)"). Drop both shapes rather than only a
+            # successfully-read bare number: (a) any bare 1-2 digit token in
+            # the top ~25% of the cell, wherever it sits on its line, and
+            # (b) the sole word of a line up there positioned in the right
+            # ~35% of the column (real dish lines start flush left and
+            # normally have several words, so an isolated right-aligned
+            # word can only be the badge).
             badge_zone = y0 + (y1 - y0) * 0.25
-            cell_words = [
-                wd for wd in cell_words
-                if not (wd.top <= badge_zone and is_bare_day_number(wd.text) is not None)
-            ]
+            col_x0, col_x1 = col_bounds[col], col_bounds[col + 1]
+            lines_by_id: dict[tuple, list[Word]] = {}
+            for wd in cell_words:
+                lines_by_id.setdefault(wd.line_id, []).append(wd)
+
+            def is_badge_word(wd: Word) -> bool:
+                if wd.top > badge_zone:
+                    return False
+                # An exact match to the date already derived for this cell is
+                # unambiguous, regardless of where it sits. Any other bare
+                # number (e.g. the "4" in "ALS 4 FORMATGES") is real dish
+                # text, even if it happens to fall in the top-right area.
+                if is_bare_day_number(wd.text) == date:
+                    return True
+                # Otherwise, only a badge misread as a garbled non-numeric
+                # "word" (e.g. "28" -> "Va.)") can still be caught: the sole
+                # word on its line, positioned in the right ~35% of the
+                # column (real dish lines start flush left and normally
+                # have several words).
+                line_words = lines_by_id[wd.line_id]
+                if len(line_words) == 1:
+                    rel_x = (wd.cx - col_x0) / (col_x1 - col_x0)
+                    return rel_x > 0.65
+                return False
+
+            cell_words = [wd for wd in cell_words if not is_badge_word(wd)]
             if not cell_words:
                 continue
 
