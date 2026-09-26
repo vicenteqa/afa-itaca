@@ -6,7 +6,6 @@ on:
     types: [completed]
 
 permissions:
-  contents: write
   pull-requests: write
 
 jobs:
@@ -15,7 +14,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Merge Dependabot PRs after CI passes
+      - name: Ask Dependabot to merge after CI passes
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           HEAD_SHA: ${{ github.event.workflow_run.head_sha }}
@@ -49,6 +48,10 @@ jobs:
             exit 0
           fi
 
+          # Ask Dependabot to merge itself rather than merging with this
+          # workflow's own token: the branch ruleset only exempts Dependabot
+          # (as the acting identity) from the required review, so the merge
+          # has to be performed by dependabot[bot], not github-actions[bot].
           for pr in $prs; do
-            gh pr merge "$pr" --repo "$REPOSITORY" --squash --delete-branch
+            gh pr comment "$pr" --repo "$REPOSITORY" --body "@dependabot squash and merge"
           done
