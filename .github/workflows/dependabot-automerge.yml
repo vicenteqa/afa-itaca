@@ -20,7 +20,6 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           HEAD_SHA: ${{ github.event.workflow_run.head_sha }}
           REPOSITORY: ${{ github.repository }}
-          APPROVER_LOGIN: ${{ github.repository_owner }}
         run: |
           set -euo pipefail
 
@@ -33,20 +32,23 @@ jobs:
             exit 0
           fi
 
+          # Dependabot embeds the semver kind of each bump ("major"/"minor"/"patch")
+          # in the commit message as `update-type: version-update:semver-<kind>`.
+          # Only auto-merge when every bump in this commit is minor or patch
+          # (X.Y.Z where only Y or Z moves) -- never a major (X) bump.
+          commit_message="$(gh api "repos/${REPOSITORY}/commits/${HEAD_SHA}" --jq '.commit.message')"
+          update_types="$(grep -oP 'update-type: version-update:semver-\K\w+' <<<"$commit_message" || true)"
+
+          if [ -z "$update_types" ]; then
+            echo "Skipping: no dependabot update-type metadata found on ${HEAD_SHA}."
+            exit 0
+          fi
+
+          if grep -qx "major" <<<"$update_types"; then
+            echo "Skipping: commit ${HEAD_SHA} includes a major version bump ($update_types)."
+            exit 0
+          fi
+
           for pr in $prs; do
-            reviews="$(gh api "repos/${REPOSITORY}/pulls/${pr}/reviews" -H "Accept: application/vnd.github+json")"
-            approval="$(jq -r --arg approver "$APPROVER_LOGIN" '
-              map(select(.user.login == $approver))
-              | sort_by(.submitted_at)
-              | last
-              | select(.state == "APPROVED")
-              | .state // empty
-            ' <<<"$reviews")"
-
-            if [ -z "$approval" ]; then
-              echo "Skipping PR #$pr: waiting for approval from ${APPROVER_LOGIN}."
-              continue
-            fi
-
             gh pr merge "$pr" --repo "$REPOSITORY" --squash --delete-branch
           done

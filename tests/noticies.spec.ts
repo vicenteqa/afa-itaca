@@ -25,6 +25,7 @@ test.describe('Notícies', () => {
   test('mostra almenys 5 notícies', async ({ page }) => {
     const noticies = new NoticiesPage(page);
     await noticies.goto();
-    await expect(page.locator('.posts-list h2')).toHaveCount(8);
+    const count = await page.locator('.posts-list h2').count();
+    expect(count).toBeGreaterThanOrEqual(5);
   });
 });

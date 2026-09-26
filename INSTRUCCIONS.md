@@ -19,14 +19,13 @@ S'ha creat un website complet per a l'AFA Ítaca amb les següents seccions:
    - Casals d'Estiu
    - Comunicació
 4. **Notícies** (`/noticies`) - Blog amb les últimes novetats
-5. **Documents** (`/documents`) - Documents descarregables per categories
-6. **Contacte** (`/contacte`) - Formulari de contacte i informació
+5. **Contacte** (`/contacte`) - Formulari de contacte i informació
 
 ### Contingut d'exemple
 
 - 5 notícies d'exemple amb contingut realista
 - 9 comissions amb tota la informació
-- 3 pàgines estàtiques (L'AFA, Documents, Contacte)
+- 2 pàgines estàtiques (L'AFA, Contacte)
 
 ## Com executar el projecte
 
@@ -86,8 +85,7 @@ Un cop configurat:
 **Des de l'interfície de Netlify CMS** (sense tocar codi):
 
 - **Notícies**: Crear, editar i eliminar notícies del blog
-- **Documents**: Pujar documents PDF, imatges, etc. amb categories
-- **Pàgines**: Editar contingut de L'AFA, Documents i Contacte
+- **Pàgines**: Editar contingut de L'AFA i Contacte
 - **Comissions**: Editar o afegir noves comissions
 
 ### Com crear una notícia nova
@@ -103,24 +101,11 @@ Un cop configurat:
    - **Contingut**: Text complet amb format Markdown
 5. Fes clic a "Publish" per publicar o "Save" per guardar com a esborrany
 
-### Com pujar un document
-
-1. Accedeix a `/admin`
-2. Fes clic a "Documents"
-3. Fes clic a "New Documents"
-4. Omple els camps:
-   - **Títol**: Nom del document
-   - **Descripció**: Descripció breu
-   - **Categoria**: Menús, Calendaris, Normatives o Altres
-   - **Arxiu**: Puja el fitxer PDF, DOC, etc.
-   - **Data**: Data del document
-5. Fes clic a "Publish"
-
 ### Com editar una pàgina
 
 1. Accedeix a `/admin`
 2. Fes clic a "Pàgines"
-3. Selecciona la pàgina que vols editar (L'AFA, Documents o Contacte)
+3. Selecciona la pàgina que vols editar (L'AFA o Contacte)
 4. Modifica el contingut
 5. Fes clic a "Publish"
 
@@ -140,7 +125,7 @@ Edita el fitxer `src/styles/global.css` i modifica les variables CSS:
 
 ### Afegir el teu logo
 
-Substitueix el fitxer `public/favicon.svg` pel teu logo.
+Substitueix el fitxer `public/favicon.png` pel teu logo.
 
 ### Actualitzar informació de contacte
 
@@ -177,8 +162,7 @@ afa-itaca/
 │   ├── content/        # Tot el contingut del web
 │   │   ├── noticies/   # Notícies del blog
 │   │   ├── comissions/ # Comissions de l'AFA
-│   │   ├── pages/      # Pàgines estàtiques
-│   │   └── documents/  # Documents descarregables
+│   │   └── pages/      # Pàgines estàtiques
 │   ├── layouts/        # Plantilles de pàgina
 │   ├── pages/          # Rutes del web
 │   └── styles/         # Estils globals

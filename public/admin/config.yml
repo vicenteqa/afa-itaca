@@ -19,20 +19,18 @@ collections:
       - {label: "Descripció", name: "description", widget: "text"}
       - {label: "Data de Publicació", name: "pubDate", widget: "datetime"}
       - {label: "Imatge Principal", name: "heroImage", widget: "image", required: false}
+      - {label: "Etiqueta del carrusel", name: "carouselLabel", widget: "string", required: false}
+      - label: "Imatges del carrusel"
+        name: "carouselImages"
+        widget: "list"
+        required: false
+        collapsed: false
+        summary: "{{fields.src}}"
+        fields:
+          - {label: "Imatge (src)", name: "src", widget: "image", hint: "Ruta de la imatge del carrusel (ex: /uploads/foto1.jpg)"}
+          - {label: "Text alternatiu", name: "alt", widget: "string", required: false}
+          - {label: "Peu de foto", name: "caption", widget: "string", required: false}
       - {label: "Contingut", name: "body", widget: "markdown"}
-
-  # Documents d'Interés
-  - name: "documents"
-    label: "Documents"
-    folder: "src/content/documents"
-    create: true
-    slug: "{{slug}}"
-    fields:
-      - {label: "Títol", name: "title", widget: "string"}
-      - {label: "Descripció", name: "description", widget: "text"}
-      - {label: "Categoria", name: "category", widget: "select", options: ["Menús", "Calendaris", "Normatives", "Altres"]}
-      - {label: "Arxiu", name: "file", widget: "file"}
-      - {label: "Data", name: "date", widget: "datetime"}
 
   # Pàgines Estàtiques
   - name: "pages"
@@ -49,14 +47,6 @@ collections:
       - label: "Menú del Mes"
         name: "menu-del-mes"
         file: "src/content/pages/menu-del-mes.md"
-        fields:
-          - {label: "Títol", name: "title", widget: "string"}
-          - {label: "Descripció", name: "description", widget: "text"}
-          - {label: "Contingut", name: "body", widget: "markdown"}
-
-      - label: "Documents d'Interés"
-        name: "documents-page"
-        file: "src/content/pages/documents.md"
         fields:
           - {label: "Títol", name: "title", widget: "string"}
           - {label: "Descripció", name: "description", widget: "text"}
