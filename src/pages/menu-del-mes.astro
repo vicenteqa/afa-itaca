@@ -95,13 +95,29 @@ try {
 		// No entry (weekend: the grid only has Mon-Fri columns) or a holiday -> stay hidden.
 		if (!entry || entry.holiday || !entry.items || entry.items.length === 0) return;
 
+		const COURSE_EMOJIS = ['🥗', '🍽️', '🍎'];
+		const toSentenceCase = (text) => {
+			const lower = text.toLowerCase();
+			return lower.charAt(0).toUpperCase() + lower.slice(1);
+		};
+
 		const list = container.querySelector('.avui-items');
 		list.innerHTML = '';
-		for (const item of entry.items) {
+		entry.items.forEach((item, i) => {
 			const li = document.createElement('li');
-			li.textContent = item;
+
+			const emoji = document.createElement('span');
+			emoji.className = 'course-emoji';
+			emoji.setAttribute('aria-hidden', 'true');
+			emoji.textContent = COURSE_EMOJIS[i] ?? '🍴';
+
+			const text = document.createElement('span');
+			text.className = 'course-text';
+			text.textContent = toSentenceCase(item);
+
+			li.append(emoji, text);
 			list.appendChild(li);
-		}
+		});
 
 		container.hidden = false;
 	}
@@ -129,14 +145,15 @@ try {
 	.avui-menu {
 		max-width: 480px;
 		margin: 0 auto 2rem;
-		padding: 1.5rem 2rem;
-		background: var(--accent-pastel);
-		border-radius: 14px;
+		padding: 1.75rem 2rem;
+		background: linear-gradient(180deg, var(--accent-pastel) 0%, rgba(191, 225, 246, 0.5) 100%);
+		border-radius: 18px;
 		text-align: left;
+		box-shadow: 0 8px 24px rgba(3, 72, 145, 0.12);
 	}
 	.avui-menu h2 {
-		margin: 0 0 0.75rem;
-		font-size: 1.2rem;
+		margin: 0 0 1.1rem;
+		font-size: 1.25rem;
 		color: var(--accent-dark);
 		text-align: center;
 	}
@@ -144,13 +161,27 @@ try {
 		margin: 0;
 		padding: 0;
 		list-style: none;
+		display: flex;
+		flex-direction: column;
+		gap: 0.6rem;
 	}
 	.avui-items li {
-		padding: 0.35rem 0;
-		border-bottom: 1px dashed rgba(3, 72, 145, 0.2);
+		display: flex;
+		align-items: center;
+		gap: 0.85rem;
+		padding: 0.7rem 1rem;
+		background: white;
+		border-radius: 12px;
+		box-shadow: 0 2px 6px rgba(3, 72, 145, 0.08);
 	}
-	.avui-items li:last-child {
-		border-bottom: none;
+	.course-emoji {
+		font-size: 1.4rem;
+		line-height: 1;
+		flex-shrink: 0;
+	}
+	.course-text {
+		color: rgb(var(--gray-dark));
+		font-weight: 500;
 	}
 
 	/* Estils específics per a la imatge del menú */
