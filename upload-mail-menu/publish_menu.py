@@ -2,11 +2,11 @@
 """
 Descarrega el PDF del menú de l'últim correu no llegit de l'adreça
 autoritzada, i el desa a public/uploads/menjador.pdf (es conserva tal
-qual per poder-ne extreure més endavant el text/menú diari), i també en
-genera una imatge (menjador.jpg) amb la primera pàgina, que és el que es
-mostra a la pàgina /menu-del-mes. El workflow de GitHub Actions és qui es
-fa càrrec de fer commit i push del canvi (aquest script només toca els
-fitxers locals).
+qual per si cal reprocessar-lo), en genera una imatge (menjador.jpg) amb
+la primera pàgina -que és el que es mostra a la pàgina /menu-del-mes-, i
+en extreu el menú dia a dia (menjador.json) per al widget "què hi ha
+avui". El workflow de GitHub Actions és qui es fa càrrec de fer commit i
+push del canvi (aquest script només toca els fitxers locals).
 
 Ús:
     python publish_menu.py
@@ -14,6 +14,7 @@ fitxers locals).
 
 import email
 import imaplib
+import json
 import os
 import sys
 from email.header import decode_header
@@ -21,6 +22,8 @@ from email.header import decode_header
 from dotenv import load_dotenv
 from pdf2image import convert_from_bytes
 from PIL import Image
+
+from ocr_menu import extract_menu
 
 load_dotenv(dotenv_path=os.path.join(os.path.dirname(__file__), ".env"))
 
@@ -31,6 +34,7 @@ ALLOWED_SENDER = os.environ.get("ALLOWED_SENDER")
 UPLOADS_DIR = os.path.join(os.path.dirname(__file__), "..", "public", "uploads")
 PDF_PATH = os.path.join(UPLOADS_DIR, "menjador.pdf")
 IMAGE_PATH = os.path.join(UPLOADS_DIR, "menjador.jpg")
+JSON_PATH = os.path.join(UPLOADS_DIR, "menjador.json")
 
 
 def get_filename(part):
@@ -156,6 +160,18 @@ def main():
     image = render_first_page(content)
     image.save(IMAGE_PATH, format="JPEG", quality=85, optimize=True)
     print(f"Imatge desada a {IMAGE_PATH}")
+
+    try:
+        menu = extract_menu(PDF_PATH)
+    except Exception as exc:  # noqa: BLE001 - a failed extraction shouldn't break the publish
+        print(f"Avís: no s'ha pogut extreure el menú dia a dia ({exc}). "
+              "Es manté el JSON anterior (si n'hi havia).")
+        return
+
+    with open(JSON_PATH, "w", encoding="utf-8") as f:
+        json.dump(menu, f, ensure_ascii=False, indent=2)
+    print(f"Menú dia a dia desat a {JSON_PATH} ({len(menu['days'])} dies, "
+          f"confiança {menu['date_offset_confidence']})")
 
 
 if __name__ == "__main__":

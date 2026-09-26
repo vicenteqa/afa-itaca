@@ -1,4 +1,6 @@
 ---
+import fs from 'node:fs';
+import path from 'node:path';
 import BaseHead from '../components/BaseHead.astro';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
@@ -8,6 +10,15 @@ import { getEntry, render } from 'astro:content';
 const page = await getEntry('pages', 'menu-del-mes');
 if (!page) throw new Error('Pàgina no trobada');
 const { Content } = await render(page);
+
+let menuJson = 'null';
+try {
+	const raw = fs.readFileSync(path.join(process.cwd(), 'public', 'uploads', 'menjador.json'), 'utf-8');
+	// Belt-and-braces: escape "<" so the JSON can never prematurely close the <script> tag it's embedded in.
+	menuJson = raw.replace(/</g, '\\u003c');
+} catch {
+	// No menjador.json yet (extraction hasn't run, or failed) -> the widget just stays hidden.
+}
 ---
 
 <!doctype html>
@@ -25,6 +36,12 @@ const { Content } = await render(page);
 
 			<article class="prose">
 				<div class="content">
+					<div id="avui-menu" class="avui-menu" hidden>
+						<h2>Què hi ha avui per dinar?</h2>
+						<ul class="avui-items"></ul>
+					</div>
+					<script type="application/json" id="menu-data" set:html={menuJson} />
+
 					<Content />
 					<!-- Cache-busting per assegurar que es veu l'última versió -->
 					<div class="menu-container">
@@ -48,6 +65,51 @@ const { Content } = await render(page);
 	</body>
 </html>
 
+<script is:inline>
+	function setupAvuiMenu() {
+		const container = document.getElementById('avui-menu');
+		const dataEl = document.getElementById('menu-data');
+		if (!container || !dataEl) return;
+
+		let menu;
+		try {
+			menu = JSON.parse(dataEl.textContent);
+		} catch {
+			return;
+		}
+		if (!menu || !Array.isArray(menu.days)) return;
+
+		// ?demoDate=YYYY-MM-DD lets us preview any day locally without touching the system clock.
+		const demoDate = new URLSearchParams(location.search).get('demoDate');
+		const today = demoDate ? new Date(`${demoDate}T00:00:00`) : new Date();
+		if (Number.isNaN(today.getTime())) return;
+
+		const day = today.getDate();
+		const month = today.getMonth() + 1;
+		const year = today.getFullYear();
+
+		// Data belongs to a different month than "today" (JSON not refreshed yet this month, or demoDate elsewhere) -> stay hidden.
+		if (menu.month_number !== month || menu.year !== year) return;
+
+		const entry = menu.days.find((d) => d.date === day);
+		// No entry (weekend: the grid only has Mon-Fri columns) or a holiday -> stay hidden.
+		if (!entry || entry.holiday || !entry.items || entry.items.length === 0) return;
+
+		const list = container.querySelector('.avui-items');
+		list.innerHTML = '';
+		for (const item of entry.items) {
+			const li = document.createElement('li');
+			li.textContent = item;
+			list.appendChild(li);
+		}
+
+		container.hidden = false;
+	}
+
+	document.addEventListener('astro:page-load', setupAvuiMenu);
+	setupAvuiMenu();
+</script>
+
 <style>
 	main {
 		width: 100%;
@@ -63,6 +125,34 @@ const { Content } = await render(page);
 			padding: 1.5rem 0.75rem;
 		}
 	}
+	/* Widget "Què hi ha avui per dinar?" */
+	.avui-menu {
+		max-width: 480px;
+		margin: 0 auto 2rem;
+		padding: 1.5rem 2rem;
+		background: var(--accent-pastel);
+		border-radius: 14px;
+		text-align: left;
+	}
+	.avui-menu h2 {
+		margin: 0 0 0.75rem;
+		font-size: 1.2rem;
+		color: var(--accent-dark);
+		text-align: center;
+	}
+	.avui-items {
+		margin: 0;
+		padding: 0;
+		list-style: none;
+	}
+	.avui-items li {
+		padding: 0.35rem 0;
+		border-bottom: 1px dashed rgba(3, 72, 145, 0.2);
+	}
+	.avui-items li:last-child {
+		border-bottom: none;
+	}
+
 	/* Estils específics per a la imatge del menú */
 	.menu-container {
 		margin: 2rem 0;
