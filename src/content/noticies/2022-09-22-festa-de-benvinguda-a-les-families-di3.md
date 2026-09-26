@@ -5,7 +5,7 @@ description: "El dimarts 4 d’octubre, de 16:30 a 18:00 hores, l’AFA vol dona
   xocolatada, espectacle de conta-contes amb La Panero, música i pintacares. Us
   hi esperem!!! Col·laboren: Jocs i Taula amb la xocolatada i Kitxalla amb el
   pintacares."
-pubDate: 2026-09-25T16:21:00.000+02:00
+pubDate: 2022-09-22
 heroImage: /noticies/festa-de-benvinguda-a-les-families-di3.jpeg
 ---
 
