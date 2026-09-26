@@ -8,6 +8,16 @@ const noticies = defineCollection({
 		description: z.string(),
 		pubDate: z.coerce.date(),
 		heroImage: z.string().optional(),
+		carouselLabel: z.string().optional(),
+		carouselImages: z
+			.array(
+				z.object({
+					src: z.string(),
+					alt: z.string().optional(),
+					caption: z.string().optional(),
+				})
+			)
+			.optional(),
 	}),
 });
 
