@@ -1,4 +1,6 @@
 ---
+import fs from 'node:fs';
+import path from 'node:path';
 import BaseHead from '../components/BaseHead.astro';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
@@ -8,6 +10,15 @@ import { getEntry, render } from 'astro:content';
 const page = await getEntry('pages', 'menu-del-mes');
 if (!page) throw new Error('Pàgina no trobada');
 const { Content } = await render(page);
+
+let menuJson = 'null';
+try {
+	const raw = fs.readFileSync(path.join(process.cwd(), 'public', 'uploads', 'menjador.json'), 'utf-8');
+	// Belt-and-braces: escape "<" so the JSON can never prematurely close the <script> tag it's embedded in.
+	menuJson = raw.replace(/</g, '\\u003c');
+} catch {
+	// No menjador.json yet (extraction hasn't run, or failed) -> the widget just stays hidden.
+}
 ---
 
 <!doctype html>
@@ -25,14 +36,23 @@ const { Content } = await render(page);
 
 			<article class="prose">
 				<div class="content">
+					<div id="avui-menu" class="avui-menu" hidden>
+						<h2>Què hi ha avui per dinar?</h2>
+						<ul class="avui-items"></ul>
+					</div>
+					<script type="application/json" id="menu-data" set:html={menuJson} />
+
 					<Content />
-					<!-- Imatge amb cache-busting per assegurar que es veu l'última versió -->
+					<!-- Cache-busting per assegurar que es veu l'última versió -->
 					<div class="menu-container">
 						<a href={`/uploads/menjador.jpg?v=${new Date().getTime()}`} target="_blank" title="Amplia el menú">
-							<img 
-								src={`/uploads/menjador.jpg?v=${new Date().getTime()}`} 
-								alt="Menú del mes de l'escola Ítaca" 
+							<img
+								src={`/uploads/menjador.jpg?v=${new Date().getTime()}`}
+								alt="Menú del mes de l'escola Ítaca"
 							/>
+						</a>
+						<a class="download-link" href={`/uploads/menjador.pdf?v=${new Date().getTime()}`} target="_blank">
+							Descarrega el PDF del menú
 						</a>
 					</div>
 				</div>
@@ -44,6 +64,67 @@ const { Content } = await render(page);
 		<Footer />
 	</body>
 </html>
+
+<script is:inline>
+	function setupAvuiMenu() {
+		const container = document.getElementById('avui-menu');
+		const dataEl = document.getElementById('menu-data');
+		if (!container || !dataEl) return;
+
+		let menu;
+		try {
+			menu = JSON.parse(dataEl.textContent);
+		} catch {
+			return;
+		}
+		if (!menu || !Array.isArray(menu.days)) return;
+
+		// ?demoDate=YYYY-MM-DD lets us preview any day locally without touching the system clock.
+		const demoDate = new URLSearchParams(location.search).get('demoDate');
+		const today = demoDate ? new Date(`${demoDate}T00:00:00`) : new Date();
+		if (Number.isNaN(today.getTime())) return;
+
+		const day = today.getDate();
+		const month = today.getMonth() + 1;
+		const year = today.getFullYear();
+
+		// Data belongs to a different month than "today" (JSON not refreshed yet this month, or demoDate elsewhere) -> stay hidden.
+		if (menu.month_number !== month || menu.year !== year) return;
+
+		const entry = menu.days.find((d) => d.date === day);
+		// No entry (weekend: the grid only has Mon-Fri columns) or a holiday -> stay hidden.
+		if (!entry || entry.holiday || !entry.items || entry.items.length === 0) return;
+
+		const COURSE_EMOJIS = ['🥗', '🍽️', '🍎'];
+		const toSentenceCase = (text) => {
+			const lower = text.toLowerCase();
+			return lower.charAt(0).toUpperCase() + lower.slice(1);
+		};
+
+		const list = container.querySelector('.avui-items');
+		list.innerHTML = '';
+		entry.items.forEach((item, i) => {
+			const li = document.createElement('li');
+
+			const emoji = document.createElement('span');
+			emoji.className = 'course-emoji';
+			emoji.setAttribute('aria-hidden', 'true');
+			emoji.textContent = COURSE_EMOJIS[i] ?? '🍴';
+
+			const text = document.createElement('span');
+			text.className = 'course-text';
+			text.textContent = toSentenceCase(item);
+
+			li.append(emoji, text);
+			list.appendChild(li);
+		});
+
+		container.hidden = false;
+	}
+
+	document.addEventListener('astro:page-load', setupAvuiMenu);
+	setupAvuiMenu();
+</script>
 
 <style>
 	main {
@@ -60,13 +141,71 @@ const { Content } = await render(page);
 			padding: 1.5rem 0.75rem;
 		}
 	}
+	/* Widget "Què hi ha avui per dinar?" */
+	.avui-menu {
+		max-width: 480px;
+		margin: 0 auto 2rem;
+		padding: 1.75rem 2rem;
+		background: linear-gradient(180deg, var(--accent-pastel) 0%, rgba(191, 225, 246, 0.5) 100%);
+		border-radius: 18px;
+		text-align: left;
+		box-shadow: 0 8px 24px rgba(3, 72, 145, 0.12);
+	}
+	.avui-menu h2 {
+		margin: 0 0 1.1rem;
+		font-size: 1.25rem;
+		color: var(--accent-dark);
+		text-align: center;
+	}
+	.avui-items {
+		margin: 0;
+		padding: 0;
+		list-style: none;
+		display: flex;
+		flex-direction: column;
+		gap: 0.6rem;
+	}
+	.avui-items li {
+		display: flex;
+		align-items: center;
+		gap: 1.25rem;
+		padding: 0.7rem 1.25rem;
+		background: white;
+		border-radius: 12px;
+		box-shadow: 0 2px 6px rgba(3, 72, 145, 0.08);
+	}
+	.course-emoji {
+		font-size: 1.4rem;
+		line-height: 1;
+		flex-shrink: 0;
+		width: 1.75rem;
+		text-align: center;
+	}
+	.course-text {
+		color: rgb(var(--gray-dark));
+		font-weight: 500;
+	}
+
 	/* Estils específics per a la imatge del menú */
-	.content :global(img) {
+	.menu-container {
+		margin: 2rem 0;
+	}
+	.menu-container img {
 		max-width: 100%;
 		height: auto;
 		border: 5px solid white;
-		box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-		margin: 2rem 0;
+		box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+	}
+	.download-link {
+		display: inline-block;
+		margin-top: 1rem;
+		color: var(--accent-dark);
+		text-decoration: none;
+		font-weight: 600;
+	}
+	.download-link:hover {
+		color: var(--accent);
+		text-decoration: underline;
 	}
 	.prose {
 		width: 100%;
