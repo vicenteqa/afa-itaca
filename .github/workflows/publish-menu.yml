@@ -1,4 +1,4 @@
-name: Upload Email Attachments to WordPress
+name: Publish Menu from Email
 
 on:
   schedule:
@@ -6,26 +6,19 @@ on:
     - cron: '0 8 25-31 * *'
     - cron: '0 8 1-5 * *'
   workflow_dispatch:
-    inputs:
-      mode:
-        description: 'Què fer amb el menú adjunt al correu'
-        type: choice
-        required: true
-        default: merge
-        options:
-          - merge
-          - replace
 
 jobs:
-  upload:
+  publish:
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout
         uses: actions/checkout@v7
+        with:
+          token: ${{ secrets.MENU_PUBLISH_TOKEN }}
 
       - name: Setup Python
-        uses: actions/setup-python@v7
+        uses: actions/setup-python@v6
         with:
           python-version: '3.12'
 
@@ -35,13 +28,23 @@ jobs:
       - name: Install Python dependencies
         run: pip install -r upload-mail-menu/requirements.txt
 
-      - name: Run upload script
+      - name: Fetch menu attachment from email
         env:
           GMAIL_USER: ${{ secrets.GMAIL_USER }}
           GMAIL_APP_PASSWORD: ${{ secrets.GMAIL_APP_PASSWORD }}
           ALLOWED_SENDER: ${{ secrets.ALLOWED_SENDER }}
-          WORDPRESS_URL: ${{ secrets.WORDPRESS_URL }}
-          WORDPRESS_USER: ${{ secrets.WORDPRESS_USER }}
-          WORDPRESS_APP_PASSWORD: ${{ secrets.WORDPRESS_APP_PASSWORD }}
-          MENU_MODE: ${{ inputs.mode }}
-        run: python upload-mail-menu/upload_attachments.py
+        run: python upload-mail-menu/publish_menu.py
+
+      - name: Commit and push if the menu changed
+        run: |
+          set -euo pipefail
+          if git diff --quiet -- public/uploads/menjador.jpg; then
+            echo "No hi ha cap menú nou. Res a publicar."
+            exit 0
+          fi
+
+          git config user.name "afa-itaca-bot"
+          git config user.email "actions@github.com"
+          git add public/uploads/menjador.jpg
+          git commit -m "Actualitza el menú del menjador"
+          git push

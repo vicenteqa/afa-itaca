@@ -30,4 +30,4 @@ La **teva adreça de correu** des de la qual enviaràs els menús. Només es pro
 
 ---
 
-**Menú disponible a:** https://www.afaitaca.org/wp-content/uploads/menjador.png
+**Menú disponible a:** https://www.afaitaca.org/menu-del-mes
