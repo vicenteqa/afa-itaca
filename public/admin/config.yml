@@ -21,19 +21,6 @@ collections:
       - {label: "Imatge Principal", name: "heroImage", widget: "image", required: false}
       - {label: "Contingut", name: "body", widget: "markdown"}
 
-  # Documents d'Interés
-  - name: "documents"
-    label: "Documents"
-    folder: "src/content/documents"
-    create: true
-    slug: "{{slug}}"
-    fields:
-      - {label: "Títol", name: "title", widget: "string"}
-      - {label: "Descripció", name: "description", widget: "text"}
-      - {label: "Categoria", name: "category", widget: "select", options: ["Menús", "Calendaris", "Normatives", "Altres"]}
-      - {label: "Arxiu", name: "file", widget: "file"}
-      - {label: "Data", name: "date", widget: "datetime"}
-
   # Pàgines Estàtiques
   - name: "pages"
     label: "Pàgines"
@@ -49,14 +36,6 @@ collections:
       - label: "Menú del Mes"
         name: "menu-del-mes"
         file: "src/content/pages/menu-del-mes.md"
-        fields:
-          - {label: "Títol", name: "title", widget: "string"}
-          - {label: "Descripció", name: "description", widget: "text"}
-          - {label: "Contingut", name: "body", widget: "markdown"}
-
-      - label: "Documents d'Interés"
-        name: "documents-page"
-        file: "src/content/pages/documents.md"
         fields:
           - {label: "Títol", name: "title", widget: "string"}
           - {label: "Descripció", name: "description", widget: "text"}
