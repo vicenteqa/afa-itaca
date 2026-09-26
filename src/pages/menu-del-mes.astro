@@ -28,10 +28,12 @@ const { Content } = await render(page);
 					<Content />
 					<!-- Cache-busting per assegurar que es veu l'última versió -->
 					<div class="menu-container">
-						<iframe
-							src={`/uploads/menjador.pdf?v=${new Date().getTime()}`}
-							title="Menú del mes de l'escola Ítaca"
-						></iframe>
+						<a href={`/uploads/menjador.jpg?v=${new Date().getTime()}`} target="_blank" title="Amplia el menú">
+							<img
+								src={`/uploads/menjador.jpg?v=${new Date().getTime()}`}
+								alt="Menú del mes de l'escola Ítaca"
+							/>
+						</a>
 						<a class="download-link" href={`/uploads/menjador.pdf?v=${new Date().getTime()}`} target="_blank">
 							Descarrega el PDF del menú
 						</a>
@@ -61,17 +63,15 @@ const { Content } = await render(page);
 			padding: 1.5rem 0.75rem;
 		}
 	}
-	/* Estils específics per al PDF del menú */
+	/* Estils específics per a la imatge del menú */
 	.menu-container {
 		margin: 2rem 0;
 	}
-	.menu-container iframe {
-		width: 100%;
-		height: 80vh;
-		max-height: 1100px;
+	.menu-container img {
+		max-width: 100%;
+		height: auto;
 		border: 5px solid white;
 		box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-		background: white;
 	}
 	.download-link {
 		display: inline-block;
@@ -83,11 +83,6 @@ const { Content } = await render(page);
 	.download-link:hover {
 		color: var(--accent);
 		text-decoration: underline;
-	}
-	@media (max-width: 720px) {
-		.menu-container iframe {
-			height: 70vh;
-		}
 	}
 	.prose {
 		width: 100%;

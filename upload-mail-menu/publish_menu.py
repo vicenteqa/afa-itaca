@@ -1,10 +1,12 @@
 #!/usr/bin/env python3
 """
 Descarrega el PDF del menú de l'últim correu no llegit de l'adreça
-autoritzada, i el desa com public/uploads/menjador.pdf, reemplaçant el
-menú del mes anterior (es mostra incrustat a la pàgina /menu-del-mes). El
-workflow de GitHub Actions és qui es fa càrrec de fer commit i push del
-canvi (aquest script només toca el fitxer local).
+autoritzada, i el desa a public/uploads/menjador.pdf (es conserva tal
+qual per poder-ne extreure més endavant el text/menú diari), i també en
+genera una imatge (menjador.jpg) amb la primera pàgina, que és el que es
+mostra a la pàgina /menu-del-mes. El workflow de GitHub Actions és qui es
+fa càrrec de fer commit i push del canvi (aquest script només toca els
+fitxers locals).
 
 Ús:
     python publish_menu.py
@@ -17,6 +19,8 @@ import sys
 from email.header import decode_header
 
 from dotenv import load_dotenv
+from pdf2image import convert_from_bytes
+from PIL import Image
 
 load_dotenv(dotenv_path=os.path.join(os.path.dirname(__file__), ".env"))
 
@@ -24,7 +28,9 @@ GMAIL_USER = os.environ.get("GMAIL_USER")
 GMAIL_APP_PASSWORD = os.environ.get("GMAIL_APP_PASSWORD")
 ALLOWED_SENDER = os.environ.get("ALLOWED_SENDER")
 
-TARGET_PATH = os.path.join(os.path.dirname(__file__), "..", "public", "uploads", "menjador.pdf")
+UPLOADS_DIR = os.path.join(os.path.dirname(__file__), "..", "public", "uploads")
+PDF_PATH = os.path.join(UPLOADS_DIR, "menjador.pdf")
+IMAGE_PATH = os.path.join(UPLOADS_DIR, "menjador.jpg")
 
 
 def get_filename(part):
@@ -101,6 +107,26 @@ def find_latest_pdf():
     return content
 
 
+def resize_if_needed(image, max_size=1800):
+    """Resize image if any dimension exceeds max_size, preserving aspect ratio."""
+    width, height = image.size
+    if width <= max_size and height <= max_size:
+        return image
+    if width > height:
+        new_width, new_height = max_size, int(height * max_size / width)
+    else:
+        new_height, new_width = max_size, int(width * max_size / height)
+    return image.resize((new_width, new_height), Image.LANCZOS)
+
+
+def render_first_page(pdf_content):
+    """Render the PDF's first page as a resized RGB image, for display."""
+    pages = convert_from_bytes(pdf_content, dpi=300, first_page=1, last_page=1)
+    if not pages:
+        raise ValueError("No s'ha pogut convertir el PDF a imatge")
+    return resize_if_needed(pages[0].convert("RGB"))
+
+
 def validate_config():
     required = [
         ("GMAIL_USER", GMAIL_USER),
@@ -121,10 +147,15 @@ def main():
         print("Cap correu nou amb un PDF adjunt. Sortint.")
         return
 
-    os.makedirs(os.path.dirname(TARGET_PATH), exist_ok=True)
-    with open(TARGET_PATH, "wb") as f:
+    os.makedirs(UPLOADS_DIR, exist_ok=True)
+
+    with open(PDF_PATH, "wb") as f:
         f.write(content)
-    print(f"Menú desat a {TARGET_PATH}")
+    print(f"PDF desat a {PDF_PATH}")
+
+    image = render_first_page(content)
+    image.save(IMAGE_PATH, format="JPEG", quality=85, optimize=True)
+    print(f"Imatge desada a {IMAGE_PATH}")
 
 
 if __name__ == "__main__":

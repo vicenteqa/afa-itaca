@@ -22,6 +22,9 @@ jobs:
         with:
           python-version: '3.12'
 
+      - name: Install system dependencies
+        run: sudo apt-get update && sudo apt-get install -y poppler-utils
+
       - name: Install Python dependencies
         run: pip install -r upload-mail-menu/requirements.txt
 
@@ -35,13 +38,13 @@ jobs:
       - name: Commit and push if the menu changed
         run: |
           set -euo pipefail
-          if git diff --quiet -- public/uploads/menjador.pdf; then
+          if git diff --quiet -- public/uploads/menjador.pdf public/uploads/menjador.jpg; then
             echo "No hi ha cap menú nou. Res a publicar."
             exit 0
           fi
 
           git config user.name "afa-itaca-bot"
           git config user.email "actions@github.com"
-          git add public/uploads/menjador.pdf
+          git add public/uploads/menjador.pdf public/uploads/menjador.jpg
           git commit -m "Actualitza el menú del menjador"
           git push
