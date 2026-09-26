@@ -125,7 +125,7 @@ Edita el fitxer `src/styles/global.css` i modifica les variables CSS:
 
 ### Afegir el teu logo
 
-Substitueix el fitxer `public/favicon.svg` pel teu logo.
+Substitueix el fitxer `public/favicon.png` pel teu logo.
 
 ### Actualitzar informació de contacte
 
