@@ -19,6 +19,6 @@ test.describe('Pàgina d\'inici', () => {
     await home.goto();
     const href = await home.menuLink.getAttribute('href');
     expect(href).not.toContain('afaitaca.org');
-    expect(href).toContain('menjador.jpg');
+    expect(href).toContain('/menu-del-mes');
   });
 });
