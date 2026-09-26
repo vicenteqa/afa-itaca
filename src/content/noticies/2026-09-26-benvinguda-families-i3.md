@@ -1,7 +1,7 @@
 ---
 title: "Benvinguda a les famílies d'I3"
 description: "Aquesta tarda hem donat la benvinguda a les noves famílies d'I3 amb una trobada plena de jocs, berenar i rialles: la primera de moltes que vindran per començar a construir junts la comunitat d'Ítaca."
-pubDate: "2026-09-26"
+pubDate: "2026-09-25"
 heroImage: "/uploads/benvinguda-i3-pati.jpg"
 carouselLabel: "Fotos de la benvinguda a les famílies d'I3"
 carouselImages:
