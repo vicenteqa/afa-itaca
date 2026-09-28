@@ -19,16 +19,18 @@ Fem seguiment de l'oferta vetllant per la qualitat. Per tenir una valoració glo
 
 _Vols fer una consulta o unir-te a la comissió? Contacta amb nosaltres a [**extraescolars@afaitaca.org**](mailto:extraescolars@afaitaca.org)._
 
-## Extraescolars Curs 25-26
+## Extraescolars Curs 26-27
 
-Aquesta és la proposta d'activitats extraescolars del curs 2025-26, coordinades per l'empresa especialitzada **Gat per Lleure**.
+Aquesta és la proposta d'activitats extraescolars del curs 2026-27, coordinades per l'empresa especialitzada **Gat per Lleure**.
 
 Trobareu tota la informació i el procediment per inscriure-us al seu [web](https://www.gatperlleure.com/escuela-itaca/).
 
 ### · Totes les activitats per dies:
 
 <p style="text-align: center;">
-  <img src="/uploads/extraescolars-curs-25-26.jpeg" alt="Graella d'activitats extraescolars 25-26" />
+  <a href="https://drive.google.com/file/d/1PChFzCkUwPVDjY3WF8vjy-OXnx1FbYlt/view" target="_blank" rel="noopener noreferrer">
+    <img src="/uploads/extraescolars-curs-26-27.jpg" alt="Graella d'activitats extraescolars 26-27" />
+  </a>
 </p>
 
 ## Documents d'interès
