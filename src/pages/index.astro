@@ -23,7 +23,15 @@ const latestNews = (await getCollection('noticies'))
 		<Header />
 		<main>
 			<div class="banner">
-				<Image src={bannerBenvinguda} alt="No és màgia, és l'AFA!" loading="eager" width={1200} format="webp" quality={70} />
+				<Image
+					src={bannerBenvinguda}
+					alt="No és màgia, és l'AFA!"
+					loading="eager"
+					widths={[400, 800, 1200]}
+					sizes="(max-width: 768px) 100vw, 1200px"
+					format="webp"
+					quality={70}
+				/>
 			</div>
 			<section class="hero">
 				<h1>Benvinguts a l'AFA de l'escola Ítaca!</h1>
@@ -87,10 +95,12 @@ const latestNews = (await getCollection('noticies'))
 		max-width: 1200px;
 		margin: 0 auto;
 		padding: 1.5rem 1.5rem 0;
+		box-sizing: border-box;
 	}
 
 	.banner img {
 		width: 100%;
+		max-width: 100%;
 		height: auto;
 		display: block;
 		border-radius: 16px;
@@ -99,6 +109,10 @@ const latestNews = (await getCollection('noticies'))
 	@media (max-width: 720px) {
 		.banner {
 			padding: 1rem 1rem 0;
+		}
+
+		.banner img {
+			border-radius: 12px;
 		}
 	}
 
