@@ -1,0 +1,97 @@
+backend:
+  name: git-gateway
+  branch: main
+
+# Permet provar el CMS en local amb `npm run dev` + `npm run cms:proxy`,
+# sense passar per Netlify Identity. Només s'activa quan s'accedeix
+# a /admin/ des de localhost; en producció no té cap efecte.
+local_backend: true
+
+media_folder: "public/uploads"
+public_folder: "/uploads"
+
+locale: "ca"
+
+collections:
+  # Notícies (Blog Posts)
+  - name: "noticies"
+    label: "Notícies"
+    folder: "src/content/noticies"
+    create: true
+    slug: "{{year}}-{{month}}-{{day}}-{{slug}}"
+    fields:
+      - {label: "Títol", name: "title", widget: "string"}
+      - {label: "Descripció", name: "description", widget: "text"}
+      - {label: "Data de Publicació", name: "pubDate", widget: "datetime"}
+      - {label: "Imatge Principal", name: "heroImage", widget: "image", required: false}
+      - {label: "Etiqueta del carrusel", name: "carouselLabel", widget: "string", required: false}
+      - label: "Imatges del carrusel"
+        name: "carouselImages"
+        widget: "list"
+        required: false
+        collapsed: false
+        summary: "{{fields.src}}"
+        fields:
+          - {label: "Imatge (src)", name: "src", widget: "image", hint: "Ruta de la imatge del carrusel (ex: /uploads/foto1.jpg)"}
+          - {label: "Text alternatiu", name: "alt", widget: "string", required: false}
+          - {label: "Peu de foto", name: "caption", widget: "string", required: false}
+      - {label: "Contingut", name: "body", widget: "markdown"}
+
+  # Pàgines Estàtiques
+  - name: "pages"
+    label: "Pàgines"
+    files:
+      - label: "L'AFA"
+        name: "lafa"
+        file: "src/content/pages/lafa.md"
+        fields:
+          - {label: "Títol", name: "title", widget: "string"}
+          - {label: "Descripció", name: "description", widget: "text"}
+          - {label: "Contingut", name: "body", widget: "markdown"}
+
+      - label: "Menú del Mes"
+        name: "menu-del-mes"
+        file: "src/content/pages/menu-del-mes.md"
+        fields:
+          - {label: "Títol", name: "title", widget: "string"}
+          - {label: "Descripció", name: "description", widget: "text"}
+          - {label: "Contingut", name: "body", widget: "markdown"}
+          - {label: "Amagar el requadre \"Què hi ha avui per dinar?\"", name: "amagarAvui", widget: "boolean", default: false, hint: "Activa-ho per amagar temporalment el requadre del dia, encara que hi hagi dades per avui."}
+          - {label: "Amagar la imatge i el PDF del menú", name: "amagarImatge", widget: "boolean", default: false, hint: "Activa-ho per amagar temporalment la imatge/PDF del menú (per exemple, si encara no s'ha actualitzat)."}
+
+      - label: "Contacte"
+        name: "contacte"
+        file: "src/content/pages/contacte.md"
+        fields:
+          - {label: "Títol", name: "title", widget: "string"}
+          - {label: "Descripció", name: "description", widget: "text"}
+          - {label: "Email", name: "email", widget: "string"}
+          - {label: "Telèfon", name: "phone", widget: "string", required: false}
+          - {label: "Adreça", name: "address", widget: "text", required: false}
+          - {label: "Contingut", name: "body", widget: "markdown"}
+
+  # Comissions
+  - name: "comissions"
+    label: "Comissions"
+    folder: "src/content/comissions"
+    extension: "md"
+    format: "frontmatter"
+    create: true
+    slug: "{{slug}}"
+    fields:
+      - {label: "Títol", name: "title", widget: "string"}
+      - {label: "Descripció Curta", name: "description", widget: "text"}
+      - {label: "Icona", name: "icon", widget: "string", hint: "Nom de l'icona (opcional)", required: false}
+      - {label: "Ordre", name: "order", widget: "number", default: 0}
+      - {label: "Etiqueta del carrusel", name: "carouselLabel", widget: "string", required: false}
+      - label: "Imatges del carrusel"
+        name: "carouselImages"
+        widget: "list"
+        required: false
+        collapsed: false
+        summary: "{{fields.src}}"
+        fields:
+          - {label: "Imatge (src)", name: "src", widget: "image", hint: "Ruta de la imatge del carrusel (ex: /uploads/hort1.jpg)"}
+          - {label: "Text alternatiu", name: "alt", widget: "string", required: false}
+          - {label: "Peu de foto", name: "caption", widget: "string", required: false}
+      - {label: "Contingut", name: "body", widget: "markdown"}

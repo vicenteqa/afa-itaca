@@ -1,0 +1,243 @@
+{
+  "month": "Setembre",
+  "month_number": 9,
+  "year": 2026,
+  "source": "pdf_text",
+  "date_offset_confidence": 0.94,
+  "days": [
+    {
+      "date": 8,
+      "weekday": "Dimarts",
+      "holiday": false,
+      "items": [
+        "ARRÒS INTEGRAL AMB SALSA DE TOMÀQUET",
+        "BACALLÀ AMB SAMFAINA (4)",
+        "FRUITA DEL TEMPS"
+      ],
+      "allergens": [
+        4
+      ],
+      "raw_text": "ARRÒS INTEGRAL AMB SALSA DE TOMÀQUET. BACALLÀ AMB SAMFAINA (4). FRUITA DEL TEMPS."
+    },
+    {
+      "date": 9,
+      "weekday": "Dimecres",
+      "holiday": false,
+      "items": [
+        "AMANIDA DE LLENTIES",
+        "TRUITA DE PATATES I CEBA (3) AMANIDA",
+        "FRUITA DEL TEMPS"
+      ],
+      "allergens": [
+        3
+      ],
+      "raw_text": "AMANIDA DE LLENTIES. TRUITA DE PATATES I CEBA (3) AMANIDA. FRUITA DEL TEMPS."
+    },
+    {
+      "date": 10,
+      "weekday": "Dijous",
+      "holiday": false,
+      "items": [
+        "CREMA DE CARBASSÓ",
+        "POLLASTRE AL FORN AMB HERBES DEL GARRAF I AMANIDA",
+        "FRUITA DEL TEMPS"
+      ],
+      "allergens": [],
+      "raw_text": "CREMA DE CARBASSÓ. POLLASTRE AL FORN AMB HERBES DEL GARRAF I AMANIDA . FRUITA DEL TEMPS."
+    },
+    {
+      "date": 11,
+      "weekday": "Divendres",
+      "holiday": true,
+      "items": [],
+      "allergens": [],
+      "raw_text": "FESTA"
+    },
+    {
+      "date": 14,
+      "weekday": "Dilluns",
+      "holiday": false,
+      "items": [
+        "AMANIDA DE PATATA I OU BULLIT (3)",
+        "GALL D´INDI ESTOFAT I AMANIDA",
+        "FRUITA DEL TEMPS"
+      ],
+      "allergens": [
+        3
+      ],
+      "raw_text": "AMANIDA DE PATATA I OU BULLIT (3). GALL D´INDI ESTOFAT I AMANIDA. FRUITA DEL TEMPS."
+    },
+    {
+      "date": 15,
+      "weekday": "Dimarts",
+      "holiday": false,
+      "items": [
+        "PASTA INTEGRAL A LA BOLONYESA",
+        "PEIX AL FORN (4) I AMANIDA",
+        "IOGURT (7)"
+      ],
+      "allergens": [
+        4,
+        7
+      ],
+      "raw_text": "PASTA INTEGRAL A LA BOLONYESA. PEIX AL FORN (4) I AMANIDA. IOGURT (7)."
+    },
+    {
+      "date": 16,
+      "weekday": "Dimecres",
+      "holiday": false,
+      "items": [
+        "CREMA DE VERDURES",
+        "POLLASTRE FILIPÍ I HUMUS DE FESOLS (11)",
+        "FRUITA DEL TEMPS"
+      ],
+      "allergens": [
+        11
+      ],
+      "raw_text": "CREMA DE VERDURES. POLLASTRE FILIPÍ I HUMUS DE FESOLS (11). FRUITA DEL TEMPS."
+    },
+    {
+      "date": 17,
+      "weekday": "Dijous",
+      "holiday": false,
+      "items": [
+        "AMANIDA D’ARRÒS",
+        "SEVILLANOS (1, 14) I PASTANAGA RALLADA",
+        "FRUITA DEL TEMPS"
+      ],
+      "allergens": [
+        1,
+        14
+      ],
+      "raw_text": "AMANIDA D’ARRÒS. SEVILLANOS (1, 14) I PASTANAGA RALLADA. FRUITA DEL TEMPS."
+    },
+    {
+      "date": 18,
+      "weekday": "Divendres",
+      "holiday": false,
+      "items": [
+        "AMANIDA DE CIGRONS",
+        "TRUITA DE VERDURES (3) I AMANIDA",
+        "FRUITA DEL TEMPS"
+      ],
+      "allergens": [
+        3
+      ],
+      "raw_text": "AMANIDA DE CIGRONS. TRUITA DE VERDURES (3) I AMANIDA. FRUITA DEL TEMPS."
+    },
+    {
+      "date": 21,
+      "weekday": "Dilluns",
+      "holiday": false,
+      "items": [
+        "CREMA DE PORROS",
+        "FIDEUÀ DE PEIX (1,2,4,14) I AMANIDA",
+        "FRUITA DEL TEMPS"
+      ],
+      "allergens": [
+        1,
+        2,
+        4,
+        14
+      ],
+      "raw_text": "CREMA DE PORROS. FIDEUÀ DE PEIX (1,2,4,14) I AMANIDA. FRUITA DEL TEMPS."
+    },
+    {
+      "date": 22,
+      "weekday": "Dimarts",
+      "holiday": false,
+      "items": [
+        "AMANIDA LLENTIES CÍTRICA",
+        "MANDONGUILLES",
+        "IOGURT (7)"
+      ],
+      "allergens": [
+        7
+      ],
+      "raw_text": "AMANIDA LLENTIES CÍTRICA. MANDONGUILLES. IOGURT (7)."
+    },
+    {
+      "date": 23,
+      "weekday": "Dimecres",
+      "holiday": false,
+      "items": [
+        "RISSOTTO DE BOLETS (7)",
+        "PEIX AL FORN (4) I AMANIDA",
+        "FRUITA DEL TEMPS"
+      ],
+      "allergens": [
+        4,
+        7
+      ],
+      "raw_text": "RISSOTTO DE BOLETS (7). PEIX AL FORN (4) I AMANIDA. FRUITA DEL TEMPS."
+    },
+    {
+      "date": 24,
+      "weekday": "Dijous",
+      "holiday": false,
+      "items": [
+        "PATATA I VERDURA",
+        "WOK DE GALL D´INDI I AMANIDA",
+        "FRUITA DEL TEMPS"
+      ],
+      "allergens": [],
+      "raw_text": "PATATA I VERDURA. WOK DE GALL D´INDI I AMANIDA. FRUITA DEL TEMPS."
+    },
+    {
+      "date": 25,
+      "weekday": "Divendres",
+      "holiday": false,
+      "items": [
+        "FESOLS ESTOFATS AMB VERDURES",
+        "OUS REMENATS AMB PERNIL (3) I AMANIDA",
+        "FRUITA DEL TEMPS"
+      ],
+      "allergens": [
+        3
+      ],
+      "raw_text": "FESOLS ESTOFATS AMB VERDURES. OUS REMENATS AMB PERNIL (3) I AMANIDA. FRUITA DEL TEMPS."
+    },
+    {
+      "date": 28,
+      "weekday": "Dilluns",
+      "holiday": false,
+      "items": [
+        "LLENTIES ESTOFADES",
+        "TRUITA DE PASTANAGA I CARBASSÓ (3) I AMANIDA",
+        "FRUITA DEL TEMPS"
+      ],
+      "allergens": [
+        3
+      ],
+      "raw_text": "LLENTIES ESTOFADES. TRUITA DE PASTANAGA I CARBASSÓ (3) I AMANIDA. FRUITA DEL TEMPS."
+    },
+    {
+      "date": 29,
+      "weekday": "Dimarts",
+      "holiday": false,
+      "items": [
+        "PASTA INTEGRAL ALS 4 FORMATGES (1,7)",
+        "BACALLÀ A LA LLAUNA (4) I AMANIDA",
+        "FRUITA DEL TEMPS"
+      ],
+      "allergens": [
+        1,
+        4,
+        7
+      ],
+      "raw_text": "PASTA INTEGRAL ALS 4 FORMATGES (1,7). BACALLÀ A LA LLAUNA (4) I AMANIDA. FRUITA DEL TEMPS."
+    },
+    {
+      "date": 30,
+      "weekday": "Dimecres",
+      "holiday": false,
+      "items": [
+        "VERDURA I PATATA",
+        "POLLATRE ROSTIT I AMANIDA",
+        "FRUITA DEL TEMPS"
+      ],
+      "allergens": [],
+      "raw_text": "VERDURA I PATATA. POLLATRE ROSTIT I AMANIDA. FRUITA DEL TEMPS."
+    }
+  ]
+}
