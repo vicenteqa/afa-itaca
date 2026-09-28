@@ -29,6 +29,8 @@ const pages = defineCollection({
 		email: z.string().optional(),
 		phone: z.string().optional(),
 		address: z.string().optional(),
+		amagarAvui: z.boolean().default(false),
+		amagarImatge: z.boolean().default(false),
 	}),
 });
 

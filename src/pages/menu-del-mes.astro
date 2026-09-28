@@ -36,14 +36,17 @@ try {
 
 			<article class="prose">
 				<div class="content">
+					{!page.data.amagarAvui && (
 					<div id="avui-menu" class="avui-menu" hidden>
 						<h2>Què hi ha avui per dinar?</h2>
 						<ul class="avui-items"></ul>
 					</div>
 					<script type="application/json" id="menu-data" set:html={menuJson} />
+					)}
 
 					<Content />
 					<!-- Cache-busting per assegurar que es veu l'última versió -->
+					{!page.data.amagarImatge && (
 					<div class="menu-container">
 						<a href={`/uploads/menjador.jpg?v=${new Date().getTime()}`} target="_blank" title="Amplia el menú">
 							<img
@@ -55,6 +58,7 @@ try {
 							Descarrega el PDF del menú
 						</a>
 					</div>
+					)}
 				</div>
 				<div class="back-link">
 					<a href="/comissions/menjador">← Torna a la Comissió de Menjador</a>

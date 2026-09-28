@@ -8,5 +8,175 @@
 </head>
 <body>
   <script src="https://unpkg.com/decap-cms@^3.0.0/dist/decap-cms.js"></script>
+  <script>
+    // Preview personalitzat de "Menú del Mes": reprodueix el layout real de
+    // la pàgina (hero + widget "avui" + imatge/PDF del menú) perquè en editar
+    // el text es vegi en el seu context real, no només com a text solt.
+    // El widget "avui" i la imatge/PDF NO són editables des d'aquí: es
+    // regeneren automàticament cada mes via el workflow publish-menu.yml.
+    var MenuDelMesPreview = createClass({
+      render: function () {
+        var entry = this.props.entry;
+        var title = entry.getIn(['data', 'title']);
+        var description = entry.getIn(['data', 'description']);
+        var amagarAvui = entry.getIn(['data', 'amagarAvui']);
+        var amagarImatge = entry.getIn(['data', 'amagarImatge']);
+
+        return h('div', { className: 'content' },
+          h('section', { className: 'hero' },
+            h('h1', {}, title),
+            h('p', { className: 'description' }, description)
+          ),
+          amagarAvui
+            ? h('p', { className: 'preview-note preview-note--off' },
+                '🚫 Amagat: el requadre "Què hi ha avui per dinar?" no sortirà a la pàgina.'
+              )
+            : h('div', {},
+                h('div', { className: 'avui-menu' },
+                  h('h2', {}, 'Què hi ha avui per dinar?'),
+                  h('ul', { className: 'avui-items' },
+                    h('li', {},
+                      h('span', { className: 'course-emoji' }, '🥗'),
+                      h('span', { className: 'course-text' }, 'Amanida verda')
+                    ),
+                    h('li', {},
+                      h('span', { className: 'course-emoji' }, '🍽️'),
+                      h('span', { className: 'course-text' }, 'Mandonguilles amb salsa')
+                    ),
+                    h('li', {},
+                      h('span', { className: 'course-emoji' }, '🍎'),
+                      h('span', { className: 'course-text' }, 'Fruita del temps')
+                    )
+                  )
+                ),
+                h('p', { className: 'preview-note' },
+                  '👆 Exemple: aquest requadre només surt alguns dies i es genera sol. No forma part del text que edites aquí.'
+                )
+              ),
+          this.props.widgetFor('body'),
+          amagarImatge
+            ? h('p', { className: 'preview-note preview-note--off' },
+                "🚫 Amagat: la imatge i el PDF del menú no sortiran a la pàgina."
+              )
+            : h('div', {},
+                h('div', { className: 'menu-container' },
+                  h('img', { src: '/uploads/menjador.jpg', alt: "Menú del mes de l'escola Ítaca" }),
+                  h('br'),
+                  h('span', { className: 'download-link' }, 'Descarrega el PDF del menú')
+                ),
+                h('p', { className: 'preview-note' },
+                  "👆 Exemple: la imatge i el PDF del menú s'actualitzen automàticament cada mes. Tampoc s'editen aquí."
+                )
+              )
+        );
+      }
+    });
+
+    CMS.registerPreviewTemplate('menu-del-mes', MenuDelMesPreview);
+
+    CMS.registerPreviewStyle(`
+      @import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700&display=swap');
+
+      body {
+        font-family: 'Quicksand', sans-serif;
+        color: #334155;
+      }
+      .content {
+        max-width: 720px;
+        margin: 0 auto;
+        padding: 1.5rem;
+        text-align: center;
+      }
+      .hero {
+        text-align: center;
+        padding: 1rem 0 2rem 0;
+      }
+      .hero h1 {
+        margin: 0;
+        font-size: 2.25rem;
+        line-height: 1.2;
+        color: #034891;
+      }
+      .description {
+        margin-top: 0.5rem;
+        font-size: 1.1rem;
+        color: #64748b;
+      }
+      .avui-menu {
+        max-width: 480px;
+        margin: 0 auto 1rem;
+        padding: 1.75rem 2rem;
+        background: linear-gradient(180deg, #bfe1f6 0%, rgba(191, 225, 246, 0.5) 100%);
+        border-radius: 18px;
+        text-align: left;
+        box-shadow: 0 8px 24px rgba(3, 72, 145, 0.12);
+      }
+      .avui-menu h2 {
+        margin: 0 0 1.1rem;
+        font-size: 1.15rem;
+        color: #034891;
+        text-align: center;
+      }
+      .avui-items {
+        margin: 0;
+        padding: 0;
+        list-style: none;
+        display: flex;
+        flex-direction: column;
+        gap: 0.6rem;
+      }
+      .avui-items li {
+        display: flex;
+        align-items: center;
+        gap: 1.25rem;
+        padding: 0.7rem 1.25rem;
+        background: white;
+        border-radius: 12px;
+        box-shadow: 0 2px 6px rgba(3, 72, 145, 0.08);
+      }
+      .course-emoji {
+        font-size: 1.3rem;
+        width: 1.75rem;
+        text-align: center;
+      }
+      .course-text {
+        color: #464b55;
+        font-weight: 500;
+      }
+      .preview-note {
+        margin: 1rem auto;
+        max-width: 480px;
+        padding: 0.6rem 1rem;
+        border: 1px dashed #cbd5e1;
+        border-radius: 10px;
+        background: #fffbea;
+        color: #7a6a2e;
+        font-size: 0.85rem;
+        font-style: italic;
+      }
+      .preview-note--off {
+        border: 1px dashed #fca5a5;
+        background: #fef2f2;
+        color: #991b1b;
+        font-weight: 600;
+        font-style: normal;
+      }
+      .menu-container {
+        margin: 2rem 0;
+      }
+      .menu-container img {
+        max-width: 100%;
+        height: auto;
+        border: 5px solid white;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+      }
+      .download-link {
+        display: inline-block;
+        margin-top: 1rem;
+        color: #034891;
+        font-weight: 600;
+      }
+    `, { raw: true });
+  </script>
 </body>
 </html>
