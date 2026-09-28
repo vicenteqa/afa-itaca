@@ -1,0 +1,72 @@
+name: Netlify PR preview
+
+on:
+  pull_request:
+    types:
+      - labeled
+      - synchronize
+      - reopened
+
+concurrency: netlify-preview-${{ github.event.pull_request.number }}
+
+permissions:
+  pull-requests: write
+
+jobs:
+  deploy-preview:
+    if: contains(github.event.pull_request.labels.*.name, 'preview')
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      # `netlify deploy --build` fa servir el build command i les variables
+      # d'entorn configurades al site de Netlify (les mateixes que producció),
+      # i entén el directori .netlify/v1 que genera l'adaptador de Netlify
+      # (necessari perquè /api/contact funcioni de veritat al preview).
+      - name: Build and deploy to Netlify
+        id: deploy
+        env:
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+          NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
+        run: |
+          npx --yes netlify-cli@latest deploy \
+            --build \
+            --alias "pr-${{ github.event.pull_request.number }}" \
+            --message "PR #${{ github.event.pull_request.number }}: ${{ github.event.pull_request.title }}" \
+            --json > netlify-deploy.json
+          cat netlify-deploy.json
+          node -e "
+            const data = require('./netlify-deploy.json');
+            const url = data.deploy_url || data.deployUrl || data.url;
+            require('fs').appendFileSync(process.env.GITHUB_OUTPUT, \`url=\${url}\n\`);
+          "
+
+      - name: Comment preview link on the PR
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const marker = '<!-- netlify-preview-comment -->';
+            const url = `${{ steps.deploy.outputs.url }}`;
+            const body = `${marker}\n🚀 **Preview de Netlify** llest: ${url}`;
+            const { data: comments } = await github.rest.issues.listComments({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+            });
+            const existing = comments.find((c) => c.body.includes(marker));
+            if (existing) {
+              await github.rest.issues.updateComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                comment_id: existing.id,
+                body,
+              });
+            } else {
+              await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: context.issue.number,
+                body,
+              });
+            }
