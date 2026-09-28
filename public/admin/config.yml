@@ -2,6 +2,11 @@ backend:
   name: git-gateway
   branch: main
 
+# Permet provar el CMS en local amb `npm run dev` + `npm run cms:proxy`,
+# sense passar per Netlify Identity. Només s'activa quan s'accedeix
+# a /admin/ des de localhost; en producció no té cap efecte.
+local_backend: true
+
 media_folder: "public/uploads"
 public_folder: "/uploads"
 
@@ -51,6 +56,8 @@ collections:
           - {label: "Títol", name: "title", widget: "string"}
           - {label: "Descripció", name: "description", widget: "text"}
           - {label: "Contingut", name: "body", widget: "markdown"}
+          - {label: "Amagar el requadre \"Què hi ha avui per dinar?\"", name: "amagarAvui", widget: "boolean", default: false, hint: "Activa-ho per amagar temporalment el requadre del dia, encara que hi hagi dades per avui."}
+          - {label: "Amagar la imatge i el PDF del menú", name: "amagarImatge", widget: "boolean", default: false, hint: "Activa-ho per amagar temporalment la imatge/PDF del menú (per exemple, si encara no s'ha actualitzat)."}
 
       - label: "Contacte"
         name: "contacte"
