@@ -34,7 +34,13 @@ jobs:
 
       - name: Build
         if: github.event.action != 'closed'
+        env:
+          PR_PREVIEW: 'true'
         run: npm run build
+
+      - name: Rewrite asset paths for the preview subpath
+        if: github.event.action != 'closed'
+        run: node scripts/rewrite-preview-base.mjs "/${{ github.event.repository.name }}/pr-preview/pr-${{ github.event.pull_request.number }}"
 
       - name: Deploy preview
         uses: rossjrw/pr-preview-action@v1
