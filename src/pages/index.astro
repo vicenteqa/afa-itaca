@@ -6,6 +6,8 @@ import FormattedDate from '../components/FormattedDate.astro';
 import InstagramFeed from '../components/InstagramFeed.astro';
 import { SHOW_HOME_INSTAGRAM_FEED, SITE_DESCRIPTION, SITE_TITLE } from '../consts';
 import { getCollection } from 'astro:content';
+import { Image } from 'astro:assets';
+import bannerBenvinguda from '../assets/banner-benvinguda.jpg';
 
 const latestNews = (await getCollection('noticies'))
 	.sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf())
@@ -20,6 +22,9 @@ const latestNews = (await getCollection('noticies'))
 	<body>
 		<Header />
 		<main>
+			<div class="banner">
+				<Image src={bannerBenvinguda} alt="No és màgia, és l'AFA!" loading="eager" />
+			</div>
 			<section class="hero">
 				<h1>Benvinguts a l'AFA de l'escola Ítaca!</h1>
 				<p class="description">{SITE_DESCRIPTION}</p>
@@ -75,6 +80,26 @@ const latestNews = (await getCollection('noticies'))
 <style>
 	main {
 		width: 100%;
+	}
+
+	.banner {
+		width: 100%;
+		max-width: 1200px;
+		margin: 0 auto;
+		padding: 1.5rem 1.5rem 0;
+	}
+
+	.banner img {
+		width: 100%;
+		height: auto;
+		display: block;
+		border-radius: 16px;
+	}
+
+	@media (max-width: 720px) {
+		.banner {
+			padding: 1rem 1rem 0;
+		}
 	}
 
 	main section:not(.hero) {
