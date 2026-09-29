@@ -38,14 +38,13 @@ jobs:
       - name: Commit and push if the menu changed
         run: |
           set -euo pipefail
-          if git diff --quiet -- public/uploads/menjador.pdf public/uploads/menjador.jpg public/uploads/menjador.json; then
+          git add -A public/uploads
+          if git diff --cached --quiet; then
             echo "No hi ha cap menú nou. Res a publicar."
             exit 0
           fi
 
           git config user.name "afa-itaca-bot"
           git config user.email "actions@github.com"
-          git add public/uploads/menjador.pdf public/uploads/menjador.jpg
-          [ -f public/uploads/menjador.json ] && git add public/uploads/menjador.json
           git commit -m "Actualitza el menú del menjador"
           git push
