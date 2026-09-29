@@ -11,13 +11,15 @@ Envia un correu amb el menú adjunt (PDF o imatge) a: **itacamenjador@gmail.com*
 
 ## Quan s'ha d'enviar?
 
-Entre el **dia 28 del mes** i el **dia 3 del mes següent**. El sistema comprova cada mitjanit si hi ha correus nous, per tant el menú apareixerà a la web com a màxim l'endemà.
+Entre el **dia 25 del mes** i el **dia 5 del mes següent**. El sistema comprova cada dia a les 8:00 UTC si hi ha correus nous.
 
-**Important:** Envia el nou menú només quan ja no calgui consultar el del mes en curs, ja que serà substituït.
+- Si el menú és del **mes següent**, es publica de seguida a la web **al costat del menú actual**, perquè les famílies el puguin consultar amb antelació.
+- El **dia 1**, el menú vell s'elimina automàticament i el nou passa a ser l'únic.
+- Si el menú és del mes en curs, substitueix l'actual.
 
 ## Has detectat un error?
 
-Torna a enviar el menú corregit dins del marge de dies (28-3) i es substituirà automàticament.
+Torna a enviar el menú corregit dins del marge de dies (25-5) i es substituirà automàticament.
 
 ## Què necessitem de tu?
 
@@ -25,7 +27,7 @@ La **teva adreça de correu** des de la qual enviaràs els menús. Només es pro
 
 ## El menú no s'ha actualitzat?
 
-- Comprova que l'has enviat des de l'adreça autoritzada i dins del període (dies 28-3)
+- Comprova que l'has enviat des de l'adreça autoritzada i dins del període (dies 25-5)
 - Recorda que pot trigar fins a 24 hores
 
 ---

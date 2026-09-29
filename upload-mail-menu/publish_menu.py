@@ -16,7 +16,10 @@ import email
 import imaplib
 import json
 import os
+import re
 import sys
+from datetime import datetime
+from zoneinfo import ZoneInfo
 from email.header import decode_header
 
 from dotenv import load_dotenv
@@ -143,35 +146,96 @@ def validate_config():
         sys.exit(1)
 
 
+def current_month():
+    """(year, month) today, in the school's timezone."""
+    now = datetime.now(ZoneInfo("Europe/Madrid"))
+    return now.year, now.month
+
+
+def pending_paths(year, month):
+    base = os.path.join(UPLOADS_DIR, f"menjador-{year:04d}-{month:02d}")
+    return base + ".pdf", base + ".jpg", base + ".json"
+
+
+def write_menu(pdf_path, image_path, json_path, content, image, menu):
+    with open(pdf_path, "wb") as f:
+        f.write(content)
+    image.save(image_path, format="JPEG", quality=85, optimize=True)
+    if menu is not None:
+        with open(json_path, "w", encoding="utf-8") as f:
+            json.dump(menu, f, ensure_ascii=False, indent=2)
+    print(f"Menú desat a {pdf_path}")
+
+
+def store_incoming(content):
+    """Save a freshly received menu: live if it's for the current
+    month, as a pending menjador-YYYY-MM.* set if it's for a future
+    month (so the menu in use isn't replaced ahead of time), and rejected if
+    the month can't be read or is already past."""
+    os.makedirs(UPLOADS_DIR, exist_ok=True)
+    image = render_first_page(content)
+
+    # extract_menu reads from a path, so go through a temp copy of the PDF.
+    tmp_pdf = PDF_PATH + ".tmp"
+    with open(tmp_pdf, "wb") as f:
+        f.write(content)
+    try:
+        menu = extract_menu(tmp_pdf)
+    except Exception as exc:  # noqa: BLE001 - a failed extraction shouldn't break the publish
+        print(f"Avís: no s'ha pogut extreure el menú dia a dia ({exc}).")
+        menu = None
+    finally:
+        os.remove(tmp_pdf)
+
+    key = (menu["year"], menu["month_number"]) if menu and menu.get("year") and menu.get("month_number") else None
+    if key is None:
+        # Sense mes/any no podem saber on va: millor fallar (workflow en vermell) que trepitjar el menú en ús.
+        sys.exit("Error: no s'ha pogut llegir el mes/any del menú. No es publica res.")
+    if key < current_month():
+        sys.exit(f"Error: el menú és de {key[1]:02d}/{key[0]}, un mes ja passat. No es publica res.")
+
+    if key > current_month():
+        pdf, img, js = pending_paths(*key)
+        print(f"Menú de {key[1]:02d}/{key[0]}: es guarda com a pendent fins que arribi el mes.")
+    else:
+        pdf, img, js = PDF_PATH, IMAGE_PATH, JSON_PATH
+        print(f"Menú de {key[1]:02d}/{key[0]}: es publica ara.")
+    write_menu(pdf, img, js, content, image, menu)
+
+
+def promote_pending():
+    """Make the most recent pending menu whose month has arrived the live one,
+    and drop every pending menu that is now stale."""
+    today = current_month()
+    found = []
+    for name in os.listdir(UPLOADS_DIR):
+        m = re.fullmatch(r"menjador-(\d{4})-(\d{2})\.pdf", name)
+        if m:
+            found.append((int(m.group(1)), int(m.group(2))))
+    due = sorted(k for k in found if k <= today)
+    if due:
+        pdf, img, js = pending_paths(*due[-1])
+        for src, dst in ((pdf, PDF_PATH), (img, IMAGE_PATH), (js, JSON_PATH)):
+            if os.path.exists(src):
+                os.replace(src, dst)
+        print(f"Menú pendent de {due[-1][1]:02d}/{due[-1][0]} promogut a menú actual.")
+        for k in due[:-1]:
+            for path in pending_paths(*k):
+                if os.path.exists(path):
+                    os.remove(path)
+
+
 def main():
     validate_config()
+    os.makedirs(UPLOADS_DIR, exist_ok=True)
 
     content = find_latest_pdf()
     if content is None:
-        print("Cap correu nou amb un PDF adjunt. Sortint.")
-        return
+        print("Cap correu nou amb un PDF adjunt.")
+    else:
+        store_incoming(content)
 
-    os.makedirs(UPLOADS_DIR, exist_ok=True)
-
-    with open(PDF_PATH, "wb") as f:
-        f.write(content)
-    print(f"PDF desat a {PDF_PATH}")
-
-    image = render_first_page(content)
-    image.save(IMAGE_PATH, format="JPEG", quality=85, optimize=True)
-    print(f"Imatge desada a {IMAGE_PATH}")
-
-    try:
-        menu = extract_menu(PDF_PATH)
-    except Exception as exc:  # noqa: BLE001 - a failed extraction shouldn't break the publish
-        print(f"Avís: no s'ha pogut extreure el menú dia a dia ({exc}). "
-              "Es manté el JSON anterior (si n'hi havia).")
-        return
-
-    with open(JSON_PATH, "w", encoding="utf-8") as f:
-        json.dump(menu, f, ensure_ascii=False, indent=2)
-    print(f"Menú dia a dia desat a {JSON_PATH} ({len(menu['days'])} dies, "
-          f"confiança {menu['date_offset_confidence']})")
+    promote_pending()
 
 
 if __name__ == "__main__":
