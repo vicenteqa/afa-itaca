@@ -4,18 +4,19 @@
 
 ## Què has de fer?
 
-Envia un correu amb el menú adjunt (PDF o imatge) a: **itacamenjador@gmail.com**
+Envia un correu amb el menú adjunt en **format PDF** (les imatges s'ignoren) a: **itacamenjador@gmail.com**
 
 - Només cal adjuntar **un arxiu** per correu
 - Si el PDF té diverses pàgines, només es publicarà la **primera pàgina**
 
 ## Quan s'ha d'enviar?
 
-Entre el **dia 25 del mes** i el **dia 5 del mes següent**. El sistema comprova cada dia a les 8:00 UTC si hi ha correus nous.
+Entre el **dia 25 del mes** i el **dia 5 del mes següent**. El sistema comprova si hi ha correus nous un cop al dia, cap a les 9-10 del matí (hora de Madrid).
 
 - Si el menú és del **mes següent**, es publica de seguida a la web **al costat del menú actual**, perquè les famílies el puguin consultar amb antelació.
 - El **dia 1**, el menú vell s'elimina automàticament i el nou passa a ser l'únic.
 - Si el menú és del mes en curs, substitueix l'actual.
+- El sistema llegeix el mes que apareix al PDF. Si és d'un **mes ja passat** o no s'hi pot llegir, **no es publica** i cal tornar-lo a enviar corregit.
 
 ## Has detectat un error?
 
