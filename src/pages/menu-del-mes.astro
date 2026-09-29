@@ -11,14 +11,27 @@ const page = await getEntry('pages', 'menu-del-mes');
 if (!page) throw new Error('Pàgina no trobada');
 const { Content } = await render(page);
 
-let menuJson = 'null';
-try {
-	const raw = fs.readFileSync(path.join(process.cwd(), 'public', 'uploads', 'menjador.json'), 'utf-8');
-	// Belt-and-braces: escape "<" so the JSON can never prematurely close the <script> tag it's embedded in.
-	menuJson = raw.replace(/</g, '\\u003c');
-} catch {
-	// No menjador.json yet (extraction hasn't run, or failed) -> the widget just stays hidden.
-}
+// Menú actual (menjador.*) + els menús ja rebuts dels mesos següents (menjador-YYYY-MM.*), en ordre cronològic.
+const uploadsDir = path.join(process.cwd(), 'public', 'uploads');
+const readMenuJson = (file: string) => {
+	try {
+		return JSON.parse(fs.readFileSync(path.join(uploadsDir, file), 'utf-8'));
+	} catch {
+		return null; // Sense JSON (extracció no feta o fallida) -> no hi ha dades per al widget.
+	}
+};
+const menus = [
+	{ base: 'menjador', data: readMenuJson('menjador.json') },
+	...fs
+		.readdirSync(uploadsDir)
+		.map((f) => f.match(/^(menjador-\d{4}-\d{2})\.pdf$/)?.[1])
+		.filter((base): base is string => !!base)
+		.sort()
+		.map((base) => ({ base, data: readMenuJson(`${base}.json`) })),
+];
+const menusData = menus.map((m) => m.data).filter(Boolean);
+// Belt-and-braces: escape "<" so the JSON can never prematurely close the <script> tag it's embedded in.
+const menuJson = JSON.stringify(menusData).replace(/</g, '\\u003c');
 ---
 
 <!doctype html>
@@ -46,19 +59,19 @@ try {
 
 					<Content />
 					<!-- Cache-busting per assegurar que es veu l'última versió -->
-					{!page.data.amagarImatge && (
+					{!page.data.amagarImatge && menus.map((m) => (
 					<div class="menu-container">
-						<a href={`/uploads/menjador.jpg?v=${new Date().getTime()}`} target="_blank" title="Amplia el menú">
+						<a href={`/uploads/${m.base}.jpg?v=${new Date().getTime()}`} target="_blank" title="Amplia el menú">
 							<img
-								src={`/uploads/menjador.jpg?v=${new Date().getTime()}`}
-								alt="Menú del mes de l'escola Ítaca"
+								src={`/uploads/${m.base}.jpg?v=${new Date().getTime()}`}
+								alt={`Menú${m.data?.month ? ` de ${m.data.month.toLowerCase()}` : ' del mes'} de l'escola Ítaca`}
 							/>
 						</a>
-						<a class="download-link" href={`/uploads/menjador.pdf?v=${new Date().getTime()}`} target="_blank">
+						<a class="download-link" href={`/uploads/${m.base}.pdf?v=${new Date().getTime()}`} target="_blank">
 							Descarrega el PDF del menú
 						</a>
 					</div>
-					)}
+					))}
 				</div>
 				<div class="back-link">
 					<a href="/comissions/menjador">← Torna a la Comissió de Menjador</a>
@@ -81,7 +94,8 @@ try {
 		} catch {
 			return;
 		}
-		if (!menu || !Array.isArray(menu.days)) return;
+		// menu-data és una llista amb el menú actual i els següents ja rebuts.
+		const menus = Array.isArray(menu) ? menu : [menu];
 
 		// ?demoDate=YYYY-MM-DD lets us preview any day locally without touching the system clock.
 		const demoDate = new URLSearchParams(location.search).get('demoDate');
@@ -92,10 +106,11 @@ try {
 		const month = today.getMonth() + 1;
 		const year = today.getFullYear();
 
-		// Data belongs to a different month than "today" (JSON not refreshed yet this month, or demoDate elsewhere) -> stay hidden.
-		if (menu.month_number !== month || menu.year !== year) return;
+		// Cap menú és d'aquest mes (JSON no refrescat, o demoDate en un altre mes) -> el widget queda amagat.
+		const current = menus.find((m) => m && m.month_number === month && m.year === year && Array.isArray(m.days));
+		if (!current) return;
 
-		const entry = menu.days.find((d) => d.date === day);
+		const entry = current.days.find((d) => d.date === day);
 		// No entry (weekend: the grid only has Mon-Fri columns) or a holiday -> stay hidden.
 		if (!entry || entry.holiday || !entry.items || entry.items.length === 0) return;
 
