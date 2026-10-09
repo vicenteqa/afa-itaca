@@ -18,12 +18,12 @@
     "@tailwindcss/vite": "^4.3.3",
     "astro": "^7.3.5",
     "netlify-cms-app": "^2.15.72",
-    "nodemailer": "^10.0.12",
+    "nodemailer": "^10.0.15",
     "sharp": "^0.35.5",
     "tailwindcss": "^4.1.18"
   },
   "devDependencies": {
-    "@playwright/test": "^1.62.1",
+    "@playwright/test": "^1.63.0",
     "decap-server": "^3.11.3"
   }
 }
