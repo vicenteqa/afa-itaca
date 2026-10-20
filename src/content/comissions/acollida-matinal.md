@@ -1,10 +1,9 @@
 ---
-title: "Acollida Matinal"
-description: "Servei d'acollida de 8:00 h a 9:00 h per facilitar la conciliació familiar."
-icon: "sunrise"
+title: Acollida Matinal
+description: Servei d'acollida de 8:00 h a 9:00 h per facilitar la conciliació familiar.
+icon: sunrise
 order: 4
 ---
-
 Pensant en facilitar la conciliació familiar, l’AFA ofereix el servei d’acollida matinal per als dies lectius.
 
 ## Horari i espai
@@ -19,26 +18,44 @@ Durant aquesta estona els infants poden esmorzar i fer activitats lúdiques (con
 
 ### Ús mensual amb dies fixos per setmana
 
-| Modalitat | Famílies sòcies AFA | Famílies no sòcies AFA |
-| :--- | :---: | :---: |
-| 4 o 5 dies per setmana | 35 € / mes | 60 € / mes |
-| 2 o 3 dies per setmana | 30 € / mes | 50 € / mes |
-| 1 dia per setmana | 14 € / mes | 25 € / mes |
+| Modalitat              | Famílies sòcies AFA | Famílies no sòcies AFA |
+| ---------------------- | ------------------- | ---------------------- |
+| 4 o 5 dies per setmana | 35 € / mes          | 60 € / mes             |
+| 2 o 3 dies per setmana | 30 € / mes          | 50 € / mes             |
+| 1 dia per setmana      | 14 € / mes          | 25 € / mes             |
 
 ### Ús en dies esporàdics
 
-| Modalitat | Famílies sòcies AFA | Famílies no sòcies AFA |
-| :--- | :---: | :---: |
-| Dies esporàdics | 3,5 € | 5,50 € |
+| Modalitat       | Famílies sòcies AFA | Famílies no sòcies AFA |
+| --------------- | ------------------- | ---------------------- |
+| Dies esporàdics | 3,5 €               | 5,50 €                 |
 
-- Els preus en modalitat fixa es mantenen sempre que el total d’inscripcions garanteixi la viabilitat econòmica del servei.
-- Si l’alta o la baixa en modalitat fixa es produeix a mig mes, es cobra el mes sencer.
+* Els preus en modalitat fixa es mantenen sempre que el total d’inscripcions garanteixi la viabilitat econòmica del servei.
+* Si l’alta o la baixa en modalitat fixa es produeix a mig mes, es cobra el mes sencer.
+
+
+
+#### **DESCOMPTE PER GERMANS – CURS 2026-27**
+
+La Junta de l'AFA Escola Ítaca ha aprovat aplicar un 10% de descompte per al segon germà i successius, exclusivament per a les famílies sòcies de l'AFA, a partir de la quota d'octubre de 2026.
+
+**Condicions del descompte:**
+
+· El 10% de descompte s'aplica exclusivament al segon germà i successius de famílies sòcies de l’AFA.
+
+· Només s'aplica a les modalitats de quota mensual fixa.
+
+· Els dies esporàdics no tenen descompte, independentment del nombre de germans.
+
+· És vigent des de la quota d’octubre de 2026.
+
+· Les famílies sòcies han de seleccionar la tarifa corresponent a [Ampasoft](https://afaitaca.ampasoft.net/login)
 
 ## Inscripció
 
-La inscripció es fa a [**afaitaca.ampasoft.net/login**](https://afaitaca.ampasoft.net/login).
+La inscripció es fa a **[afaitaca.ampasoft.net/login](https://afaitaca.ampasoft.net/login)**.
 
-Les famílies no sòcies també s’hi poden registrar seguint els passos de [**afaitaca.org/familia-socia**](/familia-socia) i indicant l’opció de no ser família sòcia durant el procés.
+Les famílies no sòcies també s’hi poden registrar seguint els passos de **[afaitaca.org/familia-socia](/familia-socia)** i indicant l’opció de no ser família sòcia durant el procés.
 
 Un cop a Ampasoft, cal anar a **Serveis Gestió assistències acollida → Noves preinscripcions**, seleccionar l’infant i introduir les dades requerides.
 
@@ -56,4 +73,4 @@ Per fer ús del servei cal estar al corrent de pagament. En cas de devolució de
 
 ## Baixa
 
-Les famílies inscrites en modalitat fixa han de comunicar la baixa per escrit **abans del dia 25 del mes anterior** a [**acollida@afaitaca.org**](mailto:acollida@afaitaca.org).
+Les famílies inscrites en modalitat fixa han de comunicar la baixa per escrit **abans del dia 25 del mes anterior** a **[acollida@afaitaca.org](mailto:acollida@afaitaca.org)**.
