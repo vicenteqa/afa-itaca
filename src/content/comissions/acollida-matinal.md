@@ -14,9 +14,9 @@ El servei funciona **cada dia lectiu de 8:00 h a 9:00 h**, al menjador de l’es
 
 Durant aquesta estona els infants poden esmorzar i fer activitats lúdiques (contes, revistes, jocs de taula i treballs manuals). També poden portar jocs o lectures de casa. Se’n pot fer un **ús regular o esporàdic**.
 
-## Preus curs 25-26
+## Preus curs 26-27
 
-### Ús mensual amb dies fixos per setmana
+### Ús mensual amb dies fixes per setmana
 
 | Modalitat              | Famílies sòcies AFA | Famílies no sòcies AFA |
 | ---------------------- | ------------------- | ---------------------- |
