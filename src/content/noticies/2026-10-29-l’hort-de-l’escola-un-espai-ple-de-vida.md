@@ -5,7 +5,7 @@ description: >
 pubDate: 2026-10-29T12:09:00.000+01:00
 heroImage: /uploads/whatsapp-image-2026-10-25-at-13.59.33.jpeg
 carouselImages:
-  - src: /uploads/whatsapp-image-2026-10-27-at-22.10.04.jpeg
+  - src: /uploads/whatsapp-image-2026-10-25-at-13.59.33_2.jpg
 ---
 🌱 **L’hort de l’escola, un espai ple de vida!** 🐸💧
 
