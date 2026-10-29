@@ -2,8 +2,7 @@
 title: Biblioteca
 description: "Fem créixer el gust per la lectura, una història rere l’altra. "
 order: 0
-carouselImages:
-  - src: /uploads/biblioteca_banner.jpg
+carouselImages: []
 ---
 Des de l’AFA, la Comissió de Biblioteca treballa per fer de la biblioteca de l’Escola Ítaca un espai viu, acollidor i ple d’històries per descobrir.
 
@@ -14,3 +13,5 @@ També impulsem activitats com les sessions de titelles i tallers especials, com
 **Perquè una biblioteca és molt més que llibres: és un espai per imaginar, aprendre i créixer plegats.**
 
 💙 T’agradaria col·laborar-hi? No cal dedicar-hi molt de temps ni tenir experiència: qualsevol idea, conte o cop de mà suma. Contacta a **[biblioteca@afaitaca.org](mailto:biblioteca@afaitaca.org)**
+
+![](/uploads/comission_biblioteca_banner.jpg)
