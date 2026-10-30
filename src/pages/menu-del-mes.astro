@@ -30,7 +30,7 @@ const menus = [
 		.map((base) => ({ base, data: readMenuJson(`${base}.json`) })),
 ];
 const menusData = menus.map((m) => m.data).filter(Boolean);
-// Belt-and-braces: escape "<" so the JSON can never prematurely close the <script> tag it's embedded in.
+// Belt-and-braces: escape "<" so the JSON can never prematurely close the inline script it is embedded in.
 const menuJson = JSON.stringify(menusData).replace(/</g, '\\u003c');
 ---
 
