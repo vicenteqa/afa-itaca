@@ -1,0 +1,5 @@
+[context.production]
+  # Exit 0 = saltar el build; exit 1 = construir.
+  # Només es construeix quan el llança el build hook "Deploy CMS"
+  # (botó "Desplegar canvis" del CMS), no a cada commit.
+  ignore = 'test "$INCOMING_HOOK_TITLE" != "Deploy CMS"'
