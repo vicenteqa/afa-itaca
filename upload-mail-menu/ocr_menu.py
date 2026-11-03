@@ -257,7 +257,14 @@ def split_items(text: str) -> list[str]:
     items = []
     for p in parts:
         p = re.sub(r"\s+", " ", p).strip(" .")
-        if p:
+        if not p:
+            continue
+        # Some cells lack the full stop before the dessert line, which leaves
+        # it glued to the previous dish ("... JARDINERA FRUITA").
+        m = re.fullmatch(r"(.+?)\s+(FRUITA|IOGURT(?:\s*\([\d\s,-]+\))?)", p)
+        if m:
+            items.extend([m.group(1), m.group(2)])
+        else:
             items.append(p)
     return items
 
