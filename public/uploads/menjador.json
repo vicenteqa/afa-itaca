@@ -1,311 +1,267 @@
 {
-  "month": "Octubre",
-  "month_number": 10,
+  "month": "Novembre",
+  "month_number": 11,
   "year": 2026,
   "source": "pdf_text",
-  "date_offset_confidence": 0.96,
+  "date_offset_confidence": 0.5,
   "days": [
     {
-      "date": 1,
-      "weekday": "Dijous",
+      "date": 2,
+      "weekday": "Dilluns",
       "holiday": false,
       "items": [
-        "CREMA DE VERDURES",
-        "COSTELLA AL FORN",
-        "AMANIDA",
-        "IOGURT (7)"
+        "9 TRINXAT DE LA CERDANYA"
       ],
-      "allergens": [
-        7
-      ],
-      "raw_text": "CREMA DE VERDURES. COSTELLA AL FORN. AMANIDA. IOGURT (7)."
+      "allergens": [],
+      "raw_text": "9 TRINXAT DE LA CERDANYA."
     },
     {
-      "date": 2,
-      "weekday": "Divendres",
+      "date": 3,
+      "weekday": "Dimarts",
       "holiday": false,
       "items": [
-        "CIGRONS AMB TOMÀQUET I PESTO (8)",
-        "PEIX AL FORN (4) AMANIDA",
-        "FRUITA DEL TEMPS"
+        "10 SOPA D’AU (1-9)"
       ],
-      "allergens": [
-        4,
-        8
+      "allergens": [],
+      "raw_text": "10 SOPA D’AU (1-9)."
+    },
+    {
+      "date": 4,
+      "weekday": "Dimecres",
+      "holiday": false,
+      "items": [
+        "11 ARRÒS INTEGRAL AMB"
       ],
-      "raw_text": "CIGRONS AMB TOMÀQUET I PESTO (8). PEIX AL FORN (4) AMANIDA. FRUITA DEL TEMPS."
+      "allergens": [],
+      "raw_text": "11 ARRÒS INTEGRAL AMB"
     },
     {
       "date": 5,
-      "weekday": "Dilluns",
+      "weekday": "Dijous",
       "holiday": false,
       "items": [
-        "ARRÓS 3 DELICIES (3)",
-        "SÍPIA A LA BRUTA (14)",
-        "I AMANIDA FRUITA DEL TEMPS"
+        "12 ESTOFAT DE FESOLS I"
       ],
-      "allergens": [
-        3,
-        14
-      ],
-      "raw_text": "ARRÓS 3 DELICIES (3). SÍPIA A LA BRUTA (14). I AMANIDA FRUITA DEL TEMPS."
+      "allergens": [],
+      "raw_text": "12 ESTOFAT DE FESOLS I"
     },
     {
       "date": 6,
-      "weekday": "Dimarts",
+      "weekday": "Divendres",
       "holiday": false,
       "items": [
-        "VERDURA I PATATA",
-        "ESTOFAT DE GALL D´INDI AMB VERDURETES",
-        "IOGURT (7)"
+        "13 CREMA DE CARBASSA I MONIATO"
       ],
-      "allergens": [
-        7
-      ],
-      "raw_text": "VERDURA I PATATA. ESTOFAT DE GALL D´INDI AMB VERDURETES. IOGURT (7)."
-    },
-    {
-      "date": 7,
-      "weekday": "Dimecres",
-      "holiday": false,
-      "items": [
-        "EMPEDRAT DE FESOLS",
-        "TRUITA DE PATATES I PASTANAGA (3), AMANIDA",
-        "FRUITA DEL TEMPS"
-      ],
-      "allergens": [
-        3
-      ],
-      "raw_text": "EMPEDRAT DE FESOLS. TRUITA DE PATATES I PASTANAGA (3), AMANIDA. FRUITA DEL TEMPS."
-    },
-    {
-      "date": 8,
-      "weekday": "Dijous",
-      "holiday": false,
-      "items": [
-        "AMANIDA DE PASTA (1)",
-        "PEIX AMB VERDURES SALTEJADES (4)",
-        "FRUITA DEL TEMPS"
-      ],
-      "allergens": [
-        1,
-        4
-      ],
-      "raw_text": "AMANIDA DE PASTA (1). PEIX AMB VERDURES SALTEJADES (4). FRUITA DEL TEMPS."
+      "allergens": [],
+      "raw_text": "13 CREMA DE CARBASSA I MONIATO."
     },
     {
       "date": 9,
-      "weekday": "Divendres",
+      "weekday": "Dilluns",
       "holiday": false,
       "items": [
-        "CREMA DE LLEGUM",
-        "POLLATRES AL FORN I SALSA DE POMA, AMANIDA",
-        "FRUITA DEL TEMPS"
+        "OUS REMENATS (3) I AMANIDA VARIADA",
+        "FRUITA"
+      ],
+      "allergens": [
+        3
+      ],
+      "raw_text": "OUS REMENATS (3) I AMANIDA VARIADA. FRUITA."
+    },
+    {
+      "date": 10,
+      "weekday": "Dimarts",
+      "holiday": false,
+      "items": [
+        "POLLASTRE AMB SALSA DE VERDURES",
+        "FRUITA"
       ],
       "allergens": [],
-      "raw_text": "CREMA DE LLEGUM. POLLATRES AL FORN I SALSA DE POMA, AMANIDA. FRUITA DEL TEMPS."
+      "raw_text": "POLLASTRE AMB SALSA DE VERDURES. FRUITA."
+    },
+    {
+      "date": 11,
+      "weekday": "Dimecres",
+      "holiday": false,
+      "items": [
+        "TOMÀQUET",
+        "CIGRONS AMB BACALLÀ A LA SALSA VERDA (4) I AMANIDA",
+        "FRUITA"
+      ],
+      "allergens": [
+        4
+      ],
+      "raw_text": "TOMÀQUET. CIGRONS AMB BACALLÀ A LA SALSA VERDA (4) I AMANIDA. FRUITA."
     },
     {
       "date": 12,
-      "weekday": "Dilluns",
-      "holiday": true,
-      "items": [],
-      "allergens": [],
-      "raw_text": "FESTA"
+      "weekday": "Dijous",
+      "holiday": false,
+      "items": [
+        "VERDURES",
+        "PASTA ALS 4 FORMATGES (1-7) I AMANIDA",
+        "IOGURT (7)"
+      ],
+      "allergens": [
+        7
+      ],
+      "raw_text": "VERDURES. PASTA ALS 4 FORMATGES (1-7) I AMANIDA. IOGURT (7)."
     },
     {
       "date": 13,
-      "weekday": "Dimarts",
+      "weekday": "Divendres",
       "holiday": false,
       "items": [
-        "CREMA DE PASTANAGA I CARBASSÓ",
-        "BACALLÀ AL PIL PIL (4 ) I AMANIDA",
-        "FRUITA DEL TEMPS"
-      ],
-      "allergens": [
-        4
-      ],
-      "raw_text": "CREMA DE PASTANAGA I CARBASSÓ. BACALLÀ AL PIL PIL (4 ) I AMANIDA. FRUITA DEL TEMPS."
-    },
-    {
-      "date": 14,
-      "weekday": "Dimecres",
-      "holiday": false,
-      "items": [
-        "LLENTIES ESTOFADES AMB VERDURES",
-        "POLLATRE AMB SOJA S/G I VERDURES",
-        "FRUITA DEL TEMPS"
+        "DAUS DE SÍPIA A L’ANDALUSA (1-14 ) AMB HUMUS DE CIGRONS I AMANIDA",
+        "FRUITA"
       ],
       "allergens": [],
-      "raw_text": "LLENTIES ESTOFADES AMB VERDURES. POLLATRE AMB SOJA S/G I VERDURES. FRUITA DEL TEMPS."
-    },
-    {
-      "date": 15,
-      "weekday": "Dijous",
-      "holiday": false,
-      "items": [
-        "PATATA I VERDURA",
-        "OUS REMENATS AMB GALL D´INDI I AMANIDA",
-        "IOGURT (7)"
-      ],
-      "allergens": [
-        7
-      ],
-      "raw_text": "PATATA I VERDURA. OUS REMENATS AMB GALL D´INDI I AMANIDA. IOGURT (7)."
+      "raw_text": "DAUS DE SÍPIA A L’ANDALUSA (1-14 ) AMB HUMUS DE CIGRONS I AMANIDA. FRUITA."
     },
     {
       "date": 16,
-      "weekday": "Divendres",
-      "holiday": false,
-      "items": [
-        "ARRÓS INTEGRAL AMB TOMÀQUET",
-        "DAUS DE SÍPIA A L’ ANDALUSA (1)",
-        "(HUMMUS DE FESOLS (11)",
-        "FRUITA DEL TEMPS"
-      ],
-      "allergens": [
-        1,
-        11
-      ],
-      "raw_text": "ARRÓS INTEGRAL AMB TOMÀQUET. DAUS DE SÍPIA A L’ ANDALUSA (1). (HUMMUS DE FESOLS (11). FRUITA DEL TEMPS."
-    },
-    {
-      "date": 19,
       "weekday": "Dilluns",
       "holiday": false,
       "items": [
-        "CREMA DE PORROS I PERES",
-        "( TASTET AMANIDA QUINOA) TRUITA DE VERDURES (3)",
-        "CRUDITÉS DE PASTANAGA",
-        "FRUITA DEL TEMPS"
-      ],
-      "allergens": [
-        3
-      ],
-      "raw_text": "CREMA DE PORROS I PERES. ( TASTET AMANIDA QUINOA) TRUITA DE VERDURES (3). CRUDITÉS DE PASTANAGA. FRUITA DEL TEMPS."
-    },
-    {
-      "date": 20,
-      "weekday": "Dimarts",
-      "holiday": false,
-      "items": [
-        "PASTA INTEGRAL AMB SALSA DE VERDURES (1)",
-        "PEIX AMB PATATAS AL FORN (4) I AMANIDA (DIA DEL CUINER)",
-        "IOGURT (7)"
+        "SOPA D’AU (1) (9)",
+        "HAMBURGUESA DE POLLASTRE I AMANIDA",
+        "FRUITA"
       ],
       "allergens": [
         1,
-        4,
-        7
+        9
       ],
-      "raw_text": "PASTA INTEGRAL AMB SALSA DE VERDURES (1). PEIX AMB PATATAS AL FORN (4) I AMANIDA (DIA DEL CUINER). IOGURT (7)."
+      "raw_text": "SOPA D’AU (1) (9). HAMBURGUESA DE POLLASTRE I AMANIDA. FRUITA."
     },
     {
-      "date": 21,
+      "date": 17,
+      "weekday": "Dimarts",
+      "holiday": false,
+      "items": [
+        "LLENTIES ESTOFADES",
+        "TRUITA DE VERDURES (3)",
+        "IOGURT (7)"
+      ],
+      "allergens": [
+        3,
+        7
+      ],
+      "raw_text": "LLENTIES ESTOFADES. TRUITA DE VERDURES (3). IOGURT (7)."
+    },
+    {
+      "date": 18,
       "weekday": "Dimecres",
       "holiday": false,
       "items": [
-        "FESOLS AMB SALSA VERDA I CLOÏSSES (14)",
-        "OUS GRATINATS (7) I AMANIDA",
-        "FRUITA DEL TEMPS"
+        "PATATA I VERDURA",
+        "ARRÒS DE PEIX (2-4-14) I AMANIDA",
+        "FRUITA"
       ],
-      "allergens": [
-        7,
-        14
-      ],
-      "raw_text": "FESOLS AMB SALSA VERDA I CLOÏSSES (14). OUS GRATINATS (7) I AMANIDA. FRUITA DEL TEMPS."
+      "allergens": [],
+      "raw_text": "PATATA I VERDURA. ARRÒS DE PEIX (2-4-14) I AMANIDA. FRUITA."
     },
     {
-      "date": 22,
+      "date": 19,
       "weekday": "Dijous",
       "holiday": false,
       "items": [
-        "AMANIDA DE CIGRONS",
-        "ESTOFAT DE VEDELLA I VERDURES",
-        "FRUITA DEL TEMPS"
+        "CREMA DE LOMBARDA I FONOLL",
+        "PASTA BOLONYESA (1-9) I AMANIDA",
+        "FRUITA"
       ],
       "allergens": [],
-      "raw_text": "AMANIDA DE CIGRONS. ESTOFAT DE VEDELLA I VERDURES. FRUITA DEL TEMPS."
+      "raw_text": "CREMA DE LOMBARDA I FONOLL. PASTA BOLONYESA (1-9) I AMANIDA. FRUITA."
     },
     {
-      "date": 23,
+      "date": 20,
       "weekday": "Divendres",
       "holiday": false,
       "items": [
-        "VERDURA I PATATA",
-        "ARRÓS INTEGRAL DE PEIX (4)",
-        "FRUITA DEL TEMPS"
+        "ESTOFAT DE CIGRONS I ESPINACS",
+        "PEIX AL FORN (4) I AMANIDA VARIADA",
+        "FRUITA"
       ],
       "allergens": [
         4
       ],
-      "raw_text": "VERDURA I PATATA. ARRÓS INTEGRAL DE PEIX (4). FRUITA DEL TEMPS."
+      "raw_text": "ESTOFAT DE CIGRONS I ESPINACS. PEIX AL FORN (4) I AMANIDA VARIADA. FRUITA."
     },
     {
-      "date": 26,
+      "date": 23,
       "weekday": "Dilluns",
       "holiday": false,
       "items": [
-        "PASTA LA PUTANESCA (1)",
-        "PASTÍS DE LLENTIES (7) I AMANIDA",
-        "FRUITA DELTEMPS"
+        "CREMA CRECY",
+        "ALL CREMAT DE LLUÇ (4) I AMANIDA VARIADA",
+        "FRUITA"
       ],
       "allergens": [
-        1,
-        7
+        4
       ],
-      "raw_text": "PASTA LA PUTANESCA (1). PASTÍS DE LLENTIES (7) I AMANIDA. FRUITA DELTEMPS."
+      "raw_text": "CREMA CRECY. ALL CREMAT DE LLUÇ (4) I AMANIDA VARIADA. FRUITA."
     },
     {
-      "date": 27,
+      "date": 24,
       "weekday": "Dimarts",
       "holiday": false,
       "items": [
-        "ESTOFAT DE CIGRONS I MONIATO",
-        "OUS REMENATS AMB PERNIL (3) I AMANIDA",
-        "FRUITA DEL TEMPS"
+        "MACARRONS INTEGRALS AMB TOMÀQUET (1)",
+        "REMENAT DE PERNIL AMB XAMPINYONS (3) I AMANIDA",
+        "FRUITA"
       ],
       "allergens": [
+        1,
         3
       ],
-      "raw_text": "ESTOFAT DE CIGRONS I MONIATO. OUS REMENATS AMB PERNIL (3) I AMANIDA. FRUITA DEL TEMPS."
+      "raw_text": "MACARRONS INTEGRALS AMB TOMÀQUET (1). REMENAT DE PERNIL AMB XAMPINYONS (3) I AMANIDA. FRUITA."
     },
     {
-      "date": 28,
+      "date": 25,
       "weekday": "Dimecres",
       "holiday": false,
       "items": [
-        "VERDURA I PATATA",
-        "GALL D´INDI AMB VERDURES SALTEJADES",
-        "FRUITA DEL TEMPS"
+        "ARRÒS DE VERDURES",
+        "POLLASTRE AMB SALSA DE POMA",
+        "FRUITA"
       ],
       "allergens": [],
-      "raw_text": "VERDURA I PATATA. GALL D´INDI AMB VERDURES SALTEJADES. FRUITA DEL TEMPS."
+      "raw_text": "ARRÒS DE VERDURES. POLLASTRE AMB SALSA DE POMA. FRUITA."
     },
     {
-      "date": 29,
+      "date": 26,
       "weekday": "Dijous",
       "holiday": false,
       "items": [
-        "ARRÓS DE VERDURES",
-        "SÍPIA ESTOFADA AMB PÉSOLS (14) I AMANIDA",
-        "IOGURT (7)"
+        "FESOLS ESTOFATS DE VERDURES",
+        "CROQUETES DE POLLASTRE (1-7 ) I AMANIDA",
+        "IOGURT"
       ],
-      "allergens": [
-        7,
-        14
-      ],
-      "raw_text": "ARRÓS DE VERDURES. SÍPIA ESTOFADA AMB PÉSOLS (14) I AMANIDA. IOGURT (7)."
+      "allergens": [],
+      "raw_text": "FESOLS ESTOFATS DE VERDURES. CROQUETES DE POLLASTRE (1-7 ) I AMANIDA. IOGURT."
     },
     {
-      "date": 30,
+      "date": 27,
       "weekday": "Divendres",
       "holiday": false,
       "items": [
-        "DINAR TEMÀTIC DEL CENTRE D'INTERÈS"
+        "DINAR TEMÀTIC DEL CENTRE D’INTERÈS"
       ],
       "allergens": [],
-      "raw_text": "DINAR TEMÀTIC DEL CENTRE D'INTERÈS"
+      "raw_text": "DINAR TEMÀTIC DEL CENTRE D’INTERÈS"
+    },
+    {
+      "date": 30,
+      "weekday": "Dilluns",
+      "holiday": false,
+      "items": [
+        "PATATA I VERDURA",
+        "ESTOFAT DE SÍPIA I PÈSOLS (14) I AMANIDA",
+        "FRUITA"
+      ],
+      "allergens": [
+        14
+      ],
+      "raw_text": "PATATA I VERDURA. ESTOFAT DE SÍPIA I PÈSOLS (14) I AMANIDA. FRUITA."
     }
   ]
 }
