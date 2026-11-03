@@ -84,7 +84,20 @@
       btn.style.cssText = 'position:fixed;right:16px;bottom:16px;z-index:9999;' +
         'padding:12px 20px;border:0;border-radius:999px;background:#034891;color:#fff;' +
         'font:600 15px sans-serif;cursor:pointer;box-shadow:0 4px 14px rgba(0,0,0,.25)';
+      btn.style.display = 'none';
       document.body.appendChild(btn);
+
+      // Només es mostra amb la sessió de Netlify Identity iniciada.
+      var syncVisibility = function () {
+        var id = window.netlifyIdentity;
+        btn.style.display = id && id.currentUser() ? '' : 'none';
+      };
+      if (window.netlifyIdentity) {
+        window.netlifyIdentity.on('init', syncVisibility);
+        window.netlifyIdentity.on('login', syncVisibility);
+        window.netlifyIdentity.on('logout', syncVisibility);
+        syncVisibility();
+      }
 
       var reset = function () {
         btn.disabled = false;
