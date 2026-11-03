@@ -71,6 +71,7 @@ class Word:
     height: int
     conf: float
     line_id: tuple = (0, 0, 0)
+    style: tuple = ()  # (fontname, size) when known; badges share one style
 
     @property
     def right(self) -> int:
@@ -284,7 +285,7 @@ def extract_menu(pdf_path: str, debug: bool = False) -> dict:
     text, since there's no image-scanning fallback."""
     with pdfplumber.open(pdf_path) as pdf:
         page = pdf.pages[0]
-        raw_words = page.extract_words()
+        raw_words = page.extract_words(extra_attrs=["fontname", "size"])
         if len(raw_words) < MIN_PDF_TEXT_WORDS:
             raise ValueError(
                 f"El PDF només té {len(raw_words)} paraules de text; "
@@ -302,6 +303,7 @@ def extract_menu(pdf_path: str, debug: bool = False) -> dict:
             text=rw["text"], left=rw["x0"], top=rw["top"],
             width=rw["x1"] - rw["x0"], height=rw["bottom"] - rw["top"],
             conf=100.0, line_id=line_id,
+            style=(rw.get("fontname"), round(rw.get("size", 0), 1)),
         ))
 
     header = find_weekday_header(words)
@@ -317,6 +319,7 @@ def extract_menu(pdf_path: str, debug: bool = False) -> dict:
     col_bounds = compute_column_bounds(header, page_width)
 
     badge_candidates: list[tuple[int, int, float]] = []
+    style_of_badge: dict[tuple[int, int, float], tuple] = {}
     for wd in words:
         val = is_bare_day_number(wd.text)
         if val is None or wd.top <= header_bottom:
@@ -324,6 +327,15 @@ def extract_menu(pdf_path: str, debug: bool = False) -> dict:
         col = next((c for c in range(5) if col_bounds[c] <= wd.cx < col_bounds[c + 1]), None)
         if col is not None:
             badge_candidates.append((col, val, wd.top))
+            style_of_badge[(col, val, wd.top)] = wd.style
+
+    # Day badges are all set in one font/size. A number inside a dish name
+    # (e.g. "PASTA ALS 4 FORMATGES") looks like a bare day number too and
+    # would create a bogus grid row, so keep only the dominant style.
+    if badge_candidates:
+        styles = Counter(style_of_badge[(c, v, t)] for c, v, t in badge_candidates)
+        dominant = styles.most_common(1)[0][0]
+        badge_candidates = [b for b in badge_candidates if style_of_badge[b] == dominant]
 
     row_bounds, offset, confidence = fit_grid(badge_candidates, header_bottom, footer_top)
     n_rows = len(row_bounds) - 1

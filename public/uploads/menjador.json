@@ -3,120 +3,138 @@
   "month_number": 11,
   "year": 2026,
   "source": "pdf_text",
-  "date_offset_confidence": 0.5,
+  "date_offset_confidence": 1.0,
   "days": [
     {
       "date": 2,
       "weekday": "Dilluns",
       "holiday": false,
       "items": [
-        "9 TRINXAT DE LA CERDANYA"
+        "LLENTIES ESTOFADES",
+        "TRUITA DE PATATA AMB CEBA (3) I AMANIDA",
+        "FRUITA"
       ],
-      "allergens": [],
-      "raw_text": "9 TRINXAT DE LA CERDANYA."
+      "allergens": [
+        3
+      ],
+      "raw_text": "LLENTIES ESTOFADES. TRUITA DE PATATA AMB CEBA (3) I AMANIDA. FRUITA."
     },
     {
       "date": 3,
       "weekday": "Dimarts",
       "holiday": false,
       "items": [
-        "10 SOPA D’AU (1-9)"
+        "PATATA I VERDURA",
+        "VEDELLA ESTOFADA A LA JARDINERA FRUITA"
       ],
       "allergens": [],
-      "raw_text": "10 SOPA D’AU (1-9)."
+      "raw_text": "PATATA I VERDURA. VEDELLA ESTOFADA A LA JARDINERA FRUITA."
     },
     {
       "date": 4,
       "weekday": "Dimecres",
       "holiday": false,
       "items": [
-        "11 ARRÒS INTEGRAL AMB"
+        "AMANIDA D’ARRÒS",
+        "ESTOFAT DE CIGRONS",
+        "IOGURT (7)"
       ],
-      "allergens": [],
-      "raw_text": "11 ARRÒS INTEGRAL AMB"
+      "allergens": [
+        7
+      ],
+      "raw_text": "AMANIDA D’ARRÒS. ESTOFAT DE CIGRONS. IOGURT (7)."
     },
     {
       "date": 5,
       "weekday": "Dijous",
       "holiday": false,
       "items": [
-        "12 ESTOFAT DE FESOLS I"
+        "CREMA DE PASTANAGA",
+        "PEIX AL FORN (4) I AMANIDA",
+        "FRUITA"
       ],
-      "allergens": [],
-      "raw_text": "12 ESTOFAT DE FESOLS I"
+      "allergens": [
+        4
+      ],
+      "raw_text": "CREMA DE PASTANAGA. PEIX AL FORN (4) I AMANIDA. FRUITA."
     },
     {
       "date": 6,
       "weekday": "Divendres",
       "holiday": false,
       "items": [
-        "13 CREMA DE CARBASSA I MONIATO"
+        "FESOLS AMB CARBASSA",
+        "PASTA INTEGRAL AL PESTO ROSSO (1 -8) I PASTANAGA RATLLADA",
+        "FRUITA"
       ],
       "allergens": [],
-      "raw_text": "13 CREMA DE CARBASSA I MONIATO."
+      "raw_text": "FESOLS AMB CARBASSA. PASTA INTEGRAL AL PESTO ROSSO (1 -8) I PASTANAGA RATLLADA. FRUITA."
     },
     {
       "date": 9,
       "weekday": "Dilluns",
       "holiday": false,
       "items": [
+        "TRINXAT DE LA CERDANYA",
         "OUS REMENATS (3) I AMANIDA VARIADA",
         "FRUITA"
       ],
       "allergens": [
         3
       ],
-      "raw_text": "OUS REMENATS (3) I AMANIDA VARIADA. FRUITA."
+      "raw_text": "TRINXAT DE LA CERDANYA. OUS REMENATS (3) I AMANIDA VARIADA. FRUITA."
     },
     {
       "date": 10,
       "weekday": "Dimarts",
       "holiday": false,
       "items": [
+        "SOPA D’AU (1-9)",
         "POLLASTRE AMB SALSA DE VERDURES",
         "FRUITA"
       ],
       "allergens": [],
-      "raw_text": "POLLASTRE AMB SALSA DE VERDURES. FRUITA."
+      "raw_text": "SOPA D’AU (1-9). POLLASTRE AMB SALSA DE VERDURES. FRUITA."
     },
     {
       "date": 11,
       "weekday": "Dimecres",
       "holiday": false,
       "items": [
-        "TOMÀQUET",
+        "ARRÒS INTEGRAL AMB TOMÀQUET",
         "CIGRONS AMB BACALLÀ A LA SALSA VERDA (4) I AMANIDA",
         "FRUITA"
       ],
       "allergens": [
         4
       ],
-      "raw_text": "TOMÀQUET. CIGRONS AMB BACALLÀ A LA SALSA VERDA (4) I AMANIDA. FRUITA."
+      "raw_text": "ARRÒS INTEGRAL AMB TOMÀQUET. CIGRONS AMB BACALLÀ A LA SALSA VERDA (4) I AMANIDA. FRUITA."
     },
     {
       "date": 12,
       "weekday": "Dijous",
       "holiday": false,
       "items": [
-        "VERDURES",
+        "ESTOFAT DE FESOLS I VERDURES",
         "PASTA ALS 4 FORMATGES (1-7) I AMANIDA",
         "IOGURT (7)"
       ],
       "allergens": [
         7
       ],
-      "raw_text": "VERDURES. PASTA ALS 4 FORMATGES (1-7) I AMANIDA. IOGURT (7)."
+      "raw_text": "ESTOFAT DE FESOLS I VERDURES. PASTA ALS 4 FORMATGES (1-7) I AMANIDA. IOGURT (7)."
     },
     {
       "date": 13,
       "weekday": "Divendres",
       "holiday": false,
       "items": [
+        "CREMA DE CARBASSA I MONIATO",
         "DAUS DE SÍPIA A L’ANDALUSA (1-14 ) AMB HUMUS DE CIGRONS I AMANIDA",
         "FRUITA"
       ],
       "allergens": [],
-      "raw_text": "DAUS DE SÍPIA A L’ANDALUSA (1-14 ) AMB HUMUS DE CIGRONS I AMANIDA. FRUITA."
+      "raw_text": "CREMA DE CARBASSA I MONIATO. DAUS DE SÍPIA A L’ANDALUSA (1-14 ) AMB HUMUS DE CIGRONS I AMANIDA. FRUITA."
     },
     {
       "date": 16,
